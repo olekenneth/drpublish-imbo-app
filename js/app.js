@@ -1,4 +1,4 @@
-define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], function(_, $, appAuth, appApi, Imbo) {
+define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-communicator', 'imboclient'], function(_, $, appAuth, appApi, articleCommunicator, Imbo) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -40,7 +40,8 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
 
         // When authentication has completed...
         onAuthed: function() {
-            this.user = {};
+            this.authed = true;
+            this.user   = {};
             appApi.getCurrentUser(this.onUserInfoReceived);
         },
 
@@ -105,7 +106,8 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
 
             this.content
                 .find('.image-list')
-                .on('click', 'button', this.onToolbarClick);
+                .on('click', 'button', this.onToolbarClick)
+                .on('click', '.full-image', this.onShowFullImage);
         },
 
         onToolbarClick: function(e) {
@@ -120,6 +122,22 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
                 case 'delete-image':
                     return this.deleteImage(imageId, item);
             }
+        },
+
+        useImageInArticle: function(e) {
+            var el   = $(e.currentTarget),
+                name = el.data('filename');
+
+            if (!this.authed) {
+                return;
+            }
+
+
+
+            e.preventDefault();
+            articleCommunicator.maximizeAppWindow(name, function() {
+                console.log('CLOSED');
+            });
         },
 
         deleteImage: function(imageId, listItem) {
@@ -154,20 +172,33 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
                 return alert(this.translate('FAILED_TO_UPLOAD_IMAGE'));
             }
 
-            this.imbo.editMetadata(imageId, {
+            // Prepare metadata
+            var metadata = {
                 'drp:filename': filename,
                 'drp:uploader': {
                     'fullname': this.user.fullname,
                     'username': this.user.username
                 }
-            }, function() {});
+            };
+
+            // Add additional metadata to the image
+            this.imbo.editMetadata(imageId, metadata, function() {});
+
+            this.imageList.append(this.buildImageListItem('', {
+                'imageIdentifier': imageId,
+                'metadata': metadata
+            }));
         },
 
         loadImages: function(limit, page) {
-            var query = new Imbo.Query();
+            var query = query || new Imbo.Query();
             query.metadata(true);
             query.limit(limit || 50).page(page || 1);
 
+            this.imbo.getImages(query, this.onImagesLoaded);
+        },
+
+        queryImages: function(query) {
             this.imbo.getImages(query, this.onImagesLoaded);
         },
 
@@ -178,16 +209,23 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
                 return;
             }
 
+            this.currentImages = this.currentImages || $('.current-images');
+            this.imageList = this.imageList || this.currentImages.find('.image-list');
+
             var images = _.reduce(images, this.buildImageListItem, '');
-            $('.image-list').append(images);
+            this.imageList.append(images);
+
+            this.currentImages.find('.display-count').text(
+                this.imageList.get(0).childNodes.length
+            );
+
+            this.currentImages.find('.total-hit-count').text(search.count);
         },
 
-        getImageToolbarForImage: function(image, imageUrl) {
-            console.log(image);
-            var filename = image.metadata['drp:filename'] || image.imageIdentifier;
+        getImageToolbarForImage: function(image, imageUrl, fileName) {
             return (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
-                .replace(/\#file\-name/, filename)
+                .replace(/\#file\-name/, fileName)
             );
         },
 
@@ -195,11 +233,14 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'imboclient'], fu
             var url   = this.imbo.getImageUrl(image.imageIdentifier),
                 full  = url.toString(),
                 thumb = url.maxSize(154, 154).jpg().toString(),
+                name  = image.metadata['drp:filename'] || image.imageIdentifier,
                 el    = '';
 
             el += '<li data-image-identifier="' + image.imageIdentifier + '">';
-            el += '<img src="' + thumb + '" alt="">';
-            el += this.getImageToolbarForImage(image, full);
+            el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
+            el += ' <img src="' + thumb + '" alt="">';
+            el += '</a>';
+            el += this.getImageToolbarForImage(image, full, name);
             el += '</li>';
 
             html += el;
