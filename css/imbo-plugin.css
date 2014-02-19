@@ -1,0 +1,97 @@
+.hidden {
+    display: none;
+}
+
+.loading .content {
+    display: none;
+}
+
+.loader {
+    display: none;
+}
+
+.loading .loader {
+    /* At some point, make an awesome loading indicator */
+    display: block;
+    font-size: 2em;
+}
+
+fieldset.add-new-images {
+    position: relative;
+}
+
+.file-upload {
+    opacity: 0;
+    z-index: 5;
+}
+
+.file-upload, button.upload-local-file {
+    position: absolute;
+    left: 5px;
+    width: 225px;
+    height: 30px;
+}
+
+.spacer {
+    visibility: hidden;
+    display: inline-block;
+    height: 30px;
+}
+
+button.upload-local-file {}
+
+.current-images {
+    padding: 0;
+}
+
+.image-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.image-list li {
+    position: relative;
+    float: left;
+    width: 32.9%;
+    height: 160px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+
+    display: -webkit-flexbox;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-flex-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    text-align: center;
+}
+
+.image-list img {
+    margin: 0 auto;
+}
+
+.image-toolbar {
+    display: none;
+    position: absolute;
+    bottom: 1%;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.image-toolbar button {
+    font-size: 2em;
+    background: none;
+}
+
+.image-toolbar button i {
+    color: #fff;
+}
+
+.image-list li:hover .image-toolbar {
+    display: block;
+}

@@ -1,0 +1,3 @@
+[submodule "no.aptoma.plugin-api"]
+	path = no.aptoma.plugin-api
+	url = git@github.com:aptoma/no.aptoma.plugin-api.git
