@@ -1,4 +1,13 @@
-define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-communicator', 'imboclient'], function(_, $, appAuth, appApi, articleCommunicator, Imbo) {
+define([
+    'underscore',
+    'jquery',
+    'drp-app-auth',
+    'drp-app-api',
+    'drp-article-communicator',
+    'drp-ah5-communicator',
+    'imboclient',
+    'uploader'
+], function(_, $, appAuth, appApi, articleCommunicator, editor, Imbo, Uploader) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -14,6 +23,9 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
 
             // Authenticate application
             appAuth(this.onAuthed);
+
+            // Init DrPublish editor
+            this.initializeEditor();
 
             // Instantiate a new Imbo client
             this.imbo = new Imbo.Client(
@@ -32,6 +44,10 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
             // Reveal the UI of the application once the translations have loaded
             this.on('translation-loaded', this.loadGui);
             this.loadTranslations();
+        },
+
+        initializeEditor: function() {
+            editor.initMenu(['simplePluginMenu']);
         },
 
         setConfig: function(config) {
@@ -86,6 +102,9 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
                 $('.image-toolbar').clone().removeClass('hidden')
             ).html();
 
+            // Initialize the uploader
+            this.uploader = new Uploader(this.imbo);
+
             // Find the content element, apply skin and make it appear
             this.content = $(document.body)
                 .addClass('dp-theme-' + (this.config.skin || 'light'))
@@ -101,13 +120,13 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
 
         bindEvents: function() {
             this.content
-                .find('.file-upload')
-                .on('change', this.onImageSelected);
-
-            this.content
                 .find('.image-list')
                 .on('click', 'button', this.onToolbarClick)
-                .on('click', '.full-image', this.onShowFullImage);
+                .on('click', '.full-image', this.useImageInArticle);
+
+            this.uploader
+                .on('image-uploaded', this.onImageAdded)
+                .on('image-batch-completed', this.showImageBatchMetadataDialog);
         },
 
         onToolbarClick: function(e) {
@@ -121,23 +140,33 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
             switch (action) {
                 case 'delete-image':
                     return this.deleteImage(imageId, item);
+                case 'use-image':
+                    return this.useImageInArticle(e);
             }
         },
 
         useImageInArticle: function(e) {
-            var el   = $(e.currentTarget),
-                name = el.data('filename');
-
             if (!this.authed) {
                 return;
             }
 
-
-
             e.preventDefault();
+
+            var item    = $(e.currentTarget).closest('li'),
+                name    = item.find('.full-image').data('filename'),
+                imageId = item.data('image-identifier'),
+                url     = this.imbo.getImageUrl(imageId);
+
+            var img = $('<img />').attr('src', url.maxSize(590).jpg().toString());
+
+
+            editor.insertElement($('<div />').append(img));
+
+            /*
             articleCommunicator.maximizeAppWindow(name, function() {
                 console.log('CLOSED');
             });
+            */
         },
 
         deleteImage: function(imageId, listItem) {
@@ -152,42 +181,9 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
 
                 if (listItem) {
                     listItem.remove();
+                    this.incImageDisplayCount(-1, true);
                 }
             }.bind(this));
-        },
-
-        onImageSelected: function(e) {
-            var files = e.target.files;
-            for (var i = 0; i < files.length; i++) {
-                this.imbo.addImage(
-                    files[i],
-                    _.partialRight(this.onImageAdded, files[i].name)
-                );
-            }
-        },
-
-        onImageAdded: function(err, imageId, response, filename) {
-            if (err) {
-                console.error(err);
-                return alert(this.translate('FAILED_TO_UPLOAD_IMAGE'));
-            }
-
-            // Prepare metadata
-            var metadata = {
-                'drp:filename': filename,
-                'drp:uploader': {
-                    'fullname': this.user.fullname,
-                    'username': this.user.username
-                }
-            };
-
-            // Add additional metadata to the image
-            this.imbo.editMetadata(imageId, metadata, function() {});
-
-            this.imageList.append(this.buildImageListItem('', {
-                'imageIdentifier': imageId,
-                'metadata': metadata
-            }));
         },
 
         loadImages: function(limit, page) {
@@ -215,11 +211,42 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
             var images = _.reduce(images, this.buildImageListItem, '');
             this.imageList.append(images);
 
-            this.currentImages.find('.display-count').text(
-                this.imageList.get(0).childNodes.length
+            this.setImageDisplayCount(
+                this.imageList.get(0).childNodes.length,
+                search.count
             );
+        },
 
-            this.currentImages.find('.total-hit-count').text(search.count);
+        setImageDisplayCount: function(display, total) {
+            this.displayCount  = (this.displayCount  || this.currentImages.find('.display-count'));
+            this.totalHitCount = (this.totalHitCount || this.currentImages.find('.total-hit-count'));
+
+            this.displayCount.text(display);
+
+            if (isNaN(total)) { return; }
+            this.totalHitCount.text(total);
+        },
+
+        incImageDisplayCount: function(count, incTotalAmount) {
+            this.displayCount  = (this.displayCount  || this.currentImages.find('.display-count'));
+            this.totalHitCount = (this.totalHitCount || this.currentImages.find('.total-hit-count'));
+
+            var display = parseInt(this.displayCount.text(), 10),
+                total   = parseInt(this.totalHitCount.text(), 10);
+
+            this.displayCount.text(display + (count || 1));
+            if (incTotalAmount) {
+                this.totalHitCount.text(total + (count || 1));
+            }
+        },
+
+        onImageAdded: function(e, image) {
+            this.imageList.append(this.buildImageListItem('', image));
+            this.incImageDisplayCount(1, true);
+        },
+
+        showImageBatchMetadataDialog: function(e, batch) {
+            console.log('batch', batch);
         },
 
         getImageToolbarForImage: function(image, imageUrl, fileName) {
@@ -232,7 +259,7 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
         buildImageListItem: function(html, image) {
             var url   = this.imbo.getImageUrl(image.imageIdentifier),
                 full  = url.toString(),
-                thumb = url.maxSize(154, 154).jpg().toString(),
+                thumb = url.maxSize(158, 158).jpg().toString(),
                 name  = image.metadata['drp:filename'] || image.imageIdentifier,
                 el    = '';
 
@@ -253,14 +280,17 @@ define(['underscore', 'jquery', 'drp-app-auth', 'drp-app-api', 'drp-article-comm
 
         on: function(e, handler) {
             this.events.on(e, handler);
+            return this;
         },
 
         off: function(e, handler) {
             this.events.off(e, handler);
+            return this;
         },
 
         trigger: function(e, handler) {
             this.events.trigger(e, handler);
+            return this;
         }
     });
 

@@ -11,13 +11,12 @@
 }
 
 .loading .loader {
-    /* At some point, make an awesome loading indicator */
     display: block;
-    font-size: 2em;
 }
 
 fieldset.add-new-images {
     position: relative;
+    min-height: 55px;
 }
 
 .file-upload {
@@ -27,7 +26,7 @@ fieldset.add-new-images {
 
 .file-upload, button.upload-local-file {
     position: absolute;
-    left: 5px;
+    left: 10px;
     width: 225px;
     height: 30px;
 }
@@ -51,23 +50,23 @@ button.upload-local-file {}
     background: #F5F5F5;
 }
 
-.image-list:before, .image-list:after {
+.clear:before, .clear:after {
     content: " ";
     display: table;
 }
 
-.image-list:after {
+.clear:after {
     clear: both;
 }
 
 .image-list li {
     position: relative;
     float: left;
-    width: 32.9%;
+    width: 30.8%;
+    margin: 5px;
     height: 160px;
     background: #fff;
     border: 1px solid #DDD;
-    border-collapse: collapse;
 
     display: -webkit-flexbox;
     display: -ms-flexbox;
@@ -83,6 +82,10 @@ button.upload-local-file {}
 
 .image-list .full-image {
     margin: 0 auto;
+}
+
+.image-list .full-image img {
+    max-width: 100%;
 }
 
 .image-toolbar {
@@ -111,3 +114,52 @@ button.upload-local-file {}
 .image-list li:hover .image-toolbar {
     display: block;
 }
+
+.progress {
+    margin: -31px 0 10px 0;
+    border: 1px solid #ddd;
+    position: relative;
+    background: #fff;
+}
+
+.progress, .progress .file, .progress .file .bar {
+    height: 30px;
+}
+
+.progress .file {
+    float: left;
+}
+
+.progress .bar {
+    width: 0%;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    white-space: nowrap;
+
+    -webkit-transition: width 0.7s ease-out;
+       -moz-transition: width 0.7s ease-out;
+        -ms-transition: width 0.7s ease-out;
+         -o-transition: width 0.7s ease-out;
+            transition: width 0.7s ease-out;
+}
+
+.progress .file:nth-child(1) { background: rgba(176, 201, 232, 0.1); }
+.progress .file:nth-child(1) .bar { background: rgb(176, 201, 232); }
+.progress .file:nth-child(2) { background: rgba(9, 136, 207, 0.1); }
+.progress .file:nth-child(2) .bar { background: rgb(9, 136, 207); }
+.progress .file:nth-child(3) { background: rgba(122, 211, 245, 0.1); }
+.progress .file:nth-child(3) .bar { background: rgb(122, 211, 245); }
+.progress .file:nth-child(4) { background: rgba(68, 103, 131, 0.1); }
+.progress .file:nth-child(4) .bar { background: rgb(68, 103, 131); }
+.progress .file:nth-child(5) { background: rgba(106, 149, 121, 0.1); }
+.progress .file:nth-child(5) .bar { background: rgb(106, 149, 121); }
+.progress .file:nth-child(6) { background: rgba(209, 168, 106, 0.1); }
+.progress .file:nth-child(6) .bar { background: rgb(209, 168, 106); }
+.progress .file:nth-child(7) { background: rgba(231, 202, 160, 0.1); }
+.progress .file:nth-child(7) .bar { background: rgb(231, 202, 160); }
+.progress .file:nth-child(8) { background: rgba(134, 138, 54, 0.1); }
+.progress .file:nth-child(8) .bar { background: rgb(134, 138, 54); }
+.progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
+.progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }

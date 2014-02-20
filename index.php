@@ -9,32 +9,34 @@
     <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.layout.css?t=1392728310">
     <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.colors.light.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css">
 </head>
 <body class="loading">
 
-    <div class="loader">Loading...</div>
+    <?php include 'imbo-loader.html'; ?>
 
     <div class="content">
         <fieldset class="add-new-images">
             <legend data-translate="ADD_NEW_IMAGES"></legend>
 
-            <input type="file" name="files[]" class="file-upload" accept="image/*" multiple>
+            <input type="file" name="files[]" accept="image/*" class="file-upload"  multiple>
             <button class="upload-local-file"><i class="fa fa-upload"></i> <span data-translate="UPLOAD_LOCAL_IMAGE"></span></button>
             <span class="spacer">&nbsp;</span>
 
+            <div class="progress clear hidden"></div>
         </fieldset>
 
         <fieldset class="current-images">
             <legend>
                 <span data-translate="IMAGE_RESULT_SHOWING"></span>
-                <span class="display-count"></span>
+                <span class="display-count">0</span>
                 <span data-translate="IMAGE_RESULT_OUT_OF"></span>
-                <span class="total-hit-count"></span>
+                <span class="total-hit-count">0</span>
                 <span data-translate="IMAGE_RESULT_TOTAL_HITS"></span>
             </legend>
 
-            <ul class="image-list"></ul>
+            <ul class="image-list clear"></ul>
         </fieldset>
     </div>
 

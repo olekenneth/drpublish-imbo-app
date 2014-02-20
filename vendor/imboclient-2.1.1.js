@@ -13,7 +13,8 @@ exports.Query   = _dereq_('./lib/query');
 exports.Version = _dereq_('./package.json').version;
 
 },{"./lib/client":8,"./lib/query":9,"./lib/url":10,"./package.json":13}],2:[function(_dereq_,module,exports){
-(function (process){/**
+(function (process){
+/**
  * This file is part of the imboclient-js package
  *
  * (c) Espen Hovlandsdal <espen@hovlandsdal.com>
@@ -106,7 +107,8 @@ module.exports = {
             addMd5Task(buffer, callback);
         });
     }
-};}).call(this,_dereq_("/home/espenh/webdev/imboclient-js/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
+};
+}).call(this,_dereq_("/home/espenh/webdev/imboclient-js/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
 },{"./md5.min":4,"./readers":5,"./sha":7,"/home/espenh/webdev/imboclient-js/node_modules/grunt-browserify/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":12}],3:[function(_dereq_,module,exports){
 /**
  * This file is part of the imboclient-js package
@@ -775,7 +777,9 @@ ImboClient.prototype.editMetadata = function(imageIdentifier, data, callback, me
         method    : method || 'POST',
         uri       : url,
         json      : data,
-        onComplete: callback
+        onComplete: function(err, res, body) {
+            callback(err, body, res);
+        }
     });
 };
 
@@ -1242,7 +1246,7 @@ module.exports={
         "url": "http://github.com/imbo/imboclient-js/issues"
     },
     "dependencies": {
-        "request": "~2.33.0"
+        "request": "~2.34.0"
     },
     "devDependencies": {
         "grunt": "~0.4.2",
@@ -1252,7 +1256,7 @@ module.exports={
         "grunt-contrib-watch": "~0.5.3",
         "grunt-mocha-test": "~0.9.0",
         "grunt-mocha-cov": "~0.2.0",
-        "grunt-replace": "~0.5.1",
+        "grunt-replace": "~0.6.2",
         "through": "~2.3.4",
         "matchdep": "~0.3.0",
         "mocha": "~1.17.1",

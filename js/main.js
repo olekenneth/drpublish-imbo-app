@@ -9,7 +9,8 @@ require.config({
         'drp-article-communicator': '../no.aptoma.plugin-api/js/ArticleCommunicator',
         'drp-listeners': '../no.aptoma.plugin-api/js/Listeners',
         'drp-app-auth': 'app-auth',
-        'imboclient': '../vendor/imboclient-2.1.1'
+        'imboclient': '../vendor/imboclient-2.1.1',
+        'async': '../vendor/async-0.2.10'
     },
     shim: {
         'jquery.postmessage': {
