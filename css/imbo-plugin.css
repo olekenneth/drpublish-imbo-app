@@ -177,6 +177,7 @@ button.upload-local-file {}
 .meta-editor .input-pane textarea {
     height: 150px;
     resize: none;
+    font-family: 'Open Sans', arial, sans-serif;
 }
 
 .meta-editor .image-container, .meta-editor .input-pane {
