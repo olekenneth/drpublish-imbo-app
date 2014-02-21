@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css">
 </head>
-<body class="loading">
+<body class="loading standalone">
 
     <?php include 'imbo-loader.html'; ?>
 
@@ -38,6 +38,39 @@
 
             <ul class="image-list clear"></ul>
         </fieldset>
+    </div>
+
+    <div class="meta-editor hidden">
+        <div class="input-pane">
+            <fieldset>
+                <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
+                <input type="text" name="drp:title">
+            </fieldset>
+
+            <fieldset>
+                <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
+                <textarea name="drp:description"></textarea>
+            </fieldset>
+
+            <fieldset>
+                <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
+                <input type="text" name="drp:photographer">
+            </fieldset>
+
+            <fieldset>
+                <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
+                <input type="text" name="drp:agency">
+            </fieldset>
+
+            <div class="buttons">
+                <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
+                <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
+            </div>
+        </div>
+
+        <div class="image-container">
+            <h2 data-translate="META_EDITOR_SOURCE_IMAGE"></h2>
+        </div>
     </div>
 
     <div class="image-toolbar hidden">

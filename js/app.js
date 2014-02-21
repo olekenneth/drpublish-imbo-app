@@ -3,11 +3,12 @@ define([
     'jquery',
     'drp-app-auth',
     'drp-app-api',
-    'drp-article-communicator',
     'drp-ah5-communicator',
+    'translator',
     'imboclient',
-    'uploader'
-], function(_, $, appAuth, appApi, articleCommunicator, editor, Imbo, Uploader) {
+    'uploader',
+    'meta-editor'
+], function(_, $, appAuth, appApi, editor, Translator, Imbo, Uploader, MetaEditor) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -35,15 +36,18 @@ define([
             );
 
             // Define language to use based on configuration
-            this.language = (_.contains(['en', 'no'], this.config.language) ?
-                            this.config.language : 'en');
+            this.language = this.config.language;
 
             // Initialize a simple event-emitter based on jQuery
             this.events   = $({});
 
             // Reveal the UI of the application once the translations have loaded
-            this.on('translation-loaded', this.loadGui);
-            this.loadTranslations();
+            this.initTranslator();
+
+            // Remove 'standalone'-state if we're iframed
+            if (window.self !== window.top) {
+                document.body.classList.remove('standalone');
+            }
         },
 
         initializeEditor: function() {
@@ -64,14 +68,19 @@ define([
         // When user info has been received, cache info
         onUserInfoReceived: function(user) {
             this.user = user;
+
+            // Since we're loading async, uploader might
+            // have been initialized before auth
+            if (this.uploader) {
+                this.uploader.setUserInfo(user);
+            }
         },
 
-        loadTranslations: function() {
-            this.translations = {};
-            require(['language/' + this.language], function(strings) {
-                this.translations = strings;
-                this.trigger('translation-loaded');
-            }.bind(this));
+        initTranslator: function() {
+            this.translator = new Translator(this.language);
+            this.translate  = this.translator.translate.bind(this.translator);
+            this.translator.on('loaded', this.loadGui);
+            this.translator.initialize();
         },
 
         translateElement: function(i, el) {
@@ -104,6 +113,12 @@ define([
 
             // Initialize the uploader
             this.uploader = new Uploader(this.imbo);
+            this.uploader.setUserInfo(this.user || {});
+
+            // Initialize meta editor
+            this.metaEditor = new MetaEditor();
+            this.metaEditor.setTranslator(this.translator);
+            this.metaEditor.setImboClient(this.imbo);
 
             // Find the content element, apply skin and make it appear
             this.content = $(document.body)
@@ -127,6 +142,10 @@ define([
             this.uploader
                 .on('image-uploaded', this.onImageAdded)
                 .on('image-batch-completed', this.showImageBatchMetadataDialog);
+
+            this.metaEditor
+                .on('show', this.hideGui)
+                .on('hide', this.showGui);
         },
 
         onToolbarClick: function(e) {
@@ -140,6 +159,8 @@ define([
             switch (action) {
                 case 'delete-image':
                     return this.deleteImage(imageId, item);
+                case 'show-image-info':
+                    return this.showImageMetadata(imageId);
                 case 'use-image':
                     return this.useImageInArticle(e);
             }
@@ -161,12 +182,6 @@ define([
 
 
             editor.insertElement($('<div />').append(img));
-
-            /*
-            articleCommunicator.maximizeAppWindow(name, function() {
-                console.log('CLOSED');
-            });
-            */
         },
 
         deleteImage: function(imageId, listItem) {
@@ -249,6 +264,11 @@ define([
             console.log('batch', batch);
         },
 
+        showImageMetadata: function(imageId) {
+            this.metaEditor.loadDataForImage(imageId);
+            this.metaEditor.show();
+        },
+
         getImageToolbarForImage: function(image, imageUrl, fileName) {
             return (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
@@ -274,8 +294,12 @@ define([
             return html;
         },
 
-        translate: function(id) {
-            return this.translations[id] || id;
+        hideGui: function() {
+            this.content.addClass('hidden');
+        },
+
+        showGui: function() {
+            this.content.removeClass('hidden');
         },
 
         on: function(e, handler) {

@@ -14,6 +14,19 @@ define(['underscore', 'language/en'], function(_, english) {
         // Image results (Showing X out of Y total hits)
         'IMAGE_RESULT_SHOWING': 'Viser',
         'IMAGE_RESULT_OUT_OF': 'av',
-        'IMAGE_RESULT_TOTAL_HITS': 'totale treff'
+        'IMAGE_RESULT_TOTAL_HITS': 'totale treff',
+
+        // Meta editor
+        'META_EDITOR_TITLE': 'Bildeinformasjon',
+        'META_EDITOR_IMAGE_TITLE': 'Tittel',
+        'META_EDITOR_IMAGE_DESCRIPTION': 'Beskrivelse',
+        'META_EDITOR_IMAGE_PHOTOGRAPHER': 'Fotograf',
+        'META_EDITOR_IMAGE_AGENCY': 'Agentur',
+        'META_EDITOR_IMAGE_EXIF': 'EXIF-data',
+        'META_EDITOR_SOURCE_IMAGE': 'Originalbilde',
+        'META_EDITOR_CLOSE_PANE': 'Lukk bildeinfo',
+        'META_EDITOR_SAVE_META_DATA': 'Lagre bildeinformasjon',
+        'META_EDITOR_SAVING_METADATA': 'Lagrer bildeinformasjon...',
+        'META_EDITOR_LOADING_METADATA': 'Laster bildeinformasjon...'
     }, english);
 });

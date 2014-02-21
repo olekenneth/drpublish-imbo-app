@@ -2,7 +2,7 @@
     display: none;
 }
 
-.loading .content {
+.loading .content, .loading .meta-editor {
     display: none;
 }
 
@@ -163,3 +163,56 @@ button.upload-local-file {}
 .progress .file:nth-child(8) .bar { background: rgb(134, 138, 54); }
 .progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
 .progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }
+
+.meta-editor fieldset {
+    padding: 3px 18px 3px 3px;
+    margin: 5px;
+}
+
+.meta-editor fieldset input, .meta-editor fieldset textarea {
+    width: 100%;
+    border: 0;
+}
+
+.meta-editor .input-pane textarea {
+    height: 150px;
+    resize: none;
+}
+
+.meta-editor .image-container, .meta-editor .input-pane {
+    float: left;
+    width: 29.5%;
+}
+
+.meta-editor .image-container {
+    width: 69.5%;
+    background: #F5F5F5 url(../img/loading.gif) no-repeat 50% 50%;
+    background-size: contain;
+    min-height: 400px;
+    border: 1px solid #000;
+    margin-top: 13px;
+}
+
+.meta-editor .image-container h2 {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px 15px;
+}
+
+.meta-editor .buttons {
+    padding: 10px;
+    text-align: center;
+}
+
+.meta-editor .buttons button {
+    font-size: 1.2em;
+}
+
+.meta-editor button.close {
+    display: none;
+    margin: 0 auto;
+}
+
+.standalone .meta-editor button.close {
+    display: inline-block;
+}
