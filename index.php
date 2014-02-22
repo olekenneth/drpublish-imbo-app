@@ -95,17 +95,20 @@
                     <button class="rotate" data-amount="90"><i class="fa fa-rotate-right"></i></button>
                 </div>
 
-                <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
-                <input type="range" min="0" max="200" step="1" value="100" name="saturation" id="slider-saturation">
+                <form action="" class="sliders">
+                    <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
+                    <input type="range" min="0" max="200" step="1" value="100" name="saturation" id="slider-saturation">
 
-                <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
-                <input type="range" min="0" max="200" step="1" value="100" name="brightness" id="slider-brightness">
+                    <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
+                    <input type="range" min="0" max="200" step="1" value="100" name="brightness" id="slider-brightness">
 
-                <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
-                <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
+                    <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
+                    <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
+                </form>
             </fieldset>
 
             <div class="buttons">
+                <button class="reset"><i class="fa fa-thumbs-o-down"></i> <span data-translate="IMAGE_EDITOR_RESET_BUTTON"></span></button>
                 <button class="cancel"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
                 <button class="save"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_INSERT_IMAGE"></span></button>
             </div>

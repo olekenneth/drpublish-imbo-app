@@ -63,6 +63,10 @@ define([
                 .on('click', this.hide);
 
             this.editorPane
+                .find('.reset')
+                .on('click', this.reset);
+
+            this.editorPane
                 .find('.insert')
                 .on('click', this.insertToArticle);
 
@@ -132,6 +136,7 @@ define([
 
         hide: function() {
             this.imageIdentifier = null;
+            this.reset();
 
             this.editorPane.addClass('hidden');
             this.trigger('hide');
@@ -252,6 +257,12 @@ define([
 
             el.addClass('active').siblings().removeClass('active');
 
+            // If there is no active crop, add a preview crop
+            if (!this.cropParams) {
+                this.cropper.setSelect([0, 0, 300, 300]);
+            }
+
+            // Now set the ratio to the given aspect ratio
             this.cropper.setOptions({ aspectRatio: el.data('ratio') });
         },
 
@@ -282,6 +293,17 @@ define([
 
             this.transformations.rotate.angle = newAmount;
 
+            this.updateImageView();
+        },
+
+        reset: function() {
+            // Remove transformations
+            this.transformations = _.cloneDeep(this.transformationDefaults);
+
+            // Reset sliders
+            this.editorPane.find('.sliders').get(0).reset();
+
+            // Update image view
             this.updateImageView();
         },
 

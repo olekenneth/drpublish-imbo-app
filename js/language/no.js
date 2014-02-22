@@ -34,6 +34,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'IMAGE_EDITOR_CROP_SETTINGS': 'Bildebeskjæring',
         'IMAGE_EDITOR_ADJUSTMENTS': 'Bildejustering',
         'IMAGE_EDITOR_CANCEL_BUTTON': 'Avbryt',
+        'IMAGE_EDITOR_RESET_BUTTON': 'Tilbakestill',
         'IMAGE_EDITOR_INSERT_IMAGE': 'Sett inn bilde',
         'IMAGE_EDITOR_ROTATION': 'Rotering',
         'IMAGE_EDITOR_SATURATION': 'Fargemetning',
