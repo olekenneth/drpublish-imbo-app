@@ -116,6 +116,8 @@ define([
                     el.value = data[name];
                 } else if (name === 'drp:title' && data['drp:filename']) {
                     el.value = data['drp:filename'];
+                } else if (name === 'drp:photographer' && data['exif:Artist']) {
+                    el.value = data['exif:Artist'];
                 }
             });
 
