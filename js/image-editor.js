@@ -3,8 +3,9 @@ define([
     'jquery',
     'drp-app-api',
     'drp-article-communicator',
+    'drp-ah5-communicator',
     'jcrop'
-], function(_, $, appApi, articleCommunicator) {
+], function(_, $, appApi, articleCommunicator, drpEditor) {
 
     var ImageEditor = function() {
         this.initialize();
@@ -111,13 +112,14 @@ define([
         buildCropper: function() {
             if (this.cropper) { return; }
 
-            this.cropper = $.Jcrop(this.imagePreview, {
-                onChange: this.onCropChange,
+            this.cropper = $.Jcrop(this.imagePreview, _.extend({
+                onChange: this.onCropChange
+            }, this.originalImageSize ? {
                 trueSize: [
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ]
-            });
+            } : {}));
         },
 
         show: function() {
@@ -159,6 +161,13 @@ define([
             // Set original image size
             this.originalImageSize = size;
 
+            // Set original size to cropper
+            if (this.cropper) {
+                this.cropper.setOptions({
+                    trueSize: [size.width, size.height]
+                });
+            }
+
             // Start loading image
             this.url = this.imbo.getImageUrl(imageId).maxSize({
                 width: this.MAX_IMAGE_WIDTH,
@@ -168,12 +177,16 @@ define([
             this.updateImageView();
         },
 
-        buildImageUrl: function() {
+        buildImageUrl: function(preview) {
             // Reset URL
-            this.url.reset().jpg().maxSize({
-                width: this.MAX_IMAGE_WIDTH,
-                height: this.MAX_IMAGE_HEIGHT
-            });
+            this.url.reset().jpg();
+
+            if (preview) {
+                this.url.maxSize({
+                    width: this.MAX_IMAGE_WIDTH,
+                    height: this.MAX_IMAGE_HEIGHT
+                });
+            }
 
             // Find transformations with values that differ from the defaults
             var transformation, option, currentValue, defaultValue, diff = {};
@@ -194,11 +207,13 @@ define([
                 this.url[transformation](diff[transformation]);
                 console.log('=== Applying transformation: ' + transformation, diff[transformation]);
             }
+
+            return this.url;
         },
 
         updateImageView: function() {
             // Build new image URL based on transformation states
-            this.buildImageUrl();
+            this.buildImageUrl(true);
 
             // Show a loading indicator while loading image
             appApi.showLoader(
@@ -305,6 +320,23 @@ define([
 
             // Update image view
             this.updateImageView();
+        },
+
+        insertToArticle: function() {
+            var url  = this.buildImageUrl(false),
+                crop = this.cropParams,
+                img  = $('<img />');
+
+            // @todo Find a better way to handle unintentional crops
+            if (crop && crop.w > 25 && crop.h > 25) {
+                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
+            }
+
+            img.attr('src', url.maxSize({ width: 500 }).jpg().toString());
+
+            drpEditor.insertElement($('<div />').append(img));
+
+            this.hide();
         },
 
         on: function(e, handler) {
