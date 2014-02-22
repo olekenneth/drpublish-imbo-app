@@ -164,7 +164,7 @@ button.upload-local-file {}
 .progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
 .progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }
 
-.meta-editor fieldset {
+.meta-editor fieldset, .image-editor fieldset {
     padding: 3px 18px 3px 3px;
     margin: 5px;
 }
@@ -180,40 +180,98 @@ button.upload-local-file {}
     font-family: 'Open Sans', arial, sans-serif;
 }
 
-.meta-editor .image-container, .meta-editor .input-pane {
+.meta-editor .image-container,
+.meta-editor .input-pane,
+.image-editor .image-container,
+.image-editor .settings-pane {
     float: left;
     width: 29.5%;
 }
 
+.meta-editor .input-pane legend,
+.image-editor .settings-pane legend {
+    font-size: 1.2em;
+}
+
+.meta-editor .input-pane legend .fa,
+.image-editor .settings-pane legend .fa {
+    margin: 0 7px;
+}
+
 .meta-editor .image-container {
     width: 69.5%;
-    background: #F5F5F5 url(../img/loading.gif) no-repeat 50% 50%;
+    background: #F5F5F5 none no-repeat 50% 50%;
     background-size: contain;
     min-height: 400px;
     border: 1px solid #000;
     margin-top: 13px;
 }
 
-.meta-editor .image-container h2 {
+.meta-editor .image-container h2, .image-editor .image-container h2 {
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 5px 15px;
 }
 
-.meta-editor .buttons {
+.meta-editor .buttons, .image-editor .buttons {
     padding: 10px;
     text-align: center;
 }
 
-.meta-editor .buttons button {
+.meta-editor .buttons button, .image-editor .buttons button {
     font-size: 1.2em;
 }
 
-.meta-editor button.close {
+.meta-editor button.close, .image-editor button.close {
     display: none;
     margin: 0 auto;
 }
 
-.standalone .meta-editor button.close {
+.standalone .meta-editor button.close,
+.standalone .image-editor button.close  {
     display: inline-block;
+}
+
+.image-editor .image-container {
+    width: 74.5%;
+    min-height: 400px;
+    border: 1px solid #000;
+    margin-top: 13px;
+}
+
+.image-editor .controls label {
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.image-editor .rotate {
+    font-size: 2em;
+    padding: 0.8em 1em 1.8em 1em;
+}
+
+.image-editor .image-loading {
+
+}
+
+.image-editor .settings-pane {
+    width: 24.5%;
+}
+
+.image-editor .crop-presets {
+    min-height: 40px;
+}
+
+.image-editor .crop-presets .ratio {
+    border: 1px solid #bbb;
+    margin: 5px;
+}
+
+.image-editor .crop-presets .active {
+    background: #a6f1a6;
+}
+
+.image-editor .settings-pane input[type=range] {
+    width: 100%;
 }

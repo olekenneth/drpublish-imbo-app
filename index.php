@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/all.elements.css?t=1392728310">
     <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.layout.css?t=1392728310">
     <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.colors.light.css">
+    <link rel="stylesheet" href="vendor/jcrop/jquery.Jcrop.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css">
@@ -16,7 +17,7 @@
 
     <?php include 'imbo-loader.html'; ?>
 
-    <div class="content">
+    <section class="content">
         <fieldset class="add-new-images">
             <legend data-translate="ADD_NEW_IMAGES"></legend>
 
@@ -38,9 +39,9 @@
 
             <ul class="image-list clear"></ul>
         </fieldset>
-    </div>
+    </section>
 
-    <div class="meta-editor hidden">
+    <section class="meta-editor hidden">
         <div class="input-pane">
             <fieldset>
                 <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
@@ -71,14 +72,56 @@
         <div class="image-container">
             <h2 data-translate="META_EDITOR_SOURCE_IMAGE"></h2>
         </div>
-    </div>
+    </section>
 
-    <div class="image-toolbar hidden">
+    <section class="image-editor hidden">
+        <div class="settings-pane">
+            <fieldset>
+                <legend><i class="fa fa-crop"></i><span data-translate="IMAGE_EDITOR_CROP_SETTINGS"></span></legend>
+
+                <div class="crop-presets">
+
+                    <button class="ratio unlock active" data-ratio="0"><i class="fa fa-unlock-alt"></i> <span data-translate="IMAGE_EDITOR_CROP_RATIO_UNLOCK"></span></button>
+                </div>
+            </fieldset>
+
+            <fieldset class="controls">
+                <legend><i class="fa fa-adjust"></i><span data-translate="IMAGE_EDITOR_ADJUSTMENTS"></span></legend>
+
+                <div class="rotation">
+                    <label data-translate="IMAGE_EDITOR_ROTATION"></label>
+
+                    <button class="rotate" data-amount="-90"><i class="fa fa-rotate-left"></i></button>
+                    <button class="rotate" data-amount="90"><i class="fa fa-rotate-right"></i></button>
+                </div>
+
+                <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
+                <input type="range" min="0" max="200" step="1" value="100" name="saturation" id="slider-saturation">
+
+                <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
+                <input type="range" min="0" max="200" step="1" value="100" name="brightness" id="slider-brightness">
+
+                <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
+                <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
+            </fieldset>
+
+            <div class="buttons">
+                <button class="cancel"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
+                <button class="save"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_INSERT_IMAGE"></span></button>
+            </div>
+        </div>
+
+        <section class="image-container">
+            <img src="img/blank.gif" id="image-preview" alt="">
+        </section>
+    </section>
+
+    <aside class="image-toolbar hidden">
         <button data-translate-title="USE_IMAGE" data-action="use-image"><i class="fa fa-plus-square-o"></i></button>
         <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="fa fa-info"></i></button>
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="fa fa-download"></i></button></a>
         <button data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="fa fa-trash-o"></i></button>
-    </div>
+    </aside>
 
     <script>
     var Drp = window.Drp || {};

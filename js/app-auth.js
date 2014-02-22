@@ -1,4 +1,4 @@
-define(['drp-app-api', 'jquery-deparam'], function(AppAPI, deparam) {
+define(['drp-app-api', 'deparam'], function(AppAPI, deparam) {
     'use strict';
 
     var AppAuth = function(params, callback) {

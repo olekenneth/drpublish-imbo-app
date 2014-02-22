@@ -27,6 +27,18 @@ define([], function() {
         'META_EDITOR_CLOSE_PANE': 'Close metadata',
         'META_EDITOR_SAVE_META_DATA': 'Save metadata',
         'META_EDITOR_SAVING_METADATA': 'Saving metadata...',
-        'META_EDITOR_LOADING_METADATA': 'Loading metadata...'
+        'META_EDITOR_LOADING_METADATA': 'Loading metadata...',
+
+        // Image editor
+        'IMAGE_EDITOR_TITLE': 'Image editor',
+        'IMAGE_EDITOR_CROP_SETTINGS': 'Crop',
+        'IMAGE_EDITOR_ADJUSTMENTS': 'Image adjustments',
+        'IMAGE_EDITOR_CANCEL_BUTTON': 'Cancel',
+        'IMAGE_EDITOR_INSERT_IMAGE': 'Insert image',
+        'IMAGE_EDITOR_ROTATION': 'Rotation',
+        'IMAGE_EDITOR_SATURATION': 'Saturation',
+        'IMAGE_EDITOR_BRIGHTNESS': 'Brightness',
+        'IMAGE_EDITOR_HUE': 'Hue',
+        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Unlock'
     };
 });

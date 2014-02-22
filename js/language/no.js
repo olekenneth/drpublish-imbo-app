@@ -27,6 +27,18 @@ define(['underscore', 'language/en'], function(_, english) {
         'META_EDITOR_CLOSE_PANE': 'Lukk bildeinfo',
         'META_EDITOR_SAVE_META_DATA': 'Lagre bildeinformasjon',
         'META_EDITOR_SAVING_METADATA': 'Lagrer bildeinformasjon...',
-        'META_EDITOR_LOADING_METADATA': 'Laster bildeinformasjon...'
+        'META_EDITOR_LOADING_METADATA': 'Laster bildeinformasjon...',
+
+        // Image editor
+        'IMAGE_EDITOR_TITLE': 'Bilderedigering',
+        'IMAGE_EDITOR_CROP_SETTINGS': 'Bildebeskjæring',
+        'IMAGE_EDITOR_ADJUSTMENTS': 'Bildejustering',
+        'IMAGE_EDITOR_CANCEL_BUTTON': 'Avbryt',
+        'IMAGE_EDITOR_INSERT_IMAGE': 'Sett inn bilde',
+        'IMAGE_EDITOR_ROTATION': 'Rotering',
+        'IMAGE_EDITOR_SATURATION': 'Fargemetning',
+        'IMAGE_EDITOR_BRIGHTNESS': 'Lysstyrke',
+        'IMAGE_EDITOR_HUE': 'Fargetone',
+        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Lås opp'
     }, english);
 });

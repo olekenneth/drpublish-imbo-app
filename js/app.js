@@ -7,8 +7,9 @@ define([
     'translator',
     'imboclient',
     'uploader',
-    'meta-editor'
-], function(_, $, appAuth, appApi, editor, Translator, Imbo, Uploader, MetaEditor) {
+    'meta-editor',
+    'image-editor'
+], function(_, $, appAuth, appApi, editor, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -120,6 +121,11 @@ define([
             this.metaEditor.setTranslator(this.translator);
             this.metaEditor.setImboClient(this.imbo);
 
+            // Initialize image editor
+            this.imageEditor = new ImageEditor();
+            this.imageEditor.setTranslator(this.translator);
+            this.imageEditor.setImboClient(this.imbo);
+
             // Find the content element, apply skin and make it appear
             this.content = $(document.body)
                 .addClass('dp-theme-' + (this.config.skin || 'light'))
@@ -146,6 +152,10 @@ define([
             this.metaEditor
                 .on('show', this.hideGui)
                 .on('hide', this.showGui);
+
+            this.imageEditor
+                .on('show', this.hideGui)
+                .on('hide', this.showGui);
         },
 
         onToolbarClick: function(e) {
@@ -167,21 +177,21 @@ define([
         },
 
         useImageInArticle: function(e) {
-            if (!this.authed) {
-                return;
-            }
-
             e.preventDefault();
 
             var item    = $(e.currentTarget).closest('li'),
                 name    = item.find('.full-image').data('filename'),
-                imageId = item.data('image-identifier'),
-                url     = this.imbo.getImageUrl(imageId);
+                imageId = item.data('image-identifier');
 
-            var img = $('<img />').attr('src', url.maxSize(590).jpg().toString());
+            this.imageEditor
+                .show()
+                .loadImage(imageId, {
+                    width: item.data('width'),
+                    height: item.data('height')
+                });
 
-
-            editor.insertElement($('<div />').append(img));
+            //var img = $('<img />').attr('src', url.maxSize(924).jpg().toString());
+            //editor.insertElement($('<div />').append(img));
         },
 
         deleteImage: function(imageId, listItem) {
@@ -279,11 +289,11 @@ define([
         buildImageListItem: function(html, image) {
             var url   = this.imbo.getImageUrl(image.imageIdentifier),
                 full  = url.toString(),
-                thumb = url.maxSize(158, 158).jpg().toString(),
+                thumb = url.maxSize({ width: 158, height: 158 }).jpg().toString(),
                 name  = image.metadata['drp:filename'] || image.imageIdentifier,
                 el    = '';
 
-            el += '<li data-image-identifier="' + image.imageIdentifier + '">';
+            el += '<li data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
             el += ' <img src="' + thumb + '" alt="">';
             el += '</a>';

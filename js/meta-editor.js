@@ -10,6 +10,9 @@ define([
     };
 
     _.extend(MetaEditor.prototype, {
+        MAX_IMAGE_WIDTH:  924,
+        MAX_IMAGE_HEIGHT: 693,
+
         initialize: function() {
             _.bindAll(this);
 
@@ -84,7 +87,10 @@ define([
 
             // Start loading image
             this.setImageViewUrl(
-                this.imbo.getImageUrl(imageId).maxSize(1024, 768).jpg()
+                this.imbo.getImageUrl(imageId).maxSize({
+                    width: this.MAX_IMAGE_WIDTH,
+                    height: this.MAX_IMAGE_HEIGHT
+                }).jpg()
             );
 
             // Show a loading indicator while loading metadata
