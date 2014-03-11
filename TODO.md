@@ -8,7 +8,7 @@
 [ ] Show original image size in info view
 [ ] Check if image exists before uploading
 [ ] Implement search
-[ ] Implement drag-and-drop uploading
+[x] Implement drag-and-drop uploading
 [ ] Implement EXIF data display on info view
 [ ] Implement Scanpix import
 [ ] Implement usage information in GUI

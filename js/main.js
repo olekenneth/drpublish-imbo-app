@@ -4,6 +4,7 @@ require.config({
         'jquery': '../vendor/jquery-2.1.0.min',
         'postmessage': '../no.aptoma.plugin-api/js/vendors/jquery.postmessage',
         'deparam': '../vendor/jquery-deparam.min',
+        'draghover': '../vendor/jquery-draghover',
         'jcrop': '../vendor/jcrop/jquery.Jcrop.min',
         'drp-ah5-communicator': '../no.aptoma.plugin-api/js/AH5Communicator',
         'drp-app-api': '../no.aptoma.plugin-api/js/AppAPI',

@@ -281,7 +281,6 @@ define([
             // Apply transformations
             for (transformation in diff) {
                 this.url[transformation](diff[transformation]);
-                console.log('=== Applying transformation: ' + transformation, diff[transformation]);
             }
 
             return this.url;
@@ -435,11 +434,7 @@ define([
                             .find('img')
                             .replaceWith(img)
                         .end()
-                    ).html(),
-                    function() {
-                        console.log(elId);
-                        drpEditor.markAsActive(elId);
-                    }.bind(this)
+                    ).html()
                 );
             } else {
                 drpEditor.insertElement($('<div />').append(img), { select: true });
@@ -449,10 +444,6 @@ define([
         },
 
         onEditorSelectImage: function(e) {
-            console.log('=======================');
-            console.log('====    SELECTED   ====');
-            console.log('=======================');
-
             this.selectedElementId = e.id;
             drpEditor.getHTMLById(e.id, function(html) {
                 this.selectedElementMarkup = html;

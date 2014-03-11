@@ -1,4 +1,4 @@
-define(['underscore', 'jquery', 'async'], function(_, $, async) {
+define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
 
     var Uploader = function(imboClient) {
         this.imbo = imboClient;
@@ -39,6 +39,18 @@ define(['underscore', 'jquery', 'async'], function(_, $, async) {
 
         bindEvents: function() {
             $(this.fileInput).on('change', this.onImagesSelected);
+            
+            $(window).draghover().on({
+                'draghoverstart': this.onDragOver,
+                'draghoverend':   this.onDragEnd,
+            });
+            
+            $(window)
+                .on('drop', this.onDragDrop)
+                .on('dragover', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
         },
 
         addProgressBar: function(file, batchSize) {
@@ -54,8 +66,25 @@ define(['underscore', 'jquery', 'async'], function(_, $, async) {
             return bar;
         },
 
-        onImagesSelected: function() {
-            var files = this.fileInput.files;
+        onDragOver: function(e) {
+            $(document.body).addClass('droppable');
+        },
+
+        onDragEnd: function(e) {
+            $(document.body).removeClass('droppable');
+        },
+
+        onDragDrop: function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            this.onDragEnd();
+
+            this.onImagesSelected(e, e.originalEvent.dataTransfer.files);
+        },
+
+        onImagesSelected: function(e, files) {
+            files = files || this.fileInput.files;
             if (!files.length) {
                 return;
             }
@@ -82,7 +111,7 @@ define(['underscore', 'jquery', 'async'], function(_, $, async) {
                     'progressBar': this.addProgressBar(files[i], totalSize),
                     'file': files[i]
                 });
-            };
+            }
 
             this.queue.push(tasks);
         },

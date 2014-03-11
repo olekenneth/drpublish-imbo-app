@@ -291,7 +291,7 @@ define([
         },
 
         onImageAdded: function(e, image) {
-            this.imageList.append(this.buildImageListItem('', image));
+            this.imageList.prepend(this.buildImageListItem('', image));
             this.incImageDisplayCount(1, true);
         },
 

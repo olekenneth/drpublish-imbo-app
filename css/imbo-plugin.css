@@ -1,3 +1,7 @@
+.droppable {
+    background: #baeebc;
+}
+
 .hidden {
     display: none;
 }
@@ -62,7 +66,7 @@ button.upload-local-file {}
 .image-list li {
     position: relative;
     float: left;
-    width: 30.8%;
+    width: 30.65%;
     margin: 5px;
     height: 160px;
     background: #fff;
