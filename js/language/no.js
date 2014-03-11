@@ -4,6 +4,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'ADD_NEW_IMAGES': 'Legg til nye bilder',
         'UPLOAD_IMAGE': 'Last opp bilde',
         'UPLOAD_LOCAL_IMAGE': 'Last opp bilde',
+        'CONFIRM_DELETE_IMAGE': 'Er du sikker på at du vil slette bildet?',
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Bruk bilde',
@@ -40,6 +41,11 @@ define(['underscore', 'language/en'], function(_, english) {
         'IMAGE_EDITOR_SATURATION': 'Fargemetning',
         'IMAGE_EDITOR_BRIGHTNESS': 'Lysstyrke',
         'IMAGE_EDITOR_HUE': 'Fargetone',
-        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Lås opp'
+        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Lås opp',
+        'IMAGE_EDITOR_LOADING_IMAGE': 'Laster bilde...',
+
+        // Selected image GUI
+        'SELECTED_IMAGE_TITLE': 'Valgt bilde',
+        'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bilde'
     }, english);
 });

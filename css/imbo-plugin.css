@@ -275,3 +275,8 @@ button.upload-local-file {}
 .image-editor .settings-pane input[type=range] {
     width: 100%;
 }
+
+.selected-image .image-preview {
+    float: left;
+    margin: 0 10px 10px 0;
+}

@@ -112,6 +112,9 @@ define([
                 $('.image-toolbar').clone().removeClass('hidden')
             ).html();
 
+            // Find DOM-element for "selected image"-GUI
+            this.selectedImage = $('fieldset.selected-image');
+
             // Initialize the uploader
             this.uploader = new Uploader(this.imbo);
             this.uploader.setUserInfo(this.user || {});
@@ -155,7 +158,13 @@ define([
 
             this.imageEditor
                 .on('show', this.hideGui)
-                .on('hide', this.showGui);
+                .on('hide', this.showGui)
+                .on('editor-image-selected',   this.onEditorImageSelected)
+                .on('editor-image-deselected', this.onEditorImageDeselected);
+
+            this.selectedImage
+                .find('.edit-image')
+                .on('click', this.editImageInArticle);
         },
 
         onToolbarClick: function(e) {
@@ -189,9 +198,25 @@ define([
                     width: item.data('width'),
                     height: item.data('height')
                 });
+        },
 
-            //var img = $('<img />').attr('src', url.maxSize(924).jpg().toString());
-            //editor.insertElement($('<div />').append(img));
+        editImageInArticle: function(e) {
+            var id = this.selectedImageOptions.imageIdentifier;
+            this.imbo.getImages(new Imbo.Query().ids([id]), function(err, info) {
+                if (err) {
+                    return console.error(err);
+                }
+
+                this.imageEditor
+                    .show()
+                    .loadImage(this.selectedImageOptions.imageIdentifier, {
+                        width:  info[0].width,
+                        height: info[0].height,
+                        crop:   this.selectedImageOptions.cropParams,
+                        cropAspectRatio: this.selectedImageOptions.cropAspectRatio,
+                        transformations: this.selectedImageOptions.transformations
+                    });
+            }.bind(this));
         },
 
         deleteImage: function(imageId, listItem) {
@@ -233,7 +258,7 @@ define([
             this.currentImages = this.currentImages || $('.current-images');
             this.imageList = this.imageList || this.currentImages.find('.image-list');
 
-            var images = _.reduce(images, this.buildImageListItem, '');
+            images = _.reduce(images, this.buildImageListItem, '');
             this.imageList.append(images);
 
             this.setImageDisplayCount(
@@ -302,6 +327,24 @@ define([
 
             html += el;
             return html;
+        },
+
+        onEditorImageSelected: function(e, options) {
+            var url = this.imbo.getImageUrl(options.imageIdentifier);
+            for (var key in options.transformations) {
+                url.append(options.transformations[key]);
+            }
+
+            this.selectedImageOptions = options;
+            this.selectedImage
+                .find('.image-preview')
+                .attr('src', url.maxSize({ width: 225, height: 225 }).toString());
+
+            this.selectedImage.removeClass('hidden');
+        },
+
+        onEditorImageDeselected: function(e) {
+            this.selectedImage.addClass('hidden');
         },
 
         hideGui: function() {

@@ -53,7 +53,7 @@ define([
                 rotate: {
                     angle: 0
                 }
-            }
+            };
 
             this.transformations = _.cloneDeep(this.transformationDefaults);
         },
@@ -84,6 +84,11 @@ define([
 
             this.imagePreview
                 .on('load', this.onImageLoaded);
+
+            appApi.addListeners({
+                pluginElementSelected: this.onEditorSelectImage,
+                pluginElementDeselected: this.onEditorDeselectImage
+            });
         },
 
         initRatioPickers: function() {
@@ -152,19 +157,22 @@ define([
             this.imagePreview.attr('src', 'img/blank.gif');
         },
 
-        loadImage: function(imageId, size) {
+        loadImage: function(imageId, options) {
             this.resetState();
 
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
 
             // Set original image size
-            this.originalImageSize = size;
+            this.originalImageSize = {
+                width: options.width,
+                height: options.height
+            };
 
             // Set original size to cropper
             if (this.cropper) {
                 this.cropper.setOptions({
-                    trueSize: [size.width, size.height]
+                    trueSize: [options.width, options.height]
                 });
             }
 
@@ -174,7 +182,75 @@ define([
                 height: this.MAX_IMAGE_HEIGHT
             }).jpg();
 
+            // Set up crop params, if we have any
+            this.cropParams = options.crop;
+            this.cropAspectRatio = options.cropAspectRatio;
+            if (options.crop) {
+                this.cropParams.forceApply = true;
+            }
+
+            // Set a fixed crop aspect ratio, if any was selected
+            if (options.cropAspectRatio) {
+                $('[data-ratio="' + options.cropAspectRatio + '"]').trigger('click');
+            }
+
+            // Apply transformations to image and GUI
+            if (options.transformations) {
+                this.applyTransformations(options.transformations);
+            }
+
             this.updateImageView();
+        },
+
+        applyTransformations: function(transformations) {
+            var transformation, i;
+            for (i = 0; i < transformations.length; i++) {
+                transformation = this.parseTransformation(transformations[i]);
+
+                // For now, we're applying crop at a different stage
+                // Change this if multiple crops is supposed to work
+                if (transformation.name === 'crop') {
+                    continue;
+                }
+
+                this.applyTransformation(transformation);
+            }
+        },
+
+        applyTransformation: function(t) {
+            // We need to translate some param names for modulate
+            if (t.name === 'modulate') {
+                this.transformations.modulate = {
+                    brightness: t.params.b,
+                    saturation: t.params.s,
+                    hue: t.params.h
+                };
+
+                for (var key in this.transformations.modulate) {
+                    $('#slider-' + key).val(this.transformations.modulate[key]);
+                }
+
+                return;
+            }
+
+            this.transformations[t.name] = _.merge(
+                this.transformations[t.name],
+                t.params
+            );
+        },
+
+        parseTransformation: function(t) {
+            var parts  = t.split(':'),
+                name   = parts.shift(),
+                params = parts.join(':').split(','),
+                args   = {};
+
+            for (var i = 0; i < params.length; i++) {
+                parts = params[i].split('=');
+                args[parts.shift()] = parts.join('=');
+            }
+
+            return { name: name, params: args };
         },
 
         buildImageUrl: function(preview) {
@@ -254,7 +330,7 @@ define([
                 c   = this.cropParams;
 
             var rotated = (this.imageSize.width !== w);
-            if (this.cropParams && !rotated) {
+            if (this.cropParams && (rotated === false || this.cropParams.forceApply)) {
                 this.cropper.setSelect([
                     this.cropParams.x,
                     this.cropParams.y,
@@ -278,7 +354,12 @@ define([
             }
 
             // Now set the ratio to the given aspect ratio
-            this.cropper.setOptions({ aspectRatio: el.data('ratio') });
+            if (this.cropper) {
+                this.cropper.setOptions({ aspectRatio: el.data('ratio') });
+            }
+
+            // Make sure the app knows about the selected ratio
+            this.cropAspectRatio = el.data('ratio');
         },
 
         onCropChange: function(coords) {
@@ -318,6 +399,10 @@ define([
             // Reset sliders
             this.editorPane.find('.sliders').get(0).reset();
 
+            // We're not selecting anything anymore
+            this.selectedElementId = null;
+            this.selectedElementMarkup = null;
+
             // Update image view
             this.updateImageView();
         },
@@ -332,11 +417,70 @@ define([
                 url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
             }
 
-            img.attr('src', url.maxSize({ width: 500 }).jpg().toString());
+            // @todo Let the width/height be configurable per publication?
+            img
+                .attr('data-image-identifier', this.imageIdentifier)
+                .attr('data-crop-parameters', JSON.stringify(crop))
+                .attr('data-crop-aspect-ratio', JSON.stringify(this.cropAspectRatio))
+                .attr('data-transformations', JSON.stringify(url.getTransformations()))
+                .attr('src', url.maxSize({ width: 552 }).jpg().toString());
 
-            drpEditor.insertElement($('<div />').append(img));
+            var elId = this.selectedElementId;
+
+            if (this.selectedElementId) {
+                drpEditor.replaceElementById(
+                    this.selectedElementId,
+                    $('<div />').append(
+                        $(this.selectedElementMarkup)
+                            .find('img')
+                            .replaceWith(img)
+                        .end()
+                    ).html(),
+                    function() {
+                        console.log(elId);
+                        drpEditor.markAsActive(elId);
+                    }.bind(this)
+                );
+            } else {
+                drpEditor.insertElement($('<div />').append(img), { select: true });
+            }
 
             this.hide();
+        },
+
+        onEditorSelectImage: function(e) {
+            console.log('=======================');
+            console.log('====    SELECTED   ====');
+            console.log('=======================');
+
+            this.selectedElementId = e.id;
+            drpEditor.getHTMLById(e.id, function(html) {
+                this.selectedElementMarkup = html;
+
+                var el  = $(html),
+                    img = el.find('img');
+
+                var transformations = img.data('transformations'),
+                    imageIdentifier = img.data('image-identifier'),
+                    cropParameters  = img.data('crop-parameters'),
+                    cropAspectRatio = img.data('crop-aspect-ratio');
+                
+                this.trigger('editor-image-selected', [{
+                    imageIdentifier: imageIdentifier,
+                    transformations: transformations,
+                    cropParams: cropParameters,
+                    cropAspectRatio: cropAspectRatio
+                }]);
+
+            }.bind(this));
+        },
+
+        onEditorDeselectImage: function() {
+            this.trigger('editor-image-deselected');
+
+            // We're not selecting anything anymore
+            this.selectedElementId = null;
+            this.selectedElementMarkup = null;
         },
 
         on: function(e, handler) {
@@ -349,8 +493,8 @@ define([
             return this;
         },
 
-        trigger: function(e, handler) {
-            this.events.trigger(e, handler);
+        trigger: function(e, data) {
+            this.events.trigger(e, data);
             return this;
         }
     });

@@ -1,9 +1,10 @@
 define([], function() {
     return {
-        // Add/import image functionality
+        // Add/import/browse image functionality
         'ADD_NEW_IMAGES': 'Add new image(s)',
         'UPLOAD_IMAGE': 'Upload image',
         'UPLOAD_LOCAL_IMAGE': 'Upload local image',
+        'CONFIRM_DELETE_IMAGE': 'Are you sure you want to delete this image?',
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Use image',
@@ -40,6 +41,11 @@ define([], function() {
         'IMAGE_EDITOR_SATURATION': 'Saturation',
         'IMAGE_EDITOR_BRIGHTNESS': 'Brightness',
         'IMAGE_EDITOR_HUE': 'Hue',
-        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Unlock'
+        'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Unlock',
+        'IMAGE_EDITOR_LOADING_IMAGE': 'Loading image...',
+
+        // Selected image GUI
+        'SELECTED_IMAGE_TITLE': 'Selected image',
+        'SELECTED_IMAGE_EDIT_IMAGE': 'Edit image'
     };
 });
