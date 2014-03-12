@@ -16,6 +16,8 @@ define([
         this.setConfig(config);
     };
 
+    ImboApp.MAX_ITEMS_PER_PAGE = 45;
+
     _.extend(ImboApp.prototype, {
 
         AppName: 'imbo-images',
@@ -82,6 +84,8 @@ define([
             this.translate  = this.translator.translate.bind(this.translator);
             this.translator.on('loaded', this.loadGui);
             this.translator.initialize();
+
+            document.body.classList.add('lang-' + this.translator.getLanguage());
         },
 
         translateElement: function(i, el) {
@@ -107,6 +111,9 @@ define([
             // Translate all GUI-elements to the correct language
             this.translateGui();
 
+            // Cache jQuery window object
+            this.window = $(window);
+
             // Cache an image-toolbar template for later use
             this.imageToolbar = $('<div />').append(
                 $('.image-toolbar').clone().removeClass('hidden')
@@ -129,6 +136,10 @@ define([
             this.imageEditor.setTranslator(this.translator);
             this.imageEditor.setImboClient(this.imbo);
 
+            // Initialize search GUI
+            this.searchForm = $('form.search');
+            this.refreshButton = this.searchForm.find('.refresh');
+
             // Find the content element, apply skin and make it appear
             this.content = $(document.body)
                 .addClass('dp-theme-' + (this.config.skin || 'light'))
@@ -143,6 +154,10 @@ define([
         },
 
         bindEvents: function() {
+            this.window
+                .on('resize', _.debounce(this.onWindowResize, 100))
+                .trigger('resize');
+
             this.content
                 .find('.image-list')
                 .on('click', 'button', this.onToolbarClick)
@@ -150,7 +165,8 @@ define([
 
             this.uploader
                 .on('image-uploaded', this.onImageAdded)
-                .on('image-batch-completed', this.showImageBatchMetadataDialog);
+                .on('image-batch-completed', this.showImageBatchMetadataDialog)
+                .on('image-batch-completed', this.refreshImages);
 
             this.metaEditor
                 .on('show', this.hideGui)
@@ -165,6 +181,20 @@ define([
             this.selectedImage
                 .find('.edit-image')
                 .on('click', this.editImageInArticle);
+
+            this.searchForm
+                .on('submit', this.onImageSearch);
+
+            this.refreshButton
+                .on('click', this.refreshImages);
+
+            this.getImageList()
+                .on('scroll', this.onImageListScroll);
+        },
+
+        onWindowResize: function() {
+            this.getImageList()
+                .css('max-height', this.window.height() - 170);
         },
 
         onToolbarClick: function(e) {
@@ -236,34 +266,55 @@ define([
             }.bind(this));
         },
 
-        loadImages: function(limit, page) {
-            var query = query || new Imbo.Query();
-            query.metadata(true);
-            query.limit(limit || 50).page(page || 1);
+        refreshImages: function() {
+            this.loadImages({ clear: true });
+        },
 
-            this.imbo.getImages(query, this.onImagesLoaded);
+        loadImages: function(options) {
+            options = options || {};
+            var query = ((options.query || new Imbo.Query())
+                .metadata(true)
+                .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
+                .page(options.page   || 1));
+
+            this.imbo.getImages(query, options.clear ? function() {
+                this.getImageList().empty();
+                this.onImagesLoaded.apply(this, arguments);
+                this.getImageList().get(0).scrollTop = 0;
+            }.bind(this) : this.onImagesLoaded);
+
+            this.isLoadingImages = true;
         },
 
         queryImages: function(query) {
-            this.imbo.getImages(query, this.onImagesLoaded);
+            this.loadImages({
+                query: new Imbo.Query().metadataQuery(query)
+            });
+        },
+
+        getImageList: function() {
+            this.currentImages = this.currentImages || $('.current-images');
+            this.imageList = this.imageList || this.currentImages.find('.image-list');
+
+            return this.imageList;
         },
 
         onImagesLoaded: function(err, images, search) {
+            this.isLoadingImages = false;
             if (err) {
                 console.log('=== ERROR LOADING IMAGES ===');
                 console.log(err);
                 return;
             }
 
-            this.currentImages = this.currentImages || $('.current-images');
-            this.imageList = this.imageList || this.currentImages.find('.image-list');
-
             images = _.reduce(images, this.buildImageListItem, '');
-            this.imageList.append(images);
 
+            var list = this.getImageList().append(images);
+
+            this.totalImageCount = search.hits;
             this.setImageDisplayCount(
-                this.imageList.get(0).childNodes.length,
-                search.count
+                list.get(0).childNodes.length,
+                search.hits
             );
         },
 
@@ -294,6 +345,28 @@ define([
             this.imageList.prepend(this.buildImageListItem('', image));
             this.incImageDisplayCount(1, true);
         },
+
+        onImageListScroll: function() {
+            var el   = this.imageList[0],
+                max  = parseInt(el.style.maxHeight, 10),
+                curr = el.scrollTop + max,
+                prct = (curr / el.scrollHeight) * 100;
+
+            if (prct > 95 && !this.isLoadingImages) {
+                this.loadNextPage();
+            }
+        },
+
+        loadNextPage: _.throttle(function() {
+            var nodes = this.getImageList().get(0).childNodes.length,
+                page  = Math.floor(nodes / ImboApp.MAX_ITEMS_PER_PAGE) + 1;
+
+            if (nodes < ImboApp.MAX_ITEMS_PER_PAGE || nodes >= this.totalImageCount) {
+                return;
+            }
+
+            this.loadImages({ page: page });
+        }, 2500, { trailing: false }),
 
         showImageBatchMetadataDialog: function(e, batch) {
             console.log('batch', batch);
@@ -345,6 +418,30 @@ define([
 
         onEditorImageDeselected: function(e) {
             this.selectedImage.addClass('hidden');
+        },
+
+        onImageSearch: function(e) {
+            e.preventDefault();
+            
+            // Empty the current list of items
+            this.getImageList().empty();
+
+            // Get query from input field
+            var q = e.target.query.value;
+
+            // If the query field is empty, show all images
+            if (!q.length) {
+                return this.loadImages();
+            }
+
+            // Set up queries for the default fields
+            var query = {};
+            ['drp:title', 'drp:filename', 'drp:description'].forEach(function(item) {
+                query[item] = { '$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*' };
+            });
+
+            // Run the query
+            this.queryImages(query);
         },
 
         hideGui: function() {

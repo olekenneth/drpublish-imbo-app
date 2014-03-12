@@ -17,6 +17,11 @@ define([], function() {
         'IMAGE_RESULT_OUT_OF': 'out of',
         'IMAGE_RESULT_TOTAL_HITS': 'total hits',
 
+        // Image search
+        'IMAGE_SEARCH_FIND_IMAGES': 'Find images',
+        'IMAGE_SEARCH_BUTTON': 'Search',
+        'IMAGE_SEARCH_REFRESH_BUTTON': 'Refresh',
+
         // Meta editor
         'META_EDITOR_TITLE': 'Image information',
         'META_EDITOR_IMAGE_TITLE': 'Title',

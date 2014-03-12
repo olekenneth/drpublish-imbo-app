@@ -48,6 +48,13 @@
                 <span data-translate="IMAGE_RESULT_TOTAL_HITS"></span>
             </legend>
 
+            <form action="#" class="search">
+                <label data-translate="IMAGE_SEARCH_FIND_IMAGES" for="image-search"></label>
+                <input type="search" id="image-search" class="image-search" name="query">
+                <button type="submit"><i class="fa fa-search"></i> <span data-translate="IMAGE_SEARCH_BUTTON"></span></button>
+                <button type="button" class="refresh"><i class="fa fa-refresh"></i> <span data-translate="IMAGE_SEARCH_REFRESH_BUTTON"></span></button>
+            </form>
+
             <ul class="image-list clear"></ul>
         </fieldset>
     </section>

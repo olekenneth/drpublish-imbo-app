@@ -801,6 +801,7 @@ var ImboQuery = function() {
         metadata : false,
         from     : null,
         to       : null,
+        metadataQuery: null,
 
         ids      : [],
         checksums: [],
@@ -886,6 +887,12 @@ extend(ImboQuery.prototype, {
         return this;
     },
 
+    metadataQuery: function(query) {
+        if (!query) { return this.values.metadataQuery; }
+        this.values.metadataQuery = query;
+        return this;
+    },
+
     from: function(val) {
         if (!val) { return this.values.from; }
         this.values.from = val instanceof Date ? val : this.values.from;
@@ -913,6 +920,12 @@ extend(ImboQuery.prototype, {
         }
         if (params.to) {
             params.to = Math.floor(params.to.getTime() / 1000);
+        }
+
+        // JSON encode any query that is present
+        if (params.metadataQuery) {
+            params.q = JSON.stringify(params.metadataQuery);
+            delete params.metadataQuery;
         }
 
         // Build query string

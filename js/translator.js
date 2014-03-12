@@ -17,6 +17,10 @@ define(['underscore'], function(_) {
             this.loadTranslationFile(this.language);
         },
 
+        getLanguage: function() {
+            return this.language;
+        },
+
         loadTranslationFile: function(language) {
             require(['language/' + language], this.onTranslationLoaded);
         },

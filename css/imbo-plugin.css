@@ -47,11 +47,60 @@ button.upload-local-file {}
     padding: 0;
 }
 
+.current-images .search {
+    padding: 10px;
+}
+
+.search label {
+    display: block;
+    padding: 0 0 5px 0;
+    font-size: 1.2em;
+}
+
+.search .image-search {
+    width: 60%;
+    line-height: 25px;
+}
+
+.search button {
+    margin-left: 5px;
+}
+
 .image-list {
     list-style-type: none;
     margin: 0;
     padding: 0;
     background: #F5F5F5;
+    overflow-y: auto;
+    min-height: 250px;
+}
+
+.lang-en .image-list:empty:before {
+    content: 'No results';
+}
+
+.lang-no .image-list:empty:before {
+    content: 'Ingen resultater';
+}
+
+.image-list:empty:before {
+    line-height: 250px;
+    width: 100%;
+
+    text-align: center;
+    font-size: 5em;
+    font-weight: bold;
+
+    background-color: #666;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+}
+
+.image-list:empty {
+    background: #fff;
 }
 
 .clear:before, .clear:after {

@@ -17,6 +17,11 @@ define(['underscore', 'language/en'], function(_, english) {
         'IMAGE_RESULT_OUT_OF': 'av',
         'IMAGE_RESULT_TOTAL_HITS': 'totale treff',
 
+        // Image search
+        'IMAGE_SEARCH_FIND_IMAGES': 'Finn bilder',
+        'IMAGE_SEARCH_BUTTON': 'Søk',
+        'IMAGE_SEARCH_REFRESH_BUTTON': 'Oppdater',
+
         // Meta editor
         'META_EDITOR_TITLE': 'Bildeinformasjon',
         'META_EDITOR_IMAGE_TITLE': 'Tittel',
