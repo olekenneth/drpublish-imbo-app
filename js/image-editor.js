@@ -1,11 +1,12 @@
 define([
     'underscore',
     'jquery',
+    'template',
     'drp-app-api',
     'drp-article-communicator',
     'drp-ah5-communicator',
     'jcrop'
-], function(_, $, appApi, articleCommunicator, drpEditor) {
+], function(_, $, template, appApi, articleCommunicator, drpEditor) {
 
     var ImageEditor = function() {
         this.initialize();
@@ -198,6 +199,12 @@ define([
             if (options.transformations) {
                 this.applyTransformations(options.transformations);
             }
+
+            // Load metadata for image
+            this.imageMetadata = {};
+            this.imbo.getMetadata(imageId, function(err, data) {
+                this.imageMetadata = data;
+            }.bind(this));
 
             this.updateImageView();
         },
@@ -416,13 +423,19 @@ define([
                 url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
             }
 
-            // @todo Let the width/height be configurable per publication?
-            img
-                .attr('data-image-identifier', this.imageIdentifier)
-                .attr('data-crop-parameters', JSON.stringify(crop))
-                .attr('data-crop-aspect-ratio', JSON.stringify(this.cropAspectRatio))
-                .attr('data-transformations', JSON.stringify(url.getTransformations()))
-                .attr('src', url.maxSize({ width: 552 }).jpg().toString());
+            // Use template to build markup
+            var markup = template({
+                'url': url.maxSize({ width: 552 }).jpg().toString(),
+                'width': 552,
+                'title': this.imageMetadata['drp:title']             || '',
+                'author': this.imageMetadata['drp:photographer']     || '',
+                'source': this.imageMetadata['drp:agency']           || '',
+                'description': this.imageMetadata['drp:description'] || '',
+                'imageIdentifier': this.imageIdentifier,
+                'cropParams': JSON.stringify(crop),
+                'cropRatio': JSON.stringify(this.cropAspectRatio),
+                'transformations': JSON.stringify(url.getTransformations())
+            });
 
             var elId = this.selectedElementId;
 
@@ -430,14 +443,14 @@ define([
                 drpEditor.replaceElementById(
                     this.selectedElementId,
                     $('<div />').append(
-                        $(this.selectedElementMarkup)
-                            .find('img')
-                            .replaceWith(img)
-                        .end()
+                        $(this.selectedElementMarkup).html(markup)
                     ).html()
                 );
             } else {
-                drpEditor.insertElement($('<div />').append(img), { select: true });
+                drpEditor.insertElement(
+                    markup,
+                    { select: true }
+                );
             }
 
             this.hide();

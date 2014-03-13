@@ -54,7 +54,7 @@ define([
         },
 
         initializeEditor: function() {
-            editor.initMenu(['simplePluginMenu']);
+            editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
         },
 
         setConfig: function(config) {
