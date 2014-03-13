@@ -34,6 +34,8 @@ define(['underscore', 'language/en'], function(_, english) {
         'META_EDITOR_SAVE_META_DATA': 'Lagre bildeinformasjon',
         'META_EDITOR_SAVING_METADATA': 'Lagrer bildeinformasjon...',
         'META_EDITOR_LOADING_METADATA': 'Laster bildeinformasjon...',
+        'META_EDITOR_CORE_TAB': 'Enkel metadata',
+        'META_EDITOR_EXIF_TAB': 'Exif metadata',
 
         // Image editor
         'IMAGE_EDITOR_TITLE': 'Bilderedigering',
@@ -51,6 +53,52 @@ define(['underscore', 'language/en'], function(_, english) {
 
         // Selected image GUI
         'SELECTED_IMAGE_TITLE': 'Valgt bilde',
-        'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bilde'
+        'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bilde',
+
+        // Exif info
+        'EXIF_DATE': 'Dato',
+        'EXIF_APERTURE': 'Blenderåpning',
+        'EXIF_MAX_APERTURE': 'Max blenderåpning',
+        'EXIF_BRIGHTNESS': 'Lysstyrke',
+        'EXIF_COMPRESSION': 'Komprimering',
+        'EXIF_EXPOSURE_TIME': 'Eksponeringstid',
+        'EXIF_EXPOSURE_PROGRAM': 'Eksponeringsprogram',
+        'EXIF_EXPOSURE_MODE': 'Eksponeringsmodus',
+        'EXIF_FLASH': 'Blits',
+        'EXIF_FOCAL_LENGTH': 'Brennvidde',
+        'EXIF_IMAGE_HEIGHT': 'Bildehøyde',
+        'EXIF_IMAGE_WIDTH': 'Bildebredde',
+        'EXIF_CAMERA_MAKE': 'Kameraprodusent',
+        'EXIF_CAMERA_MODEL': 'Kameramodell',
+        'EXIF_METERING_MODE': 'Målingsmodus',
+        'EXIF_SCENE_CAPTURE_TYPE': 'Motivprogram',
+        'EXIF_SHUTTER_SPEED': 'Lukkerhastighet',
+        'EXIF_WHITE_BALANCE': 'Hvitbalanse',
+        'EXIF_GPS_LOCATION': 'GPS lokasjon',
+        'EXIF_GPS_ALTITUDE': 'GPS høydemeter',
+        'EXIF_AUTO': 'Automatisk',
+        'EXIF_MANUAL': 'Manuell',
+        'EXIF_STANDARD': 'Standard',
+        'EXIF_AVERAGE': 'Gjennomsnitt',
+        'EXIF_UNKNOWN': 'Ukjent',
+        'EXIF_AUTO_BRACKET': 'Auto bracketing (AEB)',
+        'EXIF_CENTER_WEIGHTED_AVERAGE': 'Sentermålt gjennomsnitt',
+        'EXIF_SPOT_METERING': 'Punktmåling',
+        'EXIF_MULTI_SPOT_METERING': 'Flerpunktsmåling',
+        'EXIF_PATTERN_METERING': 'Mønstermåling',
+        'EXIF_PARTIAL_METERING': 'Begrenset lysmåling',
+        'EXIF_SCENE_CAPTURE_LANDSCAPE': 'Landskap',
+        'EXIF_SCENE_CAPTURE_PORTRAIT': 'Portrett',
+        'EXIF_SCENE_CAPTURE_NIGHT': 'Nattscene',
+        'EXIF_APERTURE_PRIORITY': 'Blenderprioritet',
+        'EXIF_SHUTTER_PRIORITY': 'Lukkerprioritet',
+        'EXIF_CREATIVE_PROGRAM': 'Kreativitetsprogram (dybdeskarphet)',
+        'EXIF_ACTION_PROGRAM': 'Actionprogram (lukkerhastighet)',
+        'EXIF_PORTRAIT_MODE': 'Portrettmodus (nærbilder)',
+        'EXIF_LANDSCAPE_MODE': 'Landskapsmodus (bakgrunnsfokus)',
+        'EXIF_LIGHTSOURCE': 'Lyskilde',
+        'EXIF_ORIENTATION': 'Orientering',
+        'EXIF_F_NUMBER': 'F-nummer',
+        'EXIF_SENSOR_TYPE': 'Sensortype'
     }, english);
 });

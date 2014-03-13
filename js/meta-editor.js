@@ -1,24 +1,28 @@
 define([
     'underscore',
     'jquery',
+    'exif',
     'drp-app-api',
     'drp-article-communicator'
-], function(_, $, appApi, articleCommunicator) {
+], function(_, $, Exif, appApi, articleCommunicator) {
 
     var MetaEditor = function() {
         this.initialize();
     };
 
     _.extend(MetaEditor.prototype, {
-        MAX_IMAGE_WIDTH:  924,
-        MAX_IMAGE_HEIGHT: 693,
+        MAX_IMAGE_WIDTH:  1464,
+        MAX_IMAGE_HEIGHT: 1104,
 
         initialize: function() {
             _.bindAll(this);
 
             this.editorPane = $('.meta-editor');
+            this.tabCtrl    = $('.tab-controller');
+            this.exifPane   = $('.exif-pane');
             this.inputPane  = $('.input-pane');
-            this.imageView  = this.editorPane.find('.image-container');
+            this.imageBox   = this.editorPane.find('.image-container');
+            this.imageView  = this.imageBox.find('.source');
 
             this.events = $({});
             this.bindEvents();
@@ -36,6 +40,10 @@ define([
             this.editorPane
                 .find('.save')
                 .on('click', this.saveMetadata);
+
+            this.tabCtrl
+                .find('button')
+                .on('click', this.switchTab);
         },
 
         setTranslator: function(translator) {
@@ -47,7 +55,24 @@ define([
         },
 
         resizePanes: function() {
-            this.imageView.css('height', $(window).height() - 50);
+            this.imageBox.css('height', $(window).height() - 50);
+        },
+
+        switchTab: function(e) {
+            var el    = $(e.currentTarget),
+                tab   = el.data('tab'),
+                tabEl = this.editorPane.find('.tab[data-tab="' + tab + '"]');
+
+            tabEl.removeClass('hidden')
+                 .siblings('.tab')
+                 .addClass('hidden');
+
+            el
+                .closest('.tab-controller')
+                .find('button[data-tab]')
+                .removeClass('active');
+
+            el.addClass('active');
         },
 
         show: function() {
@@ -56,6 +81,11 @@ define([
                 this.translator.translate('META_EDITOR_TITLE'),
                 this.hide
             );
+
+            // Focus the first tab
+            this.tabCtrl
+                .find('button[data-tab]:first')
+                .trigger('click');
 
             // Show the editor pane and trigger a show-event
             this.editorPane.removeClass('hidden');
@@ -76,6 +106,7 @@ define([
         resetState: function() {
             this.inputPane.find('input, textarea').val('');
             this.imageView.css('background-image', '');
+            this.tabCtrl.find('button[data-tab]').removeClass('hidden');
         },
 
         loadDataForImage: function(imageId) {
@@ -121,7 +152,57 @@ define([
                 }
             });
 
+            this.populateExifData(data);
+
             appApi.hideLoader();
+        },
+
+        populateExifData: function(data) {
+            this.exifPane.empty();
+
+            var dl = $('<dl />'), table, value, parts, tags = 0;
+            for (var exifTag in Exif.TagMap) {
+                if (!data[exifTag]) {
+                    continue;
+                }
+
+                table = Exif.TagTable[exifTag];
+                value = (data[exifTag] + '').replace(/^\s+|\s+$/g, '');
+
+                // Should we cast to integer?
+                if (!isNaN(value)) {
+                    value = parseInt(data[exifTag], 10);
+                }
+                
+                // Do we have a lookup table with our value in it?
+                if (table && table[value]) {
+                    value = this.translator.translate(table[value]);
+                }
+
+                // Is the value dividable, to get a decimal variant?
+                if (typeof value === 'string' && value.match(/^\d+\/\d+$/)) {
+                    parts = value.split('/');
+                    value = (parts[0] / parts[1]) + ' (' + value + ')';
+                }
+
+                $('<dt />')
+                    .text(this.translator.translate(Exif.TagMap[exifTag]))
+                    .appendTo(dl);
+
+                $('<dd />')
+                    .text(value)
+                    .appendTo(dl);
+
+                tags++;
+            }
+
+            if (tags > 0) {
+                this.exifPane.append(dl);
+            } else {
+                this.tabCtrl
+                    .find('[data-tab="exif"]')
+                    .addClass('hidden');
+            }
         },
 
         getMetadataFromInputs: function() {

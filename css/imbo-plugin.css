@@ -217,6 +217,21 @@ button.upload-local-file {}
 .progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
 .progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }
 
+.meta-editor .tab-controller, .meta-editor .tab-controller li {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.meta-editor .tab-controller li {
+    display: inline-block;
+}
+
+.meta-editor .tab-controller button {
+    font-size: 1.6em;
+    height: 2em;
+}
+
 .meta-editor fieldset, .image-editor fieldset {
     padding: 3px 18px 3px 3px;
     margin: 5px;
@@ -234,11 +249,16 @@ button.upload-local-file {}
 }
 
 .meta-editor .image-container,
-.meta-editor .input-pane,
+.meta-editor .tabs,
 .image-editor .image-container,
 .image-editor .settings-pane {
     float: left;
-    width: 29.5%;
+    width: 31.5%;
+}
+
+.meta-editor .tabs .active {
+    background: #98caf0;
+    color: #000;
 }
 
 .meta-editor .input-pane legend,
@@ -252,18 +272,27 @@ button.upload-local-file {}
 }
 
 .meta-editor .image-container {
-    width: 69.5%;
+    width: 67.5%;
     background: #F5F5F5 none no-repeat 50% 50%;
-    background-size: contain;
     min-height: 400px;
     border: 1px solid #000;
-    margin-top: 13px;
+    display: table;
+}
+
+.meta-editor .image-container .source {
+    display: table-cell;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 100%;
 }
 
 .meta-editor .image-container h2, .image-editor .image-container h2 {
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
     padding: 5px 15px;
+    position: absolute;
 }
 
 .meta-editor .buttons, .image-editor .buttons {
@@ -283,6 +312,15 @@ button.upload-local-file {}
 .standalone .meta-editor button.close,
 .standalone .image-editor button.close  {
     display: inline-block;
+}
+
+.meta-editor .exif-pane dl {
+    margin: 10px 10px 10px 20px;
+    font-size: 1.4em;
+}
+
+.meta-editor .exif-pane dt {
+    font-weight: bold;
 }
 
 .image-editor .image-container {

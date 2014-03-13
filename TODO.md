@@ -5,9 +5,10 @@
 [x] Make sure all translations strings are defined
 [x] Implement pagination / auto-load on scroll
 [x] Implement drag-and-drop uploading
+[x] Implement EXIF data display on info view
 [ ] Implement search
+[ ] Implement resize options with per-publication settings
 [ ] Make template-based insertion to support metainfo
 [ ] Show original image size in info view
-[ ] Implement EXIF data display on info view
 [ ] Implement Scanpix import
 [ ] Implement usage information in GUI

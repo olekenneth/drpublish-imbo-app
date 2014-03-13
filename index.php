@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="vendor/jcrop/jquery.Jcrop.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
-    <link rel="stylesheet" href="css/imbo-plugin.css">
+    <link rel="stylesheet" href="css/imbo-plugin.css?<?php echo time(); ?>">
 </head>
 <body class="loading standalone">
 
@@ -60,35 +60,48 @@
     </section>
 
     <section class="meta-editor hidden">
-        <div class="input-pane">
-            <fieldset>
-                <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
-                <input type="text" name="drp:title">
-            </fieldset>
+        <div class="tabs">
+            <ul class="tab-controller">
+                <li><button class="core active" data-tab="core"><i class="fa fa-info"></i> <span data-translate="META_EDITOR_CORE_TAB"></span></button></li>
+                <li><button class="exif" data-tab="exif"><i class="fa fa-picture-o"></i> <span data-translate="META_EDITOR_EXIF_TAB"></span></button></li>
+            </ul>
 
-            <fieldset>
-                <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
-                <textarea name="drp:description"></textarea>
-            </fieldset>
+            <section class="input-pane tab" data-tab="core">
+                <fieldset>
+                    <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
+                    <input type="text" name="drp:title">
+                </fieldset>
 
-            <fieldset>
-                <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
-                <input type="text" name="drp:photographer">
-            </fieldset>
+                <fieldset>
+                    <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
+                    <textarea name="drp:description"></textarea>
+                </fieldset>
 
-            <fieldset>
-                <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
-                <input type="text" name="drp:agency">
-            </fieldset>
+                <fieldset>
+                    <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
+                    <input type="text" name="drp:photographer">
+                </fieldset>
 
-            <div class="buttons">
-                <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
-                <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
-            </div>
+                <fieldset>
+                    <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
+                    <input type="text" name="drp:agency">
+                </fieldset>
+
+                <div class="buttons">
+                    <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
+                    <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
+                </div>
+            </section>
+
+            <section class="exif-pane tab hidden" data-tab="exif">
+                &nbsp;
+            </section>
         </div>
 
         <div class="image-container">
             <h2 data-translate="META_EDITOR_SOURCE_IMAGE"></h2>
+
+            <div class="source"></div>
         </div>
     </section>
 

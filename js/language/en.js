@@ -34,6 +34,8 @@ define([], function() {
         'META_EDITOR_SAVE_META_DATA': 'Save metadata',
         'META_EDITOR_SAVING_METADATA': 'Saving metadata...',
         'META_EDITOR_LOADING_METADATA': 'Loading metadata...',
+        'META_EDITOR_CORE_TAB': 'Basic metadata',
+        'META_EDITOR_EXIF_TAB': 'Exif metadata',
 
         // Image editor
         'IMAGE_EDITOR_TITLE': 'Image editor',
@@ -51,6 +53,52 @@ define([], function() {
 
         // Selected image GUI
         'SELECTED_IMAGE_TITLE': 'Selected image',
-        'SELECTED_IMAGE_EDIT_IMAGE': 'Edit image'
+        'SELECTED_IMAGE_EDIT_IMAGE': 'Edit image',
+
+        // Exif info
+        'EXIF_DATE': 'Date',
+        'EXIF_APERTURE': 'Aperture',
+        'EXIF_MAX_APERTURE': 'Max aperture',
+        'EXIF_BRIGHTNESS': 'Brightness',
+        'EXIF_COMPRESSION': 'Compression',
+        'EXIF_EXPOSURE_TIME': 'Exposure time',
+        'EXIF_EXPOSURE_PROGRAM': 'Exposure program',
+        'EXIF_EXPOSURE_MODE': 'Exposure mode',
+        'EXIF_FLASH': 'Flash',
+        'EXIF_FOCAL_LENGTH': 'Focal length',
+        'EXIF_IMAGE_HEIGHT': 'Image height',
+        'EXIF_IMAGE_WIDTH': 'Image width',
+        'EXIF_CAMERA_MAKE': 'Camera make',
+        'EXIF_CAMERA_MODEL': 'Camera model',
+        'EXIF_METERING_MODE': 'Metering mode',
+        'EXIF_SCENE_CAPTURE_TYPE': 'Scene capture',
+        'EXIF_SHUTTER_SPEED': 'Shutter speed',
+        'EXIF_WHITE_BALANCE': 'White balance',
+        'EXIF_GPS_LOCATION': 'GPS location',
+        'EXIF_GPS_ALTITUDE': 'GPS altitude',
+        'EXIF_AUTO': 'Automatic',
+        'EXIF_MANUAL': 'Manual',
+        'EXIF_STANDARD': 'Standard',
+        'EXIF_AVERAGE': 'Average',
+        'EXIF_UNKNOWN': 'Unknown',
+        'EXIF_AUTO_BRACKET': 'Automatic bracketing (AEB)',
+        'EXIF_CENTER_WEIGHTED_AVERAGE': 'Center-weighted average',
+        'EXIF_SPOT_METERING': 'Spot',
+        'EXIF_MULTI_SPOT_METERING': 'Multispot',
+        'EXIF_PATTERN_METERING': 'Pattern',
+        'EXIF_PARTIAL_METERING': 'Partial',
+        'EXIF_SCENE_CAPTURE_LANDSCAPE': 'Landscape',
+        'EXIF_SCENE_CAPTURE_PORTRAIT': 'Portrait',
+        'EXIF_SCENE_CAPTURE_NIGHT': 'Night scene',
+        'EXIF_APERTURE_PRIORITY': 'Aperture priority',
+        'EXIF_SHUTTER_PRIORITY': 'Shutter priority',
+        'EXIF_CREATIVE_PROGRAM': 'Creative program',
+        'EXIF_ACTION_PROGRAM': 'Action program',
+        'EXIF_PORTRAIT_MODE': 'Portrait mode',
+        'EXIF_LANDSCAPE_MODE': 'Landscape mode',
+        'EXIF_LIGHTSOURCE': 'Lightsource',
+        'EXIF_ORIENTATION': 'Orientation',
+        'EXIF_F_NUMBER': 'F-number',
+        'EXIF_SENSOR_TYPE': 'Sensor type'
     };
 });
