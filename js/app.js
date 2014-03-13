@@ -435,9 +435,11 @@ define([
             }
 
             // Set up queries for the default fields
-            var query = {};
+            var query = { '$or': [] }, sub;
             ['drp:title', 'drp:filename', 'drp:description'].forEach(function(item) {
-                query[item] = { '$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*' };
+                sub = {};
+                sub[item] = { '$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*' };
+                query.$or.push(sub);
             });
 
             // Run the query
