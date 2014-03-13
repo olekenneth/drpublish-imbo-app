@@ -195,7 +195,9 @@ define([], function() {
         'exif:SceneCaptureType': 'EXIF_SCENE_CAPTURE_TYPE',
         'exif:ShutterSpeedValue': 'EXIF_SHUTTER_SPEED',
         'exif:WhiteBalance': 'EXIF_WHITE_BALANCE',
-        'exif:FNumber': 'EXIF_F_NUMBER'
+        'exif:FNumber': 'EXIF_F_NUMBER',
+        'gps:location': 'EXIF_GPS_LOCATION',
+        'gps:altitude': 'EXIF_GPS_ALTITUDE'
     };
 
     return Exif;

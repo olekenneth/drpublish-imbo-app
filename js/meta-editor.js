@@ -167,7 +167,17 @@ define([
                 }
 
                 table = Exif.TagTable[exifTag];
-                value = (data[exifTag] + '').replace(/^\s+|\s+$/g, '');
+                value = data[exifTag];
+
+                // GPS location?
+                if (exifTag === 'gps:location') {
+                    value = ($('<a />')
+                        .attr('target', '_blank')
+                        .attr('href', 'http://maps.google.com/?q=' + value.reverse().join(','))
+                        .text(value.reverse().map(function(i) { return i.toFixed(5); }).join(', ')));
+                } else {
+                    value = (value + '').replace(/^\s+|\s+$/g, '');
+                }
 
                 // Should we cast to integer?
                 if (!isNaN(value)) {
@@ -185,12 +195,17 @@ define([
                     value = (parts[0] / parts[1]) + ' (' + value + ')';
                 }
 
+                // GPS altitude? Add suffix (unit)
+                if (exifTag === 'gps:altitude') {
+                    value += 'm';
+                }
+
                 $('<dt />')
                     .text(this.translator.translate(Exif.TagMap[exifTag]))
                     .appendTo(dl);
 
                 $('<dd />')
-                    .text(value)
+                    .html(value)
                     .appendTo(dl);
 
                 tags++;
