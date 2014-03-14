@@ -272,7 +272,7 @@ define([
 
         loadImages: function(options) {
             options = options || {};
-            var query = ((options.query || new Imbo.Query())
+            var query = ((options.query || this.imageQuery || new Imbo.Query())
                 .metadata(true)
                 .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
                 .page(options.page   || 1));
@@ -287,8 +287,9 @@ define([
         },
 
         queryImages: function(query) {
+            this.imageQuery = new Imbo.Query().metadataQuery(query);
             this.loadImages({
-                query: new Imbo.Query().metadataQuery(query)
+                query: this.imageQuery
             });
         },
 
@@ -431,6 +432,7 @@ define([
 
             // If the query field is empty, show all images
             if (!q.length) {
+                this.imageQuery = null;
                 return this.loadImages();
             }
 
