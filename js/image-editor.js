@@ -297,13 +297,15 @@ define([
             // Build new image URL based on transformation states
             this.buildImageUrl(true);
 
-            // Show a loading indicator while loading image
-            appApi.showLoader(
-                this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
-            );
-
             var imageUrl = this.url.toString();
             this.imagePreview.attr('src', imageUrl);
+
+            // Show a loading indicator while loading image
+            if (!this.imagePreview.get(0).complete) {
+                appApi.showLoader(
+                    this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
+                );
+            }
 
             if (this.cropper) {
                 this.cropper.setImage(imageUrl);
@@ -408,6 +410,12 @@ define([
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
+
+            // Reset cropper
+            if (this.cropper) {
+                this.cropper.release();
+                this.cropParams = null;
+            }
 
             // Update image view
             this.updateImageView();
