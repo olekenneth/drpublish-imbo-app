@@ -5,6 +5,7 @@ define([], function() {
         'UPLOAD_IMAGE': 'Upload image',
         'UPLOAD_LOCAL_IMAGE': 'Upload local image',
         'CONFIRM_DELETE_IMAGE': 'Are you sure you want to delete this image?',
+        'FAILED_TO_DELETE_IMAGE': 'An error occured. Could not delete image.',
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Use image',

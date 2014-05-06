@@ -5,6 +5,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'UPLOAD_IMAGE': 'Last opp bilde',
         'UPLOAD_LOCAL_IMAGE': 'Last opp bilde',
         'CONFIRM_DELETE_IMAGE': 'Er du sikker på at du vil slette bildet?',
+        'FAILED_TO_DELETE_IMAGE': 'En feil oppstod under sletting av bildet',
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Bruk bilde',
