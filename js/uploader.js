@@ -39,12 +39,12 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
 
         bindEvents: function() {
             $(this.fileInput).on('change', this.onImagesSelected);
-            
+
             $(window).draghover().on({
                 'draghoverstart': this.onDragOver,
                 'draghoverend':   this.onDragEnd,
             });
-            
+
             $(window)
                 .on('drop', this.onDragDrop)
                 .on('dragover', function(e) {
@@ -116,12 +116,26 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             this.queue.push(tasks);
         },
 
+        uploadImageFromUrl: function(url) {
+            var loc     = window.location,
+                baseUrl = loc.href.replace(loc.search, '').replace(/\/$/, ''),
+                imgUrl  = baseUrl + '/image-proxy/?url=' + encodeURIComponent(url);
+
+            this.queue.push({
+                'progressBar': this.addProgressBar({ size: 0 }, 0),
+                'url': imgUrl,
+                'filename': url.split('/').pop()
+            });
+        },
+
         uploadImage: function(task, callback) {
-            var imbo = this.imbo;
-            imbo.addImage(task.file, {
+            var imbo   = this.imbo,
+                method = task.url ? 'addImageFromUrl' : 'addImage';
+
+            imbo[method](task.url || task.file, {
                 onComplete: _.partialRight(
                     this.onFileUploaded,
-                    task.file.name,
+                    task.file ? task.file.name : (task.filename || ''),
                     callback
                 ),
 
@@ -132,7 +146,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             });
         },
 
-        onFileUploaded: function(err, imageIdentifier, res, filename, callback) {
+        onFileUploaded: function(err, imageIdentifier, body, res, filename, callback) {
             if (err) { return callback(err); }
 
             // Edit metadata for image

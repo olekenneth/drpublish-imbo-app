@@ -3,10 +3,8 @@ define([
     'jquery',
     'template',
     'drp-app-api',
-    'drp-article-communicator',
-    'drp-ah5-communicator',
     'jcrop'
-], function(_, $, template, appApi, articleCommunicator, drpEditor) {
+], function(_, $, template, appApi) {
 
     var ImageEditor = function() {
         this.initialize();
@@ -87,7 +85,7 @@ define([
                 .on('load', this.onImageLoaded);
 
             appApi.addListeners({
-                pluginElementSelected: this.onEditorSelectImage,
+                pluginElementClicked: this.onEditorSelectImage,
                 pluginElementDeselected: this.onEditorDeselectImage
             });
         },
@@ -130,7 +128,7 @@ define([
 
         show: function() {
             // Maximize app window (if in app context)
-            articleCommunicator.maximizeAppWindow(
+            appApi.Article.maximizeAppWindow(
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
@@ -149,7 +147,7 @@ define([
             this.editorPane.addClass('hidden');
             this.trigger('hide');
 
-            articleCommunicator.restoreAppWindow();
+            appApi.Article.restoreAppWindow();
 
             appApi.hideLoader();
         },
@@ -184,9 +182,9 @@ define([
             }).jpg();
 
             // Set up crop params, if we have any
-            this.cropParams = options.crop;
-            this.cropAspectRatio = options.cropAspectRatio;
-            if (options.crop) {
+            this.cropParams = options.crop && options.crop.x2 ? options.crop : null;
+            this.cropAspectRatio = options.cropAspectRatio || null;
+            if (this.cropParams) {
                 this.cropParams.forceApply = true;
             }
 
@@ -440,22 +438,21 @@ define([
                 'source': this.imageMetadata['drp:agency']           || '',
                 'description': this.imageMetadata['drp:description'] || '',
                 'imageIdentifier': this.imageIdentifier,
-                'cropParams': JSON.stringify(crop),
+                'cropParams': JSON.stringify(_.mapValues(crop, Math.floor)),
                 'cropRatio': JSON.stringify(this.cropAspectRatio),
                 'transformations': JSON.stringify(url.getTransformations())
             });
 
             var elId = this.selectedElementId;
 
-            if (this.selectedElementId) {
-                drpEditor.replaceElementById(
-                    this.selectedElementId,
-                    $('<div />').append(
-                        $(this.selectedElementMarkup).html(markup)
-                    ).html()
+            if (elId) {
+                appApi.Editor.replaceElementById(
+                    elId,
+                    $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
+                    function() { appApi.Editor.markAsActive(elId); }
                 );
             } else {
-                drpEditor.insertElement(
+                appApi.Editor.insertElement(
                     markup,
                     { select: true }
                 );
@@ -466,7 +463,7 @@ define([
 
         onEditorSelectImage: function(e) {
             this.selectedElementId = e.id;
-            drpEditor.getHTMLById(e.id, function(html) {
+            appApi.Editor.getHTMLById(e.id, function(html) {
                 this.selectedElementMarkup = html;
 
                 var el  = $(html),
@@ -475,13 +472,13 @@ define([
                 var transformations = img.data('transformations'),
                     imageIdentifier = img.data('image-identifier'),
                     cropParameters  = img.data('crop-parameters'),
-                    cropAspectRatio = img.data('crop-aspect-ratio');
-                
+                    cropAspectRatio = img.data('crop-aspect-ratio') || null;
+
                 this.trigger('editor-image-selected', [{
                     imageIdentifier: imageIdentifier,
                     transformations: transformations,
-                    cropParams: cropParameters,
-                    cropAspectRatio: cropAspectRatio
+                    cropAspectRatio: cropAspectRatio,
+                    cropParams:      cropParameters
                 }]);
 
             }.bind(this));

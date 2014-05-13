@@ -3,20 +3,41 @@ define([
     'jquery',
     'drp-app-auth',
     'drp-app-api',
-    'drp-ah5-communicator',
     'translator',
     'imboclient',
     'uploader',
     'meta-editor',
     'image-editor'
-], function(_, $, appAuth, appApi, editor, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
+], function(_, $, appAuth, appApi, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
     'use strict';
 
     var ImboApp = function(config) {
         this.setConfig(config);
     };
 
-    ImboApp.MAX_ITEMS_PER_PAGE = 45;
+    ImboApp.MAX_ITEMS_PER_PAGE  = 45;
+    ImboApp.DEFAULT_IMAGE_SIZES = [
+        {
+            'name': 'default',
+            'width': 590
+        }, {
+            'name': 'max',
+            'width': 590
+        }, {
+            'name': 'small',
+            'width': 270,
+            'float': 'right'
+        }, {
+            'name': 'panorama',
+            'width': 590,
+            'height': 295,
+            'type': 'autocrop'
+        }, {
+            'name': 'x-small',
+            'width': 100,
+            'float': 'right'
+        }
+    ];
 
     _.extend(ImboApp.prototype, {
 
@@ -24,6 +45,10 @@ define([
 
         initialize: function() {
             _.bindAll(this);
+
+            // Set base URL for the app
+            var loc = window.location;
+            this.baseUrl = loc.href.replace(loc.search, '').replace(/\/$/, '');
 
             // Authenticate application
             appAuth(this.onAuthed);
@@ -54,11 +79,74 @@ define([
         },
 
         initializeEditor: function() {
-            editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
+            appApi.Editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
+
+            appApi.Editor.registerMenuActionGroup({
+                label: 'size',
+                icon: this.baseUrl + '/img/compress.svg',
+                actions: this.getImageResizeActions()
+            });
         },
 
         setConfig: function(config) {
             this.config = config || {};
+            this.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES || [];
+        },
+
+        getImageResizeActions: function() {
+            var actions = [], sizes = this.imageSizes;
+            for (var i = 0; i < sizes.length; i++) {
+                actions.push({
+                    label: sizes[i].name,
+                    callback: _.partial(this.resizeSelectedImage, sizes[i])
+                });
+            }
+
+            return actions;
+        },
+
+        resizeSelectedImage: function(options, id, clickedElementId) {
+            var floats = ['dp-float-left', 'dp-float-right', 'dp-float-none'];
+
+            appApi.Editor.getHTMLById(id, function(html) {
+                var el  = $(html),
+                    img = el.find('img[data-transformations]');
+
+                // Remove all existing floats
+                el.removeClass(floats.join(' '));
+
+                // Add float for chosen size (if any)
+                if (options.float) {
+                    el.addClass('dp-float-' + options.float);
+                }
+
+                // Get the transformations applied to the image
+                var imgUrl = this.imbo.parseImageUrl(img.attr('src')),
+                    transformations = imgUrl.getTransformations();
+
+                // Reset to contain no transformations
+                imgUrl.reset();
+
+                // Re-apply all transformations except any maxSize
+                transformations.filter(function(t) {
+                    return t.indexOf('maxSize') !== 0;
+                }).map(imgUrl.append, imgUrl);
+
+                // Apply new image size
+                imgUrl.maxSize({ width: options.width });
+
+                // Replace the image source
+                img
+                    .attr('src', imgUrl.toString())
+                    .attr('width', options.width)
+                    .attr('data-transformations', imgUrl.getTransformations());
+
+                appApi.Editor.replaceElementById(
+                    id,
+                    el.get(0).outerHTML,
+                    function() { appApi.Editor.markAsActive(id); }
+                );
+            }.bind(this));
         },
 
         // When authentication has completed...
@@ -423,7 +511,7 @@ define([
 
         onImageSearch: function(e) {
             e.preventDefault();
-            
+
             // Empty the current list of items
             this.getImageList().empty();
 

@@ -32,16 +32,16 @@ require.config({
         },
         'drp-ah5-communicator': {
             deps: ['jquery', 'postmessage', 'drp-app-api'],
-            exports: 'AH5Communicator'
+            exports: 'AppAPI.Editor'
         },
         'drp-article-communicator': {
             deps: ['jquery', 'postmessage', 'drp-app-api'],
-            exports: 'ArticleCommunicator'
+            exports: 'AppAPI.Article'
         }
     }
 });
 
-require(['app', 'deparam'], function(App, deparam) {
+require(['app', 'deparam', 'drp-app-api', 'drp-ah5-communicator', 'drp-article-communicator'], function(App, deparam) {
     'use strict';
 
     if (!window.Drp || !Drp.ImboConfig) {

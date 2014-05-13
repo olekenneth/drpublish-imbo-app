@@ -2,9 +2,8 @@ define([
     'underscore',
     'jquery',
     'exif',
-    'drp-app-api',
-    'drp-article-communicator'
-], function(_, $, Exif, appApi, articleCommunicator) {
+    'drp-app-api'
+], function(_, $, Exif, appApi) {
 
     var MetaEditor = function() {
         this.initialize();
@@ -77,7 +76,7 @@ define([
 
         show: function() {
             // Maximize app window (if in app context)
-            articleCommunicator.maximizeAppWindow(
+            appApi.Article.maximizeAppWindow(
                 this.translator.translate('META_EDITOR_TITLE'),
                 this.hide
             );
@@ -98,7 +97,7 @@ define([
             this.editorPane.addClass('hidden');
             this.trigger('hide');
 
-            articleCommunicator.restoreAppWindow();
+            appApi.Article.restoreAppWindow();
 
             appApi.hideLoader();
         },
@@ -183,7 +182,7 @@ define([
                 if (!isNaN(value)) {
                     value = parseInt(data[exifTag], 10);
                 }
-                
+
                 // Do we have a lookup table with our value in it?
                 if (table && table[value]) {
                     value = this.translator.translate(table[value]);

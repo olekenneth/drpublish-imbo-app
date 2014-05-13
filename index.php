@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <title>Images (Imbo)</title>
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/jquery-ui/drpublish/jquery-ui-1.8.6.custom.css">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/all.reset.css">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/all.elements.css?t=1392728310">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.layout.css?t=1392728310">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/aptomadev/drpublish/css/main/plugin.colors.light.css">
+    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/jquery-ui/drpublish/jquery-ui-1.8.6.custom.css">
+    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/all.reset.css">
+    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/all.elements.css?t=1392728310">
+    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/plugin.layout.css?t=1392728310">
+    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/plugin.colors.light.css">
     <link rel="stylesheet" href="vendor/jcrop/jquery.Jcrop.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
