@@ -282,7 +282,7 @@ define([
 
         onWindowResize: function() {
             this.getImageList()
-                .css('max-height', this.window.height() - 170);
+                .css('max-height', this.window.height() - 180);
         },
 
         onToolbarClick: function(e) {

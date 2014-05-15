@@ -84,7 +84,7 @@ button.upload-local-file {}
 }
 
 .image-list:empty:before {
-    line-height: 250px;
+    line-height: 110px;
     width: 100%;
 
     text-align: center;
