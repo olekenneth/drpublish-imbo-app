@@ -474,9 +474,7 @@ define([
             this.loadImages({ page: page });
         }, 2500, { trailing: false }),
 
-        showImageBatchMetadataDialog: function(e, batch) {
-            console.log('batch', batch);
-        },
+        showImageBatchMetadataDialog: function(e, batch) {},
 
         showImageMetadata: function(imageId) {
             this.metaEditor.loadDataForImage(imageId);
