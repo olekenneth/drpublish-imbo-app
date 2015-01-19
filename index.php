@@ -23,6 +23,7 @@
 
             <input type="file" name="files[]" accept="image/*" class="file-upload"  multiple>
             <button class="upload-local-file"><i class="fa fa-upload"></i> <span data-translate="UPLOAD_LOCAL_IMAGE"></span></button>
+            <button class="upload-scanpix-image"><i class="fa fa-upload"></i> <span data-translate="LOAD_FROM_SCANPIX"></span></button>
             <span class="spacer">&nbsp;</span>
 
             <div class="progress clear hidden"></div>

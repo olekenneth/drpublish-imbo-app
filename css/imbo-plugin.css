@@ -28,11 +28,20 @@ fieldset.add-new-images {
     z-index: 5;
 }
 
-.file-upload, button.upload-local-file {
-    position: absolute;
-    left: 10px;
+.file-upload,
+button.upload-local-file,
+button.upload-scanpix-image {
     width: 225px;
     height: 30px;
+    position: absolute;
+}
+
+.file-upload, button.upload-local-file {
+    left: 10px;
+}
+
+button.upload-scanpix-image {
+    left: 250px;
 }
 
 .spacer {
