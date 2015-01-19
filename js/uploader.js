@@ -129,6 +129,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
                     {
                         'scanpix:source':  image.source,
                         'scanpix:caption': image.caption,
+                        'scanpix:byline':  image.byline,
                         'scanpix:refPtr':  image.refPtr
                     }
                 );
