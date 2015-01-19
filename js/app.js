@@ -254,7 +254,8 @@ define([
             this.uploader
                 .on('image-uploaded', this.onImageAdded)
                 .on('image-batch-completed', this.showImageBatchMetadataDialog)
-                .on('image-batch-completed', this.refreshImages);
+                .on('image-batch-completed', this.refreshImages)
+                .on('scanpix-init-upload', this.initScanpixUpload);
 
             this.metaEditor
                 .on('show', this.hideGui)
@@ -278,6 +279,18 @@ define([
 
             this.getImageList()
                 .on('scroll', this.onImageListScroll);
+
+            appApi.on('receivedFocus', _.bind(function(e) {
+                if (e.data.previousPluginName !== 'scanpix') {
+                    return;
+                }
+
+                this.uploadScanpixImages(e.data.items);
+            }, this));
+        },
+
+        uploadScanpixImages: function(scanpixImages) {
+            this.uploader.addScanpixImages(scanpixImages);
         },
 
         onWindowResize: function() {
@@ -428,6 +441,10 @@ define([
             if (incTotalAmount) {
                 this.totalHitCount.text(total + (count || 1));
             }
+        },
+
+        initScanpixUpload: function() {
+            appApi.giveFocus('scanpix');
         },
 
         onImageAdded: function(e, image) {

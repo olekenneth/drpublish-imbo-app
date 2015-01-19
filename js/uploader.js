@@ -11,9 +11,10 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             _.bindAll(this);
 
             // Find GUI elements
-            this.content   = $('.add-new-images');
-            this.fileInput = this.content.find('.file-upload').get(0);
-            this.progress  = this.content.find('.progress');
+            this.content       = $('.add-new-images');
+            this.fileInput     = this.content.find('.file-upload').get(0);
+            this.scanpixButton = this.content.find('.upload-scanpix-image').get(0);
+            this.progress      = this.content.find('.progress');
 
             // Bind DOM events
             this.bindEvents();
@@ -39,6 +40,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
 
         bindEvents: function() {
             $(this.fileInput).on('change', this.onImagesSelected);
+            $(this.scanpixButton).on('click', _.bind(this.onScanpixButtonClick, this));
 
             $(window).draghover().on({
                 'draghoverstart': this.onDragOver,
@@ -116,7 +118,24 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             this.queue.push(tasks);
         },
 
-        uploadImageFromUrl: function(url) {
+        onScanpixButtonClick: function() {
+            this.trigger('scanpix-init-upload');
+        },
+
+        addScanpixImages: function(images) {
+            _.each(images, _.bind(function(image) {
+                this.uploadImageFromUrl(
+                    image.url,
+                    {
+                        'scanpix:source':  image.source,
+                        'scanpix:caption': image.caption,
+                        'scanpix:refPtr':  image.refPtr
+                    }
+                );
+            }, this));
+        },
+
+        uploadImageFromUrl: function(url, metadata) {
             var loc     = window.location,
                 baseUrl = loc.href.replace(loc.search, '').replace(/\/$/, ''),
                 imgUrl  = baseUrl + '/image-proxy/?url=' + encodeURIComponent(url);
@@ -124,7 +143,8 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             this.queue.push({
                 'progressBar': this.addProgressBar({ size: 0 }, 0),
                 'url': imgUrl,
-                'filename': url.split('/').pop()
+                'filename': url.split('/').pop(),
+                'metadata': metadata
             });
         },
 
@@ -136,6 +156,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
                 onComplete: _.partialRight(
                     this.onFileUploaded,
                     task.file ? task.file.name : (task.filename || ''),
+                    task.metadata || {},
                     callback
                 ),
 
@@ -146,11 +167,11 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
             });
         },
 
-        onFileUploaded: function(err, imageIdentifier, body, res, filename, callback) {
+        onFileUploaded: function(err, imageIdentifier, body, res, filename, taskMetadata, callback) {
             if (err) { return callback(err); }
 
             // Edit metadata for image
-            var metadata = _.merge({}, this.userMeta, {
+            var metadata = _.merge({}, this.userMeta, taskMetadata, {
                 'drp:filename': filename || imageIdentifier,
             });
 
