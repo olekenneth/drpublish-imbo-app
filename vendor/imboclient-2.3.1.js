@@ -2137,6 +2137,18 @@ extend(ImageUrl.prototype, {
         }
 
         return query;
+    },
+
+    /**
+     * Sets the custom query params property on the ImageUrl instance
+     *
+     * @param  {String} Query string
+     * @return {Imbo.ImageUrl}
+     */
+    setQueryString: function(queryString) {
+        this.queryString = queryString;
+
+        return this;
     }
 });
 
