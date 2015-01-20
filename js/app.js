@@ -489,8 +489,22 @@ define([
         },
 
         buildImageListItem: function(html, image) {
-            var url   = this.imbo.getImageUrl(image.imageIdentifier),
-                full  = url.toString(),
+            // Get file name
+            var fileName = image.metadata['drp:filename'] || [image.imageIdentifier, image.extension].join('.');
+
+            // Build query string
+            var queryString = [
+                'name=' + encodeURIComponent(fileName),
+                'mimetype=' + encodeURIComponent(image.mime)
+            ].join('&');
+
+            // Get ImageUrl
+            var url = this.imbo.getImageUrl(image.imageIdentifier);
+
+            // Set queryString on ImageUrl
+            url = url.setQueryString(queryString);
+
+            var full  = url.toString(),
                 thumb = url.maxSize({ width: 158, height: 158 }).jpg().toString(),
                 name  = image.metadata['drp:filename'] || image.imageIdentifier,
                 el    = '';
