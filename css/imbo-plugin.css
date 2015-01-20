@@ -402,3 +402,16 @@ button.upload-local-file {}
     float: left;
     margin: 0 10px 10px 0;
 }
+
+/** MEDIA QUERIES **/
+@media all and (max-width: 546px) and (min-width: 370px) {
+    .image-list li {
+        width: 46%;
+    }
+}
+
+@media all and (max-width: 369px) {
+    .image-list li {
+        width: 92%;
+    }
+}
