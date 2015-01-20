@@ -323,6 +323,28 @@ button.upload-local-file {}
     display: inline-block;
 }
 
+/* Degrade functionality if running standalone (Newspilot) */
+.standalone .add-new-images,
+.standalone .image-editor .settings-pane fieldset,
+.standalone .image-editor .settings-pane .buttons .reset,
+.standalone .image-editor .settings-pane .buttons .insert,
+.standalone .image-toolbar .image-delete,
+.standalone .meta-editor .save {
+    display: none;
+}
+
+.standalone .image-editor .settings-pane .buttons {
+    text-align: left;
+}
+
+.standalone .image-editor .image-container {
+    border: 0;
+    margin-left: 10px;
+    float: none;
+}
+
+/* End of degrade styling */
+
 .meta-editor .exif-pane dl {
     margin: 10px 10px 10px 20px;
     font-size: 1.4em;

@@ -72,8 +72,11 @@ define([
             // Reveal the UI of the application once the translations have loaded
             this.initTranslator();
 
+            // Check if app is running standalone or in iframe
+            this.standalone = window.self === window.top;
+
             // Remove 'standalone'-state if we're iframed
-            if (window.self !== window.top) {
+            if (!this.standalone) {
                 document.body.classList.remove('standalone');
             }
         },
@@ -220,7 +223,7 @@ define([
             this.metaEditor.setImboClient(this.imbo);
 
             // Initialize image editor
-            this.imageEditor = new ImageEditor();
+            this.imageEditor = new ImageEditor(this.standalone);
             this.imageEditor.setTranslator(this.translator);
             this.imageEditor.setImboClient(this.imbo);
 
