@@ -262,7 +262,6 @@ button.upload-local-file {}
 .image-editor .image-container,
 .image-editor .settings-pane {
     float: left;
-    width: 31.5%;
 }
 
 .meta-editor .tabs .active {
@@ -325,22 +324,15 @@ button.upload-local-file {}
 
 /* Degrade functionality if running standalone (Newspilot) */
 .standalone .add-new-images,
-.standalone .image-editor .settings-pane fieldset,
-.standalone .image-editor .settings-pane .buttons .reset,
-.standalone .image-editor .settings-pane .buttons .insert,
+.standalone .image-toolbar .image-use,
 .standalone .image-toolbar .image-delete,
-.standalone .meta-editor .save {
+.standalone .meta-editor .save,
+.standalone .meta-editor .image-container {
     display: none;
 }
 
-.standalone .image-editor .settings-pane .buttons {
-    text-align: left;
-}
-
-.standalone .image-editor .image-container {
-    border: 0;
-    margin-left: 10px;
-    float: none;
+.standalone .image-list .full-image {
+    cursor: default;
 }
 
 /* End of degrade styling */

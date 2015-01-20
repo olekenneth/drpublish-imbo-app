@@ -322,6 +322,10 @@ define([
         useImageInArticle: function(e) {
             e.preventDefault();
 
+            if (this.standalone) {
+                return;
+            }
+
             var item    = $(e.currentTarget).closest('li'),
                 name    = item.find('.full-image').data('filename'),
                 imageId = item.data('image-identifier');

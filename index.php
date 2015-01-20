@@ -87,16 +87,16 @@
                     <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
                     <input type="text" name="drp:agency">
                 </fieldset>
-
-                <div class="buttons">
-                    <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
-                    <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
-                </div>
             </section>
 
             <section class="exif-pane tab hidden" data-tab="exif">
                 &nbsp;
             </section>
+
+            <div class="buttons">
+                <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
+                <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
+            </div>
         </div>
 
         <div class="image-container">
@@ -152,7 +152,7 @@
     </section>
 
     <aside class="image-toolbar hidden">
-        <button data-translate-title="USE_IMAGE" data-action="use-image"><i class="fa fa-plus-square-o"></i></button>
+        <button class="image-use" data-translate-title="USE_IMAGE" data-action="use-image"><i class="fa fa-plus-square-o"></i></button>
         <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="fa fa-info"></i></button>
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="fa fa-download"></i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="fa fa-trash-o"></i></button>

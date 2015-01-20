@@ -6,10 +6,7 @@ define([
     'jcrop'
 ], function(_, $, template, appApi) {
 
-    var ImageEditor = function(standalone) {
-        // Whether the app is running standalone or in an iframe
-        this.standalone = standalone || false;
-
+    var ImageEditor = function() {
         this.initialize();
     };
 
@@ -326,10 +323,6 @@ define([
         },
 
         onImageLoaded: function() {
-            if (this.standalone) {
-                return;
-            }
-
             // Initialize cropper
             this.buildCropper();
 
