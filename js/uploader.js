@@ -127,8 +127,9 @@ define(['underscore', 'jquery', 'async', 'draghover'], function(_, $, async) {
                 this.uploadImageFromUrl(
                     image.url,
                     {
-                        'scanpix:source':  image.source,
+                        'drp:description': image.caption,
                         'scanpix:caption': image.caption,
+                        'scanpix:source':  image.source,
                         'scanpix:byline':  image.byline,
                         'scanpix:refPtr':  image.refPtr
                     }
