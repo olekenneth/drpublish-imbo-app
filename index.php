@@ -33,7 +33,6 @@
             <legend data-translate="SELECTED_IMAGE_TITLE"></legend>
 
             <img src="img/blank.gif" class="image-preview" alt="">
-            <p class="description">En eller annen tekst. Som wrapper seg sånn ca rundt det bildet over her. Håper det går greit.</p>
 
             <div class="action-buttons">
                 <button class="edit-image"><i class="fa fa-edit"></i> <span data-translate="SELECTED_IMAGE_EDIT_IMAGE"></span></button>
