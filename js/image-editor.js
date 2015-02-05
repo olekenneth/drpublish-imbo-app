@@ -449,12 +449,18 @@ define([
                 appApi.Editor.replaceElementById(
                     elId,
                     $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
-                    function() { appApi.Editor.markAsActive(elId); }
+                    function() {
+                        appApi.Editor.addClasses(elId, ['dp-imbo-image']);
+                        appApi.Editor.markAsActive(elId);
+                    }
                 );
             } else {
                 appApi.Editor.insertElement(
                     markup,
-                    { select: true }
+                    { select: true },
+                    function(elId) {
+                        appApi.Editor.addClasses(elId, ['dp-imbo-image']);
+                    }
                 );
             }
 
