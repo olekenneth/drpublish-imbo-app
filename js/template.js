@@ -13,13 +13,15 @@ define(['underscore'], function(_) {
      */
 
     var defaultTemplate = _.template([
-        '<div class="dp-article-image-container">',
-        '   <img src="<%= url %>" width="<%= width %>" alt="<%- title %>" data-transformations="<%- transformations %>" data-image-identifier="<%- imageIdentifier %>" data-crop-parameters="<%- cropParams %>" data-crop-aspect-ratio="<%- cropRatio %>">',
-        '   <div class="dp-article-image-title" data-dp-editable-type="textfield" data-dp-editable-name="Title"><%- title %></div>',
-        '   <div class="dp-article-image-description" data-dp-editable-type="html" data-dp-editable-name="Description"><%- description %></div>',
-        '   <div class="dp-article-image-byline">',
-        '       <span class="dp-article-image-author" data-dp-editable-type="textfield" data-dp-editable-name="Author"><%- author %></span>',
-        '       <span class="dp-article-image-source" data-dp-editable-type="textfield" data-dp-editable-name="Source"><%- source %></span>',
+        '<div id="imbo-image-<%- imageIdentifier %>" class="dp-plugin-element dp-imbo-image" data-external-id="<%- imageIdentifier %>">',
+        '    <div class="dp-article-image-container" >',
+        '       <img src="<%= url %>" width="<%= width %>" alt="<%- title %>" data-transformations="<%- transformations %>" data-image-identifier="<%- imageIdentifier %>" data-crop-parameters="<%- cropParams %>" data-crop-aspect-ratio="<%- cropRatio %>">',
+        '       <div class="dp-article-image-title" data-dp-editable-type="textfield" data-dp-editable-name="Title"><%- title %></div>',
+        '       <div class="dp-article-image-description" data-dp-editable-type="html" data-dp-editable-name="Description"><%- description %></div>',
+        '       <div class="dp-article-image-byline">',
+        '           <span class="dp-article-image-author" data-dp-editable-type="textfield" data-dp-editable-name="Author"><%- author %></span>',
+        '           <span class="dp-article-image-source" data-dp-editable-type="textfield" data-dp-editable-name="Source"><%- source %></span>',
+        '        </div>',
         '    </div>',
         '</div>'
     ].join('\n'));
