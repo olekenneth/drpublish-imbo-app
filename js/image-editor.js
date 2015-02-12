@@ -26,17 +26,30 @@ define([
         initialize: function() {
             _.bindAll(this);
 
+            this.imageClassName = 'dp-imbo-image';
             this.editorPane   = $('.image-editor');
             this.controls     = this.editorPane.find('.controls');
             this.cropRatios   = this.editorPane.find('.crop-presets');
             this.imageView    = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
             this.imageSize    = { width: 0, height: 0 };
-
+            this.embeddedTypeId = null;
             this.events = $({});
+
+            this.initEmbeddedTypeId();
             this.initTransformations();
             this.initRatioPickers();
             this.bindEvents();
+        },
+
+        initEmbeddedTypeId: function() {
+            appApi.getEmbeddedObjectTypes(function(types) {
+                types.forEach(function(type) {
+                    if (type.cssClass === this.imageClassName) {
+                        this.embeddedTypeId = type.typeId;
+                    }
+                }.bind(this));
+            }.bind(this));
         },
 
         initTransformations: function() {
@@ -429,35 +442,46 @@ define([
                 url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
             }
 
-            // Use template to build markup
-            var markup = template({
-                'url': url.maxSize({ width: 552 }).jpg().toString(),
-                'width': 552,
-                'title': this.imageMetadata['drp:title']             || '',
-                'author': this.imageMetadata['drp:photographer']     || '',
-                'source': this.imageMetadata['drp:agency']           || '',
-                'description': this.imageMetadata['drp:description'] || '',
-                'imageIdentifier': this.imageIdentifier,
-                'cropParams': JSON.stringify(_.mapValues(crop, Math.floor)),
-                'cropRatio': JSON.stringify(this.cropAspectRatio),
-                'transformations': JSON.stringify(url.getTransformations())
-            });
 
-            var elId = this.selectedElementId;
-
-            if (elId) {
-                appApi.Editor.replaceElementById(
-                    elId,
-                    $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
-                    function() {
-                        appApi.Editor.markAsActive(elId);
-                    }
-                );
+            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
+                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
             } else {
-                appApi.Editor.insertElement(
-                    markup,
-                    { select: true }
-                );
+                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement.bind(this));
+            }
+
+            function insertElement (drPublishId) {
+                // Use template to build markup
+                var markup = template({
+                    'url': url.maxSize({ width: 552 }).jpg().toString(),
+                    'drPublishId': drPublishId,
+                    'className': this.imageClassName,
+                    'width': 552,
+                    'title': this.imageMetadata['drp:title']             || '',
+                    'author': this.imageMetadata['drp:photographer']     || '',
+                    'source': this.imageMetadata['drp:agency']           || '',
+                    'description': this.imageMetadata['drp:description'] || '',
+                    'imageIdentifier': this.imageIdentifier,
+                    'cropParams': JSON.stringify(_.mapValues(crop, Math.floor)),
+                    'cropRatio': JSON.stringify(this.cropAspectRatio),
+                    'transformations': JSON.stringify(url.getTransformations())
+                });
+
+                var elId = this.selectedElementId;
+
+                if (elId) {
+                    appApi.Editor.replaceElementById(
+                        elId,
+                        $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
+                        function() {
+                            appApi.Editor.markAsActive(elId);
+                        }
+                    );
+                } else {
+                    appApi.Editor.insertElement(
+                        markup,
+                        { select: true }
+                    );
+                }
             }
 
             this.hide();
