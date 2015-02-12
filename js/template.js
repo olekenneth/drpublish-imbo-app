@@ -13,7 +13,7 @@ define(['underscore'], function(_) {
      */
 
     var defaultTemplate = _.template([
-        '<div id="imbo-image-<%- imageIdentifier %>" class="dp-plugin-element dp-imbo-image" data-external-id="<%- imageIdentifier %>">',
+        '<div id="imbo-image-<%- drPublishId %>" class="dp-plugin-element <%- className %>" data-external-id="<%- imageIdentifier %>" data-internal-id="<%- drPublishId %>">',
         '    <div class="dp-article-image-container" >',
         '       <img src="<%= url %>" width="<%= width %>" alt="<%- title %>" data-transformations="<%- transformations %>" data-image-identifier="<%- imageIdentifier %>" data-crop-parameters="<%- cropParams %>" data-crop-aspect-ratio="<%- cropRatio %>">',
         '       <div class="dp-article-image-title" data-dp-editable-type="textfield" data-dp-editable-name="Title"><%- title %></div>',
