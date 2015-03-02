@@ -15,6 +15,6 @@ When this has been done, you need to activate the app in the publication config 
 The configuration file should have the name `config.php` and must be placed in the `config/` folder under the application root.
 
 ## License
-Copyright (c) 2014-2015, Verdens Gang and Aptoma
+Copyright (c) 2014-2015, Verdens Gang AS and Aptoma AS
 
 Licensed under the MIT License
