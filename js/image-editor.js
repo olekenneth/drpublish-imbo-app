@@ -471,7 +471,7 @@ define([
                 if (elId) {
                     appApi.Editor.replaceElementById(
                         elId,
-                        $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
+                        $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
                         function() {
                             appApi.Editor.markAsActive(elId);
                             this.hide();
