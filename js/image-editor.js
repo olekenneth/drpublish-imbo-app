@@ -437,19 +437,7 @@ define([
                 crop = this.cropParams,
                 img  = $('<img />');
 
-            // @todo Find a better way to handle unintentional crops
-            if (crop && crop.w > 25 && crop.h > 25) {
-                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
-            }
-
-
-            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
-                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
-            } else {
-                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement.bind(this));
-            }
-
-            function insertElement (drPublishId) {
+            var insertElement = function insertElement(drPublishId) {
                 // Use template to build markup
                 var markup = template({
                     'url': url.maxSize({ width: 552 }).jpg().toString(),
@@ -486,6 +474,17 @@ define([
                         }.bind(this)
                     );
                 }
+            }.bind(this);
+
+            // @todo Find a better way to handle unintentional crops
+            if (crop && crop.w > 25 && crop.h > 25) {
+                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
+            }
+
+            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
+                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
+            } else {
+                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement);
             }
         },
 
