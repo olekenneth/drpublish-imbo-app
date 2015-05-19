@@ -474,17 +474,19 @@ define([
                         $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
                         function() {
                             appApi.Editor.markAsActive(elId);
-                        }
+                            this.hide();
+                        }.bind(this)
                     );
                 } else {
                     appApi.Editor.insertElement(
                         markup,
-                        { select: true }
+                        { select: true },
+                        function() {
+                            this.hide();
+                        }.bind(this)
                     );
                 }
             }
-
-            this.hide();
         },
 
         onEditorSelectImage: function(e) {
