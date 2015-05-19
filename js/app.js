@@ -142,7 +142,10 @@ define([
                 img
                     .attr('src', imgUrl.toString())
                     .attr('width', options.width)
-                    .attr('data-transformations', imgUrl.getTransformations());
+                    .attr(
+                        'data-transformations',
+                        JSON.stringify(imgUrl.getTransformations())
+                    );
 
                 appApi.Editor.replaceElementById(
                     id,
