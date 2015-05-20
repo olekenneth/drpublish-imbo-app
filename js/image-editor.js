@@ -80,7 +80,7 @@ define([
                 .on('click', this.reset);
 
             this.editorPane
-                .find('.insert')
+                .find('.insert, .update')
                 .on('click', this.insertToArticle);
 
             this.controls
@@ -96,6 +96,9 @@ define([
 
             this.imagePreview
                 .on('load', this.onImageLoaded);
+
+            this.on('editor-image-selected', _.partial(this.setEditMode, true));
+            this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
             appApi.addListeners({
                 pluginElementClicked: this.onEditorSelectImage,
@@ -517,6 +520,11 @@ define([
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
+        },
+
+        setEditMode: function(editing) {
+            this.editorPane.find('button.insert').toggleClass('hidden', editing);
+            this.editorPane.find('button.update').toggleClass('hidden', !editing);
         },
 
         on: function(e, handler) {
