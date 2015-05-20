@@ -46,6 +46,7 @@ define([], function() {
         'IMAGE_EDITOR_CANCEL_BUTTON': 'Cancel',
         'IMAGE_EDITOR_RESET_BUTTON': 'Reset',
         'IMAGE_EDITOR_INSERT_IMAGE': 'Insert image',
+        'IMAGE_EDITOR_UPDATE_IMAGE': 'Update image',
         'IMAGE_EDITOR_ROTATION': 'Rotation',
         'IMAGE_EDITOR_SATURATION': 'Saturation',
         'IMAGE_EDITOR_BRIGHTNESS': 'Brightness',

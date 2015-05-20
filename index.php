@@ -142,6 +142,7 @@
                 <button class="reset"><i class="fa fa-thumbs-o-down"></i> <span data-translate="IMAGE_EDITOR_RESET_BUTTON"></span></button>
                 <button class="cancel"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
                 <button class="insert"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_INSERT_IMAGE"></span></button>
+                <button class="update hidden"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_UPDATE_IMAGE"></span></button>
             </div>
         </div>
 

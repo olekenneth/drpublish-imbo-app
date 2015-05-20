@@ -80,7 +80,7 @@ define([
                 .on('click', this.reset);
 
             this.editorPane
-                .find('.insert')
+                .find('.insert, .update')
                 .on('click', this.insertToArticle);
 
             this.controls
@@ -96,6 +96,9 @@ define([
 
             this.imagePreview
                 .on('load', this.onImageLoaded);
+
+            this.on('editor-image-selected', _.partial(this.setEditMode, true));
+            this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
             appApi.addListeners({
                 pluginElementClicked: this.onEditorSelectImage,
@@ -437,19 +440,7 @@ define([
                 crop = this.cropParams,
                 img  = $('<img />');
 
-            // @todo Find a better way to handle unintentional crops
-            if (crop && crop.w > 25 && crop.h > 25) {
-                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
-            }
-
-
-            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
-                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
-            } else {
-                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement.bind(this));
-            }
-
-            function insertElement (drPublishId) {
+            var insertElement = function insertElement(drPublishId) {
                 // Use template to build markup
                 var markup = template({
                     'url': url.maxSize({ width: 552 }).jpg().toString(),
@@ -471,20 +462,33 @@ define([
                 if (elId) {
                     appApi.Editor.replaceElementById(
                         elId,
-                        $(this.selectedElementMarkup).html(markup).get(0).outerHTML,
+                        $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
                         function() {
                             appApi.Editor.markAsActive(elId);
-                        }
+                            this.hide();
+                        }.bind(this)
                     );
                 } else {
                     appApi.Editor.insertElement(
                         markup,
-                        { select: true }
+                        { select: true },
+                        function() {
+                            this.hide();
+                        }.bind(this)
                     );
                 }
+            }.bind(this);
+
+            // @todo Find a better way to handle unintentional crops
+            if (crop && crop.w > 25 && crop.h > 25) {
+                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
             }
 
-            this.hide();
+            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
+                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
+            } else {
+                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement);
+            }
         },
 
         onEditorSelectImage: function(e) {
@@ -516,6 +520,11 @@ define([
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
+        },
+
+        setEditMode: function(editing) {
+            this.editorPane.find('button.insert').toggleClass('hidden', editing);
+            this.editorPane.find('button.update').toggleClass('hidden', !editing);
         },
 
         on: function(e, handler) {
