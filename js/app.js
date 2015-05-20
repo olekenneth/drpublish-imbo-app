@@ -53,9 +53,6 @@ define([
             // Authenticate application
             appAuth(this.onAuthed);
 
-            // Init DrPublish editor
-            this.initializeEditor();
-
             // Instantiate a new Imbo client
             this.imbo = new Imbo.Client(
                 this.config.imbo.host,
@@ -70,7 +67,13 @@ define([
             this.events   = $({});
 
             // Reveal the UI of the application once the translations have loaded
-            this.initTranslator();
+            this.initTranslator(function() {
+                // Init DrPublish editor
+                this.initializeEditor();
+
+                // Load UI
+                this.loadGui();
+            }.bind(this));
 
             // Check if app is running standalone or in iframe
             this.standalone = window.self === window.top;
@@ -83,6 +86,12 @@ define([
 
         initializeEditor: function() {
             appApi.Editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
+
+            appApi.Editor.registerMenuAction({
+                label: this.translate('SELECTED_IMAGE_EDIT_IMAGE'),
+                icon: 'gfx/icons/iconic/vector/svggen.php?file=pen&amp;fill=%231d4e6f',
+                callback: this.editImageInArticle
+            });
 
             appApi.Editor.registerMenuActionGroup({
                 label: 'size',
@@ -173,10 +182,10 @@ define([
             }
         },
 
-        initTranslator: function() {
+        initTranslator: function(callback) {
             this.translator = new Translator(this.language);
             this.translate  = this.translator.translate.bind(this.translator);
-            this.translator.on('loaded', this.loadGui);
+            this.translator.on('loaded', callback);
             this.translator.initialize();
 
             document.body.classList.add('lang-' + this.translator.getLanguage());
