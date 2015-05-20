@@ -135,6 +135,9 @@
 
                     <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
                     <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
+
+                    <label for="slider-sharpen" data-translate="IMAGE_EDITOR_SHARPNESS"></label>
+                    <input type="range" min="0" max="4" step="1" value="0" name="sharpen" id="slider-sharpen">
                 </form>
             </fieldset>
 

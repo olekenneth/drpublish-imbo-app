@@ -22,6 +22,13 @@ define([
             '3:4': 3 / 4,
             '2:3': 2 / 3
         },
+        SHARPEN_LEVELS: {
+            0: '',
+            1: 'light',
+            2: 'moderate',
+            3: 'strong',
+            4: 'extreme'
+        },
 
         initialize: function() {
             _.bindAll(this);
@@ -64,7 +71,8 @@ define([
                 },
                 rotate: {
                     angle: 0
-                }
+                },
+                sharpen: {}
             };
 
             this.transformations = _.cloneDeep(this.transformationDefaults);
@@ -333,6 +341,14 @@ define([
 
             if (_.contains(['brightness', 'saturation', 'hue'], name)) {
                 this.transformations.modulate[name] = value;
+            }
+
+            if (name === 'sharpen') {
+                if (value === 0) {
+                    delete this.transformations.sharpen.preset;
+                } else {
+                    this.transformations.sharpen.preset = this.SHARPEN_LEVELS[value];
+                }
             }
 
             this.updateImageView();

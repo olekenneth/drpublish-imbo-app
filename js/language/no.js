@@ -51,6 +51,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'IMAGE_EDITOR_SATURATION': 'Fargemetning',
         'IMAGE_EDITOR_BRIGHTNESS': 'Lysstyrke',
         'IMAGE_EDITOR_HUE': 'Fargetone',
+        'IMAGE_EDITOR_SHARPNESS': 'Skarphet',
         'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Lås opp',
         'IMAGE_EDITOR_LOADING_IMAGE': 'Laster bilde...',
 

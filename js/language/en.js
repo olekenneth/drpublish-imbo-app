@@ -51,6 +51,7 @@ define([], function() {
         'IMAGE_EDITOR_SATURATION': 'Saturation',
         'IMAGE_EDITOR_BRIGHTNESS': 'Brightness',
         'IMAGE_EDITOR_HUE': 'Hue',
+        'IMAGE_EDITOR_SHARPNESS': 'Sharpness',
         'IMAGE_EDITOR_CROP_RATIO_UNLOCK': 'Unlock',
         'IMAGE_EDITOR_LOADING_IMAGE': 'Loading image...',
 
