@@ -3,7 +3,7 @@ define([
     'jquery',
     'exif',
     'drp-app-api'
-], function(_, $, Exif, appApi) {
+], function(_, $, Exif, pluginApi) {
 
     var MetaEditor = function() {
         this.initialize();
@@ -76,7 +76,7 @@ define([
 
         show: function() {
             // Maximize app window (if in app context)
-            appApi.Article.maximizeAppWindow(
+            pluginApi.Article.maximizeAppWindow(
                 this.translator.translate('META_EDITOR_TITLE'),
                 this.hide
             );
@@ -97,9 +97,9 @@ define([
             this.editorPane.addClass('hidden');
             this.trigger('hide');
 
-            appApi.Article.restoreAppWindow();
+            pluginApi.Article.restoreAppWindow();
 
-            appApi.hideLoader();
+            pluginApi.hideLoader();
         },
 
         resetState: function() {
@@ -124,7 +124,7 @@ define([
             );
 
             // Show a loading indicator while loading metadata
-            appApi.showLoader(
+            pluginApi.showLoader(
                 this.translator.translate('META_EDITOR_LOADING_METADATA')
             );
 
@@ -153,7 +153,7 @@ define([
 
             this.populateExifData(data);
 
-            appApi.hideLoader();
+            pluginApi.hideLoader();
         },
 
         populateExifData: function(data) {
@@ -234,7 +234,7 @@ define([
                 return console.error('Tried to save metadata, no image active');
             }
 
-            appApi.showLoader(
+            pluginApi.showLoader(
                 this.translator.translate('META_EDITOR_SAVING_METADATA')
             );
 

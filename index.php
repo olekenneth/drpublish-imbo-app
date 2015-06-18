@@ -1,22 +1,24 @@
+<?php
+    $config = require 'config/config.php';
+    $DrPublishURL = $config['DrPublishURL'];
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>Images (Imbo)</title>
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/jquery-ui/drpublish/jquery-ui-1.8.6.custom.css">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/all.reset.css">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/all.elements.css?t=1392728310">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/plugin.layout.css?t=1392728310">
-    <link rel="stylesheet" href="//publish-stage.vgnett.no/dev/drpublish/css/main/plugin.colors.light.css">
+    <link rel="stylesheet" href="<?php echo $DrPublishURL ?>/css/jquery-ui/drpublish/jquery-ui-1.8.6.custom.css">
+    <link rel="stylesheet" href="<?php echo $DrPublishURL ?>/css/main/all.reset.css">
+    <link rel="stylesheet" href="<?php echo $DrPublishURL ?>/css/main/all.elements.css?t=1392728310">
+    <link rel="stylesheet" href="<?php echo $DrPublishURL ?>/css/main/plugin.layout.css?t=1392728310">
+    <link rel="stylesheet" href="<?php echo $DrPublishURL ?>/css/main/plugin.colors.light.css">
     <link rel="stylesheet" href="vendor/jcrop/jquery.Jcrop.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css?<?php echo time(); ?>">
 </head>
 <body class="loading standalone">
-
     <?php include 'imbo-loader.html'; ?>
-
     <section class="content">
         <fieldset class="add-new-images">
             <legend data-translate="ADD_NEW_IMAGES"></legend>
@@ -163,7 +165,7 @@
 
     <script>
     var Drp = window.Drp || {};
-    Drp.ImboConfig = <?php echo json_encode(require 'config/config.php'); ?>
+    Drp.ImboConfig = <?php echo json_encode($config); ?>
     </script>
     <script src="vendor/require-2.1.11.min.js" data-main="js/main"></script>
 </body>

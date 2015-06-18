@@ -1,4 +1,4 @@
-define(['drp-app-api', 'deparam'], function(AppAPI, deparam) {
+define(['drp-app-api', 'deparam'], function(PluginAPI, deparam) {
     'use strict';
 
     var AppAuth = function(params, callback) {
@@ -10,11 +10,11 @@ define(['drp-app-api', 'deparam'], function(AppAPI, deparam) {
         params = params || deparam((window.location.search || '').substr(1));
 
         if (callback) {
-            AppAPI.eventListeners.add('appAuthenticated', callback);
+            PluginAPI.eventListeners.add('appAuthenticated', callback);
         }
 
-        AppAPI.setAppName(params.appName);
-        AppAPI.doStandardAuthentication(
+        PluginAPI.setAppName(params.appName);
+        PluginAPI.doStandardAuthentication(
             (params.authUrl || 'auth/') + '?' + $.param({
                 'auth': params.auth,
                 'iv'  : params.iv

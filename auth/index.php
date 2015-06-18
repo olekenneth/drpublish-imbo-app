@@ -1,6 +1,6 @@
 <?php
 require 'auth.php';
-
+$config = require '../config/config.php';
 $defaults = array('app' => '', 'iv' => '', 'auth' => '');
 $params   = array_merge($defaults, $_GET);
 
@@ -18,7 +18,7 @@ $app   = new AptomaApp($params['app'], 'DrPublish', $url);
 $valid = $app->validate($params['auth'], $params['iv']);
 
 // Validates the two variables that were passed along in the iframe paramter
-if ($valid) {
+if ($valid || $config['bypassAuth'] === true) {
     $token = $app->getAuthenticationToken();
     echo json_encode($token);
 } else {

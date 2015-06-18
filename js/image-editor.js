@@ -4,7 +4,7 @@ define([
     'template',
     'drp-app-api',
     'jcrop'
-], function(_, $, template, appApi) {
+], function(_, $, template, pluginApi) {
 
     var ImageEditor = function() {
         this.initialize();
@@ -50,7 +50,7 @@ define([
         },
 
         initEmbeddedTypeId: function() {
-            appApi.getEmbeddedObjectTypes(function(types) {
+            pluginApi.getEmbeddedObjectTypes(function(types) {
                 types.forEach(function(type) {
                     if (type.cssClass === this.imageClassName) {
                         this.embeddedTypeId = type.typeId;
@@ -108,7 +108,7 @@ define([
             this.on('editor-image-selected', _.partial(this.setEditMode, true));
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
-            appApi.addListeners({
+            pluginApi.addListeners({
                 pluginElementClicked: this.onEditorSelectImage,
                 pluginElementDeselected: this.onEditorDeselectImage
             });
@@ -152,7 +152,7 @@ define([
 
         show: function() {
             // Maximize app window (if in app context)
-            appApi.Article.maximizeAppWindow(
+            pluginApi.Article.maximizeAppWindow(
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
@@ -171,9 +171,9 @@ define([
             this.editorPane.addClass('hidden');
             this.trigger('hide');
 
-            appApi.Article.restoreAppWindow();
+            pluginApi.Article.restoreAppWindow();
 
-            appApi.hideLoader();
+            pluginApi.hideLoader();
         },
 
         resetState: function() {
@@ -324,7 +324,7 @@ define([
 
             // Show a loading indicator while loading image
             if (!this.imagePreview.get(0).complete) {
-                appApi.showLoader(
+                pluginApi.showLoader(
                     this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
                 );
             }
@@ -359,7 +359,7 @@ define([
             this.buildCropper();
 
             // Hide loading indication
-            appApi.hideLoader();
+            pluginApi.hideLoader();
 
             // Get new image dimensions
             var img = this.imagePreview.get(0),
@@ -476,16 +476,16 @@ define([
                 var elId = this.selectedElementId;
 
                 if (elId) {
-                    appApi.Editor.replaceElementById(
+                    pluginApi.Editor.replaceElementById(
                         elId,
                         $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
                         function() {
-                            appApi.Editor.markAsActive(elId);
+                            pluginApi.Editor.markAsActive(elId);
                             this.hide();
                         }.bind(this)
                     );
                 } else {
-                    appApi.Editor.insertElement(
+                    pluginApi.Editor.insertElement(
                         markup,
                         { select: true },
                         function() {
@@ -503,13 +503,13 @@ define([
             if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
                 insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
             } else {
-                appApi.createEmbeddedObject(this.embeddedTypeId, insertElement);
+                pluginApi.createEmbeddedObject(this.embeddedTypeId, insertElement);
             }
         },
 
         onEditorSelectImage: function(e) {
             this.selectedElementId = e.id;
-            appApi.Editor.getHTMLById(e.id, function(html) {
+            pluginApi.Editor.getHTMLById(e.id, function(html) {
                 this.selectedElementMarkup = html;
 
                 var el  = $(html),

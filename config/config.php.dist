@@ -3,4 +3,7 @@ return array(
     'host'       => 'http://some-imbo-host',
     'publicKey'  => 'pubKey',
     'privateKey' => 'privKey',
+    'DrPublishURL' => '//publish-stage.vgnett.no/dev/drpublish',
+    'bypassAuth' => false
+    'bypassAuth' => false
 );
