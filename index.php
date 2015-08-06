@@ -16,6 +16,11 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css?<?php echo time(); ?>">
+    <script>
+        var Drp = window.Drp || {};
+        Drp.ImboConfig = <?php echo json_encode($config); ?>;
+    </script>
+    <script src="vendor/require-2.1.11.min.js" data-main="js/main"></script>
 </head>
 <body class="loading standalone">
     <?php include 'imbo-loader.html'; ?>
@@ -162,11 +167,5 @@
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="fa fa-download"></i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="fa fa-trash-o"></i></button>
     </aside>
-
-    <script>
-    var Drp = window.Drp || {};
-    Drp.ImboConfig = <?php echo json_encode($config); ?>
-    </script>
-    <script src="vendor/require-2.1.11.min.js" data-main="js/main"></script>
 </body>
 </html>

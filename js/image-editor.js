@@ -2,9 +2,9 @@ define([
     'underscore',
     'jquery',
     'template',
-    'drp-app-api',
+    'drp-plugin-api',
     'jcrop'
-], function(_, $, template, pluginApi) {
+], function(_, $, template, PluginAPI) {
 
     var ImageEditor = function() {
         this.initialize();
@@ -50,7 +50,7 @@ define([
         },
 
         initEmbeddedTypeId: function() {
-            pluginApi.getEmbeddedObjectTypes(function(types) {
+            PluginAPI.getEmbeddedObjectTypes(function(types) {
                 types.forEach(function(type) {
                     if (type.cssClass === this.imageClassName) {
                         this.embeddedTypeId = type.typeId;
@@ -108,7 +108,7 @@ define([
             this.on('editor-image-selected', _.partial(this.setEditMode, true));
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
-            pluginApi.addListeners({
+            PluginAPI.addListeners({
                 pluginElementClicked: this.onEditorSelectImage,
                 pluginElementDeselected: this.onEditorDeselectImage
             });
@@ -119,7 +119,7 @@ define([
             for (format in this.CROP_FORMATS) {
                 value = this.CROP_FORMATS[format];
                 $('<button class="ratio">').attr({
-                    'data-ratio': value,
+                    'data-ratio': value
                 }).text(format).css({
                     width: size * value,
                     height: size
@@ -152,7 +152,7 @@ define([
 
         show: function() {
             // Maximize app window (if in app context)
-            pluginApi.Article.maximizeAppWindow(
+            PluginAPI.Article.maximizeAppWindow(
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
@@ -171,9 +171,9 @@ define([
             this.editorPane.addClass('hidden');
             this.trigger('hide');
 
-            pluginApi.Article.restoreAppWindow();
+            PluginAPI.Article.restoreAppWindow();
 
-            pluginApi.hideLoader();
+            PluginAPI.hideLoader();
         },
 
         resetState: function() {
@@ -324,7 +324,7 @@ define([
 
             // Show a loading indicator while loading image
             if (!this.imagePreview.get(0).complete) {
-                pluginApi.showLoader(
+                PluginAPI.showLoader(
                     this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
                 );
             }
@@ -359,7 +359,7 @@ define([
             this.buildCropper();
 
             // Hide loading indication
-            pluginApi.hideLoader();
+            PluginAPI.hideLoader();
 
             // Get new image dimensions
             var img = this.imagePreview.get(0),
@@ -476,16 +476,16 @@ define([
                 var elId = this.selectedElementId;
 
                 if (elId) {
-                    pluginApi.Editor.replaceElementById(
+                    PluginAPI.Editor.replaceElementById(
                         elId,
                         $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
                         function() {
-                            pluginApi.Editor.markAsActive(elId);
+                            PluginAPI.Editor.markAsActive(elId);
                             this.hide();
                         }.bind(this)
                     );
                 } else {
-                    pluginApi.Editor.insertElement(
+                    PluginAPI.Editor.insertElement(
                         markup,
                         { select: true },
                         function() {
@@ -503,13 +503,13 @@ define([
             if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
                 insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
             } else {
-                pluginApi.createEmbeddedObject(this.embeddedTypeId, insertElement);
+                PluginAPI.createEmbeddedObject(this.embeddedTypeId, insertElement);
             }
         },
 
         onEditorSelectImage: function(e) {
             this.selectedElementId = e.id;
-            pluginApi.Editor.getHTMLById(e.id, function(html) {
+            PluginAPI.Editor.getHTMLById(e.id, function(html) {
                 this.selectedElementMarkup = html;
 
                 var el  = $(html),

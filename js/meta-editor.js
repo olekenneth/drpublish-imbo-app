@@ -2,7 +2,7 @@ define([
     'underscore',
     'jquery',
     'exif',
-    'drp-app-api'
+    'drp-plugin-api'
 ], function(_, $, Exif, pluginApi) {
 
     var MetaEditor = function() {

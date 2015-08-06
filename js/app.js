@@ -1,14 +1,14 @@
 define([
     'underscore',
     'jquery',
-    'drp-app-auth',
-    'drp-app-api',
+    'drp-plugin-auth',
+    'drp-plugin-api',
     'translator',
     'imboclient',
     'uploader',
     'meta-editor',
     'image-editor'
-], function(_, $, appAuth, pluginApi, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
+], function(_, $, PluginAuth, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -45,6 +45,8 @@ define([
         AppName: 'imbo-images',
 
         initialize: function() {
+
+
             _.bindAll(this);
 
             // Set base URL for the app
@@ -52,7 +54,7 @@ define([
             this.baseUrl = loc.href.replace(loc.search, '').replace(/\/$/, '');
 
             // Authenticate application
-            appAuth(this.onAuthed);
+            PluginAuth(this.onAuthed);
 
             // Instantiate a new Imbo client
             this.imbo = new Imbo.Client(
@@ -86,15 +88,15 @@ define([
         },
 
         initializeEditor: function() {
-            pluginApi.Editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
+            PluginAPI.Editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
 
-            pluginApi.Editor.registerMenuAction({
+            PluginAPI.Editor.registerMenuAction({
                 label: this.translate('SELECTED_IMAGE_EDIT_IMAGE'),
                 icon: 'gfx/icons/iconic/vector/svggen.php?file=pen&amp;fill=%231d4e6f',
                 callback: this.editImageInArticle
             });
 
-            pluginApi.Editor.registerMenuActionGroup({
+            PluginAPI.Editor.registerMenuActionGroup({
                 label: 'size',
                 icon: this.baseUrl + '/img/compress.svg',
                 actions: this.getImageResizeActions()
@@ -121,7 +123,7 @@ define([
         resizeSelectedImage: function(options, id, clickedElementId) {
             var floats = ['dp-float-left', 'dp-float-right', 'dp-float-none'];
 
-            pluginApi.Editor.getHTMLById(id, function(html) {
+            PluginAPI.Editor.getHTMLById(id, function(html) {
                 var el  = $(html),
                     img = el.find('img[data-transformations]');
 
@@ -157,10 +159,10 @@ define([
                         JSON.stringify(imgUrl.getTransformations())
                     );
 
-                pluginApi.Editor.replaceElementById(
+                PluginAPI.Editor.replaceElementById(
                     id,
                     el.get(0).outerHTML,
-                    function() { pluginApi.Editor.markAsActive(id); }
+                    function() { PluginAPI.Editor.markAsActive(id); }
                 );
             }.bind(this));
         },
@@ -169,7 +171,7 @@ define([
         onAuthed: function() {
             this.authed = true;
             this.user   = {};
-            pluginApi.getCurrentUser(this.onUserInfoReceived);
+            PluginAPI.getCurrentUser(this.onUserInfoReceived);
         },
 
         // When user info has been received, cache info
@@ -212,7 +214,6 @@ define([
         },
 
         loadGui: function() {
-            console.debug('stef: load gui');
 
             // Translate all GUI-elements to the correct language
             this.translateGui();
@@ -261,7 +262,6 @@ define([
 
         bindEvents: function() {
 
-
             this.window
                 .on('resize', _.debounce(this.onWindowResize, 100))
                 .trigger('resize');
@@ -300,27 +300,24 @@ define([
             this.getImageList()
                 .on('scroll', this.onImageListScroll);
 
-            pluginApi.on('assetFocus', _.bind(function(e) {
-                console.debug('stef: assetFocus', e.data);
-                this.assetMode = {
-                    activeAssetId : e.data.assetElementId,
-                    assetDpArticleId : e.data.dpArticleId
-                };
+            PluginAPI.on('assetFocus', _.bind(function(e) {
+                console.debug('stef: asset focus received (Imbo)', e.data);
+                this.selectedPackageAsset = e.data;
             }, this));
 
-            pluginApi.on('assetBlur', _.bind(function(e) {
-                console.debug('stef: assetBlur', e.data);
-                this.assetMode = null;
+            PluginAPI.on('assetBlur', _.bind(function(e) {
+                console.debug('stef: asset blur received (Imbo)', e.data);
+                this.selectedPackageAsset = null;
             }, this));
 
 
-            pluginApi.on('receivedFocus', _.bind(function(e) {
+            PluginAPI.on('receivedFocus', _.bind(function(e) {
+                console.debug('stef: received focus (Imbo)', e.data);
                 if (e.data.previousPluginName !== 'scanpix') {
                     return;
                 }
                 this.uploadScanpixImages(e.data.items);
             }, this));
-
         },
 
         uploadScanpixImages: function(scanpixImages) {
@@ -351,19 +348,28 @@ define([
         },
 
         useImageInArticle: function(e) {
-
-            console.debug('stef: use image in article', PluginAPI);
-            console.debug('stef: assetMode', this.assetMode);
-            this.importAssetImage();
             e.preventDefault();
 
             if (this.standalone) {
                 return;
             }
+            var item = $(e.currentTarget).closest('li'), imageId = item.data('image-identifier');
 
-            var item    = $(e.currentTarget).closest('li'),
-                name    = item.find('.full-image').data('filename'),
-                imageId = item.data('image-identifier');
+            // insert image source only directly into package asset container
+            // TODO: improve to insert a thumbnail instead of the full size image
+            if (this.selectedPackageAsset !== null) {
+                PluginAPI.showLoader('Inserting image');
+                var fullsizeUrl = this.imbo.getImageUrl(imageId).maxSize({width: 8000}).jpg().toString();
+                var thumbnUrl =  this.imbo.getImageUrl(imageId).maxSize({width:100, height: 100}).jpg().toString();
+                var previewUrl =  this.imbo.getImageUrl(imageId).maxSize({width:800, height: 800}).jpg().toString();
+                var renditions = {
+                    highRes : {uri:fullsizeUrl},
+                    thumbnail : {uri:thumbnUrl},
+                    preview : {uri:previewUrl},
+                    fuckYou: { uri : this.imbo.getImageUrl(imageId).maxSize({width:600, height: 600}).jpg().toString()}
+                }
+                return this.importAssetImage(renditions,  function() {PluginAPI.hideLoader()});
+            }
 
             this.imageEditor
                 .show()
@@ -486,7 +492,7 @@ define([
         },
 
         initScanpixUpload: function() {
-            pluginApi.giveFocus('scanpix');
+            PluginAPI.giveFocus('scanpix');
         },
 
         onImageAdded: function(e, image) {
@@ -630,20 +636,18 @@ define([
             return this;
         },
 
-        assetMode: null,
+        selectedPackageAsset: null,
 
-        importAssetImage: function(id, fullsizeUrl) {
-            pluginApi.Editor.updateAssetMedia( {
-                dpArticleId:this.assetMode.assetDpArticleId,
-                assetElementId: this.assetMode.activeAssetId,
+        importAssetImage: function(renditions, callback) {
+            var data = {
+                dpArticleId:this.selectedPackageAsset.dpArticleId,
+                assetElementId: this.selectedPackageAsset.assetElementId,
                 assetType: 'article-image',
-                //remoteContent: fullsizeUrl
-                remoteContent: 'http://cdn2.spiegel.de/images/image-861379-breitwandaufmacher-igwo.jpg'
-            })
+                renditions: renditions
+            }
+            PluginAPI.Editor.updateAssetMedia(data, callback);
         }
 
-
     });
-
     return ImboApp;
 });
