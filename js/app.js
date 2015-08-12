@@ -301,14 +301,18 @@ define([
                 .on('scroll', this.onImageListScroll);
 
             PluginAPI.on('assetFocus', _.bind(function(e) {
-                console.debug('stef: asset focus received (Imbo)', e.data);
+                console.debug('stef: asset focus received (Imbo)', e.data.assetSource, PluginAPI.appName);
                 this.selectedPackageAsset = e.data;
-                this.editImageInAsset(e.data);
+                if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
+                    this.previewImageInAsset(e.data);
+                }
+
             }, this));
 
             PluginAPI.on('assetBlur', _.bind(function(e) {
                 console.debug('stef: asset blur received (Imbo)', e.data);
                 this.selectedPackageAsset = null;
+                this.onEditorImageDeselected();
             }, this));
 
 
@@ -364,7 +368,7 @@ define([
                 });
         },
 
-        editImageInAsset: function(imageData) {
+        previewImageInAsset: function(imageData) {
             var resourceUri = imageData.resourceUri;
             var id = resourceUri.match(/[^\/]*$/)[0].match(/[^\.]*/)[0];
             var url = this.imbo.getImageUrl(id);
@@ -576,7 +580,6 @@ define([
             for (var key in options.transformations) {
                 url.append(options.transformations[key]);
             }
-console.debug('stef: selected image options', options);
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')

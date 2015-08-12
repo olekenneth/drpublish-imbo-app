@@ -32,7 +32,6 @@ define([
 
         initialize: function(imboApp) {
             this.imboApp = imboApp;
-            console.debug('stef: imbo app', imboApp);
             _.bindAll(this);
 
             this.imageClassName = 'dp-picture';
@@ -55,7 +54,6 @@ define([
 
         initEmbeddedTypeId: function() {
             PluginAPI.getEmbeddedObjectTypes(function(types) {
-                console.debug('stef: init embedded types', types);
                 types.forEach(function(type) {
                     if (type.cssClass === this.imageClassName) {
                         this.embeddedTypeId = type.typeId;
