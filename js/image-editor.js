@@ -6,8 +6,8 @@ define([
     'jcrop'
 ], function(_, $, template, PluginAPI) {
 
-    var ImageEditor = function() {
-        this.initialize();
+    var ImageEditor = function(imboApp) {
+        this.initialize(imboApp);
     };
 
     _.extend(ImageEditor.prototype, {
@@ -30,10 +30,12 @@ define([
             4: 'extreme'
         },
 
-        initialize: function() {
+        initialize: function(imboApp) {
+            this.imboApp = imboApp;
+            console.debug('stef: imbo app', imboApp);
             _.bindAll(this);
 
-            this.imageClassName = 'dp-imbo-image';
+            this.imageClassName = 'dp-picture';
             this.editorPane   = $('.image-editor');
             this.controls     = this.editorPane.find('.controls');
             this.cropRatios   = this.editorPane.find('.crop-presets');
@@ -49,8 +51,11 @@ define([
             this.bindEvents();
         },
 
+        imboApp: null,
+
         initEmbeddedTypeId: function() {
             PluginAPI.getEmbeddedObjectTypes(function(types) {
+                console.debug('stef: init embedded types', types);
                 types.forEach(function(type) {
                     if (type.cssClass === this.imageClassName) {
                         this.embeddedTypeId = type.typeId;
@@ -283,6 +288,8 @@ define([
         },
 
         buildImageUrl: function(preview) {
+
+            var crop = this.cropParams;
             // Reset URL
             this.url.reset().jpg();
 
@@ -312,6 +319,10 @@ define([
                 this.url[transformation](diff[transformation]);
             }
 
+            // @todo Find a better way to handle unintentional crops
+            if (crop && crop.w > 25 && crop.h > 25) {
+                this.url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
+            }
             return this.url;
         },
 
@@ -456,6 +467,10 @@ define([
                 crop = this.cropParams,
                 img  = $('<img />');
 
+            if (this.imboApp.selectedPackageAsset !== null) {
+                return this.insertAssetImage();
+            }
+
             var insertElement = function insertElement(drPublishId) {
                 // Use template to build markup
                 var markup = template({
@@ -495,16 +510,28 @@ define([
                 }
             }.bind(this);
 
-            // @todo Find a better way to handle unintentional crops
-            if (crop && crop.w > 25 && crop.h > 25) {
-                url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
-            }
 
             if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
                 insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
             } else {
                 PluginAPI.createEmbeddedObject(this.embeddedTypeId, insertElement);
             }
+        },
+
+
+        insertAssetImage: function() {
+            var resourceUri =  this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
+            var previewUri =   this.buildImageUrl().maxSize({width:800, height: 800}).jpg().toString();
+            var thumbnailUri = this.buildImageUrl().maxSize({width:100, height: 100}).jpg().toString();
+            //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
+            var renditions = {
+                highRes : {uri:resourceUri},
+                //custom: {uri: customUri},
+                thumbnail : {uri:thumbnailUri},
+                preview : {uri:previewUri}
+            }
+            this.imboApp.importAssetImage(resourceUri, previewUri, renditions,  function() {PluginAPI.hideLoader()});
+            this.hide();
         },
 
         onEditorSelectImage: function(e) {

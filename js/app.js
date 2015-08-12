@@ -1,14 +1,14 @@
 define([
     'underscore',
     'jquery',
-    'drp-plugin-auth',
     'drp-plugin-api',
     'translator',
     'imboclient',
     'uploader',
     'meta-editor',
-    'image-editor'
-], function(_, $, PluginAuth, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor) {
+    'image-editor',
+    'deparam'
+], function(_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam) {
     'use strict';
 
     var ImboApp = function(config) {
@@ -49,12 +49,12 @@ define([
 
             _.bindAll(this);
 
-            // Set base URL for the app
+            // Set base config for the app
             var loc = window.location;
             this.baseUrl = loc.href.replace(loc.search, '').replace(/\/$/, '');
-
-            // Authenticate application
-            PluginAuth(this.onAuthed);
+            var pluginParameters = deparam((window.location.search || '').substr(1));
+            PluginAPI.getCurrentUser(this.onUserInfoReceived);
+            PluginAPI.setAppName(pluginParameters.appName);
 
             // Instantiate a new Imbo client
             this.imbo = new Imbo.Client(
@@ -239,7 +239,7 @@ define([
             this.metaEditor.setImboClient(this.imbo);
 
             // Initialize image editor
-            this.imageEditor = new ImageEditor(this.standalone);
+            this.imageEditor = new ImageEditor(this);
             this.imageEditor.setTranslator(this.translator);
             this.imageEditor.setImboClient(this.imbo);
 
@@ -303,6 +303,7 @@ define([
             PluginAPI.on('assetFocus', _.bind(function(e) {
                 console.debug('stef: asset focus received (Imbo)', e.data);
                 this.selectedPackageAsset = e.data;
+                this.editImageInAsset(e.data);
             }, this));
 
             PluginAPI.on('assetBlur', _.bind(function(e) {
@@ -326,7 +327,7 @@ define([
 
         onWindowResize: function() {
             this.getImageList()
-                .css('max-height', this.window.height() - 180);
+                .css('max-height', this.window.height() - 155);
         },
 
         onToolbarClick: function(e) {
@@ -355,28 +356,30 @@ define([
             }
             var item = $(e.currentTarget).closest('li'), imageId = item.data('image-identifier');
 
-            // insert image source only directly into package asset container
-            // TODO: improve to insert a thumbnail instead of the full size image
-            if (this.selectedPackageAsset !== null) {
-                PluginAPI.showLoader('Inserting image');
-                var fullsizeUrl = this.imbo.getImageUrl(imageId).maxSize({width: 8000}).jpg().toString();
-                var thumbnUrl =  this.imbo.getImageUrl(imageId).maxSize({width:100, height: 100}).jpg().toString();
-                var previewUrl =  this.imbo.getImageUrl(imageId).maxSize({width:800, height: 800}).jpg().toString();
-                var renditions = {
-                    highRes : {uri:fullsizeUrl},
-                    thumbnail : {uri:thumbnUrl},
-                    preview : {uri:previewUrl},
-                    fuckYou: { uri : this.imbo.getImageUrl(imageId).maxSize({width:600, height: 600}).jpg().toString()}
-                }
-                return this.importAssetImage(renditions,  function() {PluginAPI.hideLoader()});
-            }
-
             this.imageEditor
                 .show()
                 .loadImage(imageId, {
                     width: item.data('width'),
                     height: item.data('height')
                 });
+        },
+
+        editImageInAsset: function(imageData) {
+            var resourceUri = imageData.resourceUri;
+            var id = resourceUri.match(/[^\/]*$/)[0].match(/[^\.]*/)[0];
+            var url = this.imbo.getImageUrl(id);
+            this.selectedImage
+                .find('.image-preview')
+                .attr('src', url.maxSize({ width: 225, height: 225 }).toString());
+            this.selectedImage.removeClass('hidden');
+            this.selectedImageOptions = {};
+            /*todo is there a way to process those meta information out from the resourceUri?*/
+            var options = {
+                imageIdentifier : id,
+                cropParams: {},
+                transformations: []
+            };
+            this.selectedImageOptions = options;
         },
 
         editImageInArticle: function(e) {
@@ -573,7 +576,7 @@ define([
             for (var key in options.transformations) {
                 url.append(options.transformations[key]);
             }
-
+console.debug('stef: selected image options', options);
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
@@ -638,11 +641,15 @@ define([
 
         selectedPackageAsset: null,
 
-        importAssetImage: function(renditions, callback) {
+        importAssetImage: function(resourceUri, previewUri, renditions, callback) {
             var data = {
                 dpArticleId:this.selectedPackageAsset.dpArticleId,
                 assetElementId: this.selectedPackageAsset.assetElementId,
-                assetType: 'article-image',
+                assetType: 'picture',
+                //assetSource: PluginAPI.appName,
+                assetSource: PluginAPI.appName,
+                resourceUri: resourceUri,
+                previewUri: previewUri,
                 renditions: renditions
             }
             PluginAPI.Editor.updateAssetMedia(data, callback);

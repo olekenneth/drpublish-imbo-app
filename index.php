@@ -38,29 +38,26 @@
 
         <fieldset class="selected-image hidden">
             <legend data-translate="SELECTED_IMAGE_TITLE"></legend>
-
             <img src="img/blank.gif" class="image-preview" alt="">
-
             <div class="action-buttons">
                 <button class="edit-image"><i class="fa fa-edit"></i> <span data-translate="SELECTED_IMAGE_EDIT_IMAGE"></span></button>
             </div>
         </fieldset>
 
         <fieldset class="current-images">
-            <legend>
+            <legend data-translate="IMAGE_SEARCH_FIND_IMAGES" ></legend>
+            <form action="#" class="search">
+                <input type="search" id="image-search" class="image-search" name="query">
+                <button type="submit"><i class="fa fa-search"></i> <span data-translate="IMAGE_SEARCH_BUTTON"></span></button>
+                <button type="button" class="refresh"><i class="fa fa-refresh"></i> <span data-translate="IMAGE_SEARCH_REFRESH_BUTTON"></span></button>
+            </form>
+            <div class="search-stats">
                 <span data-translate="IMAGE_RESULT_SHOWING"></span>
                 <span class="display-count">0</span>
                 <span data-translate="IMAGE_RESULT_OUT_OF"></span>
                 <span class="total-hit-count">0</span>
                 <span data-translate="IMAGE_RESULT_TOTAL_HITS"></span>
-            </legend>
-
-            <form action="#" class="search">
-                <label data-translate="IMAGE_SEARCH_FIND_IMAGES" for="image-search"></label>
-                <input type="search" id="image-search" class="image-search" name="query">
-                <button type="submit"><i class="fa fa-search"></i> <span data-translate="IMAGE_SEARCH_BUTTON"></span></button>
-                <button type="button" class="refresh"><i class="fa fa-refresh"></i> <span data-translate="IMAGE_SEARCH_REFRESH_BUTTON"></span></button>
-            </form>
+            </div>
 
             <ul class="image-list clear"></ul>
         </fieldset>

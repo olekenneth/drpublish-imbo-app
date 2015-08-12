@@ -1,15 +1,14 @@
 /* Semi-defaults from Aptoma */
 
 .content > fieldset {
-    margin: 10px 0 15px 0;
-    padding: 12px 18px;
+    margin: 0;
+    padding: 6px 12px;
     min-height: 60px;
     border: none;
-    border-bottom: solid 1px #dfdfdf;
 }
 
-.content > fieldset legend {
-    margin: 6px 0 1em -9px;
+.content  fieldset legend {
+    margin: 6px 0 0 0;
     font-size: 15px;
 }
 
@@ -20,11 +19,6 @@ input[type="submit"],
 button, div.button {
     background: #dce0e3;
 }
-
-
-
-
-
 
 
 .droppable {
@@ -81,19 +75,10 @@ button.upload-scanpix-image {
 
 button.upload-local-file {}
 
-.current-images {
-    padding: 0;
+fieldset.current-images {
+    padding: 0 0 0 12px;
 }
 
-.current-images .search {
-    padding: 10px;
-}
-
-.search label {
-    display: block;
-    padding: 0 0 5px 0;
-    font-size: 1.2em;
-}
 
 .search .image-search {
     width: 60%;
@@ -435,4 +420,8 @@ button.upload-local-file {}
     .image-list li {
         width: 92%;
     }
+}
+
+.search-stats {
+    margin-bottom: 6px;
 }

@@ -7,8 +7,10 @@ define(['drp-plugin-api', 'deparam'], function(PluginAPI, deparam) {
             params = null;
         }
 
+console.debug('stef: auth params', params);
         params = params || deparam((window.location.search || '').substr(1));
 console.debug('stef: auth params', params);
+console.debug('stef: auth arguments', arguments);
 
         if (callback) {
             PluginAPI.eventListeners.add('appAuthenticated', callback);

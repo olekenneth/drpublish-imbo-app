@@ -10,7 +10,6 @@ require.config({
         'drp-plugin-api': '../no.aptoma.plugin-api/js/PluginAPI',
         'drp-article-communicator': '../no.aptoma.plugin-api/js/ArticleCommunicator',
         'drp-listeners': '../no.aptoma.plugin-api/js/Listeners',
-        'drp-plugin-auth': 'app-auth',
         'imboclient': '../vendor/imboclient-2.3.4',
         'async': '../vendor/async-0.2.10'
     },
