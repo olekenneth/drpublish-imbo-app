@@ -304,7 +304,7 @@ define([
                 console.debug('stef: asset focus received (Imbo)', e.data.assetSource, PluginAPI.appName);
                 this.selectedPackageAsset = e.data;
                 if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
-                    this.previewImageInAsset(e.data);
+                    this.previewImage(e.data.options);
                 }
 
             }, this));
@@ -368,22 +368,16 @@ define([
                 });
         },
 
-        previewImageInAsset: function(imageData) {
-            var resourceUri = imageData.resourceUri;
-            var id = resourceUri.match(/[^\/]*$/)[0].match(/[^\.]*/)[0];
-            var url = this.imbo.getImageUrl(id);
+        previewImage: function(options) {
+            var url = this.imbo.getImageUrl(options.imageIdentifier);
+            for (var key in options.transformations) {
+                url.append(options.transformations[key]);
+            }
+            this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
                 .attr('src', url.maxSize({ width: 225, height: 225 }).toString());
             this.selectedImage.removeClass('hidden');
-            this.selectedImageOptions = {};
-            /*todo is there a way to process those meta information out from the resourceUri?*/
-            var options = {
-                imageIdentifier : id,
-                cropParams: {},
-                transformations: []
-            };
-            this.selectedImageOptions = options;
         },
 
         editImageInArticle: function(e) {
@@ -576,16 +570,7 @@ define([
         },
 
         onEditorImageSelected: function(e, options) {
-            var url = this.imbo.getImageUrl(options.imageIdentifier);
-            for (var key in options.transformations) {
-                url.append(options.transformations[key]);
-            }
-            this.selectedImageOptions = options;
-            this.selectedImage
-                .find('.image-preview')
-                .attr('src', url.maxSize({ width: 225, height: 225 }).toString());
-
-            this.selectedImage.removeClass('hidden');
+            this.previewImage(options);
         },
 
         onEditorImageDeselected: function(e) {
@@ -644,17 +629,18 @@ define([
 
         selectedPackageAsset: null,
 
-        importAssetImage: function(resourceUri, previewUri, renditions, callback) {
+        exportAssetImage: function(options, callback) {
             var data = {
                 dpArticleId:this.selectedPackageAsset.dpArticleId,
                 assetElementId: this.selectedPackageAsset.assetElementId,
                 assetType: 'picture',
-                //assetSource: PluginAPI.appName,
                 assetSource: PluginAPI.appName,
-                resourceUri: resourceUri,
-                previewUri: previewUri,
-                renditions: renditions
+                resourceUri: options.resourceUri,
+                previewUri: options.previewUri,
+                renditions: options.renditions,
+                options: options.imboOptions
             }
+            console.debug('stef: imbo import asset image options', data);
             PluginAPI.Editor.updateAssetMedia(data, callback);
         }
 

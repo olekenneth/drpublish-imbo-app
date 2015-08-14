@@ -461,13 +461,17 @@ define([
         },
 
         insertToArticle: function() {
+            if (this.imboApp.selectedPackageAsset !== null) {
+                return this.insertAssetImage();
+            } else {
+                return this.insertEmbeddedImage();
+            }
+        },
+
+        insertEmbeddedImage: function() {
             var url  = this.buildImageUrl(false),
                 crop = this.cropParams,
                 img  = $('<img />');
-
-            if (this.imboApp.selectedPackageAsset !== null) {
-                return this.insertAssetImage();
-            }
 
             var insertElement = function insertElement(drPublishId) {
                 // Use template to build markup
@@ -507,8 +511,6 @@ define([
                     );
                 }
             }.bind(this);
-
-
             if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
                 insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
             } else {
@@ -518,9 +520,9 @@ define([
 
 
         insertAssetImage: function() {
+            var thumbnailUri = this.buildImageUrl().maxSize({width:100, height: 100}).jpg().toString();
             var resourceUri =  this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
             var previewUri =   this.buildImageUrl().maxSize({width:800, height: 800}).jpg().toString();
-            var thumbnailUri = this.buildImageUrl().maxSize({width:100, height: 100}).jpg().toString();
             //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
             var renditions = {
                 highRes : {uri:resourceUri},
@@ -528,7 +530,23 @@ define([
                 thumbnail : {uri:thumbnailUri},
                 preview : {uri:previewUri}
             }
-            this.imboApp.importAssetImage(resourceUri, previewUri, renditions,  function() {PluginAPI.hideLoader()});
+            var options = {
+                resourceUri: resourceUri,
+                previewUri: previewUri,
+                renditions: renditions,
+                imboOptions : {
+                    imageIdentifier: this.imageIdentifier,
+                    title: this.imageMetadata['drp:title']             || '',
+                    author: this.imageMetadata['drp:photographer']     || '',
+                    source: this.imageMetadata['drp:agency']           || '',
+                    description: this.imageMetadata['drp:description'] || '',
+                    cropParams: this.cropParams,
+                    cropRatio: this.cropAspectRatio,
+                    transformations: this.buildImageUrl().getTransformations()
+                }
+            }
+
+            this.imboApp.exportAssetImage(options,  function() {PluginAPI.hideLoader()});
             this.hide();
         },
 
