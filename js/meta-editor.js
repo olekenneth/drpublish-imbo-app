@@ -3,28 +3,28 @@ define([
     'jquery',
     'exif',
     'drp-plugin-api'
-], function(_, $, Exif, pluginApi) {
+], function(_, $, Exif, PluginApi) {
 
-    var MetaEditor = function() {
-        this.initialize();
+    var MetaEditor = function(imboApp) {
+        this.initialize(imboApp);
     };
 
     _.extend(MetaEditor.prototype, {
         MAX_IMAGE_WIDTH:  1464,
         MAX_IMAGE_HEIGHT: 1104,
 
-        initialize: function() {
-            _.bindAll(this);
 
+        initialize: function(imboApp) {
+            _.bindAll(this);
             this.editorPane = $('.meta-editor');
             this.tabCtrl    = $('.tab-controller');
             this.exifPane   = $('.exif-pane');
             this.inputPane  = $('.input-pane');
             this.imageBox   = this.editorPane.find('.image-container');
             this.imageView  = this.imageBox.find('.source');
-
             this.events = $({});
             this.bindEvents();
+            this.imboApp = imboApp;
         },
 
         bindEvents: function() {
@@ -74,12 +74,14 @@ define([
             el.addClass('active');
         },
 
+        imboApp: null,
+
         show: function() {
             // Maximize app window (if in app context)
-            pluginApi.Article.maximizeAppWindow(
-                this.translator.translate('META_EDITOR_TITLE'),
-                this.hide
-            );
+            //PluginApi.Article.maximizeAppWindow(
+            //    this.translator.translate('META_EDITOR_TITLE'),
+            //    this.hide
+            //);
 
             // Focus the first tab
             this.tabCtrl
@@ -92,14 +94,7 @@ define([
         },
 
         hide: function() {
-            this.imageIdentifier = null;
-
-            this.editorPane.addClass('hidden');
-            this.trigger('hide');
-
-            pluginApi.Article.restoreAppWindow();
-
-            pluginApi.hideLoader();
+            this.imboApp.imageEditor.hide();
         },
 
         resetState: function() {
@@ -109,26 +104,13 @@ define([
         },
 
         loadDataForImage: function(imageId) {
+            console.debug('stef: loadDataForImage', imageId);
             // Reset state so we're not showing old data
             this.resetState();
 
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
 
-            // Start loading image
-            this.setImageViewUrl(
-                this.imbo.getImageUrl(imageId).maxSize({
-                    width: this.MAX_IMAGE_WIDTH,
-                    height: this.MAX_IMAGE_HEIGHT
-                }).jpg()
-            );
-
-            // Show a loading indicator while loading metadata
-            pluginApi.showLoader(
-                this.translator.translate('META_EDITOR_LOADING_METADATA')
-            );
-
-            // Fetch metadata for image
             this.imbo.getMetadata(imageId, this.onImageDataLoaded);
         },
 
@@ -140,6 +122,9 @@ define([
         },
 
         onImageDataLoaded: function(err, data) {
+            if (!data) {
+                return;
+            }
             this.inputPane.find('input, textarea').each(function(i, el) {
                 var name = el.getAttribute('name');
                 if (data[name]) {
@@ -150,10 +135,7 @@ define([
                     el.value = data['exif:Artist'];
                 }
             });
-
             this.populateExifData(data);
-
-            pluginApi.hideLoader();
         },
 
         populateExifData: function(data) {
@@ -234,14 +216,19 @@ define([
                 return console.error('Tried to save metadata, no image active');
             }
 
-            pluginApi.showLoader(
+            PluginApi.showLoader(
                 this.translator.translate('META_EDITOR_SAVING_METADATA')
             );
+
+            var callback = function() {
+                console.debug('stef: meta data saved');
+                PluginAPI.hideLoader();
+            }
 
             this.imbo.editMetadata(
                 this.imageIdentifier,
                 this.getMetadataFromInputs(),
-                this.hide
+                callback
             );
         },
 

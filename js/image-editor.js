@@ -33,17 +33,17 @@ define([
         initialize: function(imboApp) {
             this.imboApp = imboApp;
             _.bindAll(this);
-
             this.imageClassName = 'dp-picture';
             this.editorPane   = $('.image-editor');
-            this.controls     = this.editorPane.find('.controls');
+            this.controls     = this.editorPane.find('.controls, .rotates');
             this.cropRatios   = this.editorPane.find('.crop-presets');
             this.imageView    = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
+            this.imagePreviewReference = $('#reference-image');
+            this.settingsTabButtons = $('.settings-header > button');
             this.imageSize    = { width: 0, height: 0 };
             this.embeddedTypeId = null;
             this.events = $({});
-
             this.initEmbeddedTypeId();
             this.initTransformations();
             this.initRatioPickers();
@@ -51,6 +51,8 @@ define([
         },
 
         imboApp: null,
+
+        settingsTabButtons: null,
 
         initEmbeddedTypeId: function() {
             PluginAPI.getEmbeddedObjectTypes(function(types) {
@@ -85,29 +87,26 @@ define([
             this.editorPane
                 .find('.cancel')
                 .on('click', this.hide);
-
             this.editorPane
                 .find('.reset')
                 .on('click', this.reset);
-
             this.editorPane
                 .find('.insert, .update')
                 .on('click', this.insertToArticle);
-
             this.controls
                 .find('input[type=range]')
                 .on('change', _.debounce(this.onAdjustSlider, 300));
-
             this.controls
                 .find('.rotate')
                 .on('click', this.rotateImage);
-
             this.cropRatios
                 .on('click', '.ratio', this.onLockRatio);
+            this.settingsTabButtons
+                .on('click', this.switchSettingsTab);
 
-            this.imagePreview
-                .on('load', this.onImageLoaded);
-
+            //this.imagePreview
+            //    .on('load', this.onImageLoaded);
+            this.imagePreviewReference.on('load', this.onImageLoaded);
             this.on('editor-image-selected', _.partial(this.setEditMode, true));
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
@@ -118,18 +117,13 @@ define([
         },
 
         initRatioPickers: function() {
-            var size = 40, format, value;
+            var format, value;
             for (format in this.CROP_FORMATS) {
                 value = this.CROP_FORMATS[format];
                 $('<button class="ratio">').attr({
                     'data-ratio': value
-                }).text(format).css({
-                    width: size * value,
-                    height: size
-                }).prependTo(this.cropRatios);
+                }).text(format).prependTo(this.cropRatios);
             }
-
-            this.cropRatios.find('.unlock').css('height', size);
         },
 
         setTranslator: function(translator) {
@@ -140,18 +134,39 @@ define([
             this.imbo = imboClient;
         },
 
-        buildCropper: function() {
-            if (this.cropper) { return; }
-
-            this.cropper = $.Jcrop(this.imagePreview, _.extend({
+        setCropper: function(cropParams) {
+            var img = this.imagePreview.get(0);
+            var rotated = (this.imageSize.width !== img.naturalWidth);
+            this.imageSize.width  = img.naturalWidth;
+            this.imageSize.height = img.naturalHeight;
+            var options = {
                 onChange: this.onCropChange
-            }, this.originalImageSize ? {
-                trueSize: [
+            };
+            if (this.originalImageSize) {
+                options.trueSize = [
                     this.originalImageSize.width,
                     this.originalImageSize.height
-                ]
-            } : {}));
+                ];
+            }
+            //if (cropParams && rotated === false ) {
+            if (cropParams) {
+                options.setSelect = [
+                    cropParams.x,
+                    cropParams.y,
+                    cropParams.x2,
+                    cropParams.y2
+                ];
+            }
+            if (this.cropper) {
+                this.cropper.setImage(this.imagePreview.attr('src'));
+                window.setTimeout(function(imageEditor) {
+                    imageEditor.cropper.setOptions(options);
+                }, 100, this);
+            } else {
+                this.cropper = $.Jcrop(this.imagePreview, options);
+            }
         },
+
 
         show: function() {
             // Maximize app window (if in app context)
@@ -159,92 +174,80 @@ define([
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
-
             // Show the editor pane and trigger a show-event
             this.editorPane.removeClass('hidden');
             this.trigger('show');
-
+            $('body').addClass('editor-view');
             return this;
         },
 
+        setImagePreviewSrc: function(src) {
+            this.imagePreview.attr('src', src);
+        },
+
         hide: function() {
+            $('body').removeClass('editor-view');
             this.imageIdentifier = null;
             this.reset();
-
             this.editorPane.addClass('hidden');
             this.trigger('hide');
-
             PluginAPI.Article.restoreAppWindow();
-
             PluginAPI.hideLoader();
         },
 
         resetState: function() {
-            this.imagePreview.attr('src', 'img/blank.gif');
+            this.setImagePreviewSrc('img/clearpix.png');
         },
 
         loadImage: function(imageId, options) {
             this.resetState();
-
+            PluginAPI.showLoader('Loading image');
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
-
             // Set original image size
             this.originalImageSize = {
                 width: options.width,
                 height: options.height
             };
-
-            // Set original size to cropper
-            if (this.cropper) {
-                this.cropper.setOptions({
-                    trueSize: [options.width, options.height]
-                });
-            }
-
             // Start loading image
             this.url = this.imbo.getImageUrl(imageId).maxSize({
                 width: this.MAX_IMAGE_WIDTH,
                 height: this.MAX_IMAGE_HEIGHT
             }).jpg();
-
             // Set up crop params, if we have any
             this.cropParams = options.crop && options.crop.x2 ? options.crop : null;
             this.cropAspectRatio = options.cropAspectRatio || null;
             if (this.cropParams) {
                 this.cropParams.forceApply = true;
             }
-
             // Set a fixed crop aspect ratio, if any was selected
             if (options.cropAspectRatio) {
                 $('[data-ratio="' + options.cropAspectRatio + '"]').trigger('click');
+            } else {
+                $('button.ratio').removeClass('active');
             }
-
             // Apply transformations to image and GUI
             if (options.transformations) {
                 this.applyTransformations(options.transformations);
             }
-
             // Load metadata for image
             this.imageMetadata = {};
             this.imbo.getMetadata(imageId, function(err, data) {
                 this.imageMetadata = data;
             }.bind(this));
-
             this.updateImageView();
+            this.imboApp.metaEditor.loadDataForImage(this.imageIdentifier);
         },
 
         applyTransformations: function(transformations) {
             var transformation, i;
             for (i = 0; i < transformations.length; i++) {
                 transformation = this.parseTransformation(transformations[i]);
-
                 // For now, we're applying crop at a different stage
                 // Change this if multiple crops is supposed to work
                 if (transformation.name === 'crop') {
                     continue;
                 }
-
                 this.applyTransformation(transformation);
             }
         },
@@ -257,11 +260,9 @@ define([
                     saturation: t.params.s,
                     hue: t.params.h
                 };
-
                 for (var key in this.transformations.modulate) {
                     $('#slider-' + key).val(this.transformations.modulate[key]);
                 }
-
                 return;
             }
 
@@ -276,35 +277,29 @@ define([
                 name   = parts.shift(),
                 params = parts.join(':').split(','),
                 args   = {};
-
             for (var i = 0; i < params.length; i++) {
                 parts = params[i].split('=');
                 args[parts.shift()] = parts.join('=');
             }
-
             return { name: name, params: args };
         },
 
-        buildImageUrl: function(preview) {
-
-            var crop = this.cropParams;
+        buildImageUrl: function(preview, preventCropping) {
+            var crop = preventCropping ? null: this.cropParams;
             // Reset URL
             this.url.reset().jpg();
-
             if (preview) {
                 this.url.maxSize({
                     width: this.MAX_IMAGE_WIDTH,
                     height: this.MAX_IMAGE_HEIGHT
                 });
             }
-
             // Find transformations with values that differ from the defaults
             var transformation, option, currentValue, defaultValue, diff = {};
             for (transformation in this.transformations) {
                 for (option in this.transformations[transformation]) {
                     currentValue = this.transformations[transformation][option];
                     defaultValue = this.transformationDefaults[transformation][option];
-
                     if (currentValue !== defaultValue) {
                         diff[transformation] = diff[transformation] || {};
                         diff[transformation][option] = currentValue;
@@ -325,33 +320,28 @@ define([
         },
 
         updateImageView: function() {
+            $('#editor-image-loading').show();
             // Build new image URL based on transformation states
-            this.buildImageUrl(true);
-
+            this.buildImageUrl(true, true);
             var imageUrl = this.url.toString();
-            this.imagePreview.attr('src', imageUrl);
-
+            this.setImagePreviewSrc(imageUrl);
             // Show a loading indicator while loading image
             if (!this.imagePreview.get(0).complete) {
                 PluginAPI.showLoader(
                     this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
                 );
             }
-
-            if (this.cropper) {
-                this.cropper.setImage(imageUrl);
-            }
+            $('#reference-image').attr('src', imageUrl);
+            //this.cropper.setImage(imageUrl);
         },
 
         onAdjustSlider: function(e) {
             var el    = $(e.target),
                 name  = el.attr('name'),
                 value = e.target.valueAsNumber || e.target.value;
-
             if (_.contains(['brightness', 'saturation', 'hue'], name)) {
                 this.transformations.modulate[name] = value;
             }
-
             if (name === 'sharpen') {
                 if (value === 0) {
                     delete this.transformations.sharpen.preset;
@@ -359,52 +349,26 @@ define([
                     this.transformations.sharpen.preset = this.SHARPEN_LEVELS[value];
                 }
             }
-
             this.updateImageView();
         },
 
         onImageLoaded: function() {
-            // Initialize cropper
-            this.buildCropper();
-
-            // Hide loading indication
+            this.setCropper(this.cropParams);
             PluginAPI.hideLoader();
-
-            // Get new image dimensions
-            var img = this.imagePreview.get(0),
-                w   = img.naturalWidth,
-                h   = img.naturalHeight,
-                c   = this.cropParams;
-
-            var rotated = (this.imageSize.width !== w);
-            if (this.cropParams && (rotated === false || this.cropParams.forceApply)) {
-                this.cropper.setSelect([
-                    this.cropParams.x,
-                    this.cropParams.y,
-                    this.cropParams.x2,
-                    this.cropParams.y2
-                ]);
-            }
-
-            this.imageSize.width  = w;
-            this.imageSize.height = h;
         },
+
 
         onLockRatio: function(e) {
             var el = $(e.currentTarget);
-
             el.addClass('active').siblings().removeClass('active');
-
             // If there is no active crop, add a preview crop
             if (!this.cropParams) {
-                this.cropper.setSelect([0, 0, 300, 300]);
+                this.setCropper([0, 0, 300, 300]);
             }
-
             // Now set the ratio to the given aspect ratio
             if (this.cropper) {
                 this.cropper.setOptions({ aspectRatio: el.data('ratio') });
             }
-
             // Make sure the app knows about the selected ratio
             this.cropAspectRatio = el.data('ratio');
         },
@@ -421,46 +385,42 @@ define([
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
-
             if (newAmount < 0) {
                 newAmount = 360 + newAmount;
             }
-
             if (newAmount === 90 || newAmount === 270) {
                 trueSize = trueSize.reverse();
             }
-
             this.cropper.setOptions({
                 'trueSize': trueSize
             });
-
+            this.cropper.release();
             this.transformations.rotate.angle = newAmount;
-
             this.updateImageView();
+
         },
 
         reset: function() {
             // Remove transformations
             this.transformations = _.cloneDeep(this.transformationDefaults);
-
             // Reset sliders
             this.editorPane.find('.sliders').get(0).reset();
-
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
-
             // Reset cropper
             if (this.cropper) {
                 this.cropper.release();
                 this.cropParams = null;
             }
-
             // Update image view
             this.updateImageView();
         },
 
         insertToArticle: function() {
+            if (!this.imboApp.insertionEnabled) {
+                return;
+            }
             if (this.imboApp.selectedPackageAsset !== null) {
                 return this.insertAssetImage();
             } else {
@@ -469,55 +429,43 @@ define([
         },
 
         insertEmbeddedImage: function() {
-            var url  = this.buildImageUrl(false),
-                crop = this.cropParams,
-                img  = $('<img />');
-
-            var insertElement = function insertElement(drPublishId) {
+            var insertElement = function() {
+                var url  = this.buildImageUrl(false);
                 // Use template to build markup
                 var markup = template({
-                    'url': url.maxSize({ width: 552 }).jpg().toString(),
-                    'drPublishId': drPublishId,
-                    'className': this.imageClassName,
-                    'width': 552,
-                    'title': this.imageMetadata['drp:title']             || '',
-                    'author': this.imageMetadata['drp:photographer']     || '',
-                    'source': this.imageMetadata['drp:agency']           || '',
-                    'description': this.imageMetadata['drp:description'] || '',
-                    'imageIdentifier': this.imageIdentifier,
-                    'cropParams': JSON.stringify(_.mapValues(crop, Math.floor)),
-                    'cropRatio': JSON.stringify(this.cropAspectRatio),
-                    'transformations': JSON.stringify(url.getTransformations())
+                    url: url.maxSize({ width: 552 }).jpg().toString(),
+                    drPublishId: $(this.selectedElementMarkup).attr('data-internal-id'),
+                    className: this.imageClassName,
+                    width: 552,
+                    title: this.imageMetadata['drp:title']             || '',
+                    author: this.imageMetadata['drp:photographer']     || '',
+                    source: this.imageMetadata['drp:agency']           || '',
+                    description: this.imageMetadata['drp:description'] || '',
+                    imageIdentifier: this.imageIdentifier,
+                    cropParams: JSON.stringify(_.mapValues(this.cropParams, Math.floor)),
+                    cropRatio: JSON.stringify(this.cropAspectRatio),
+                    transformations: JSON.stringify(url.getTransformations())
                 });
-
-                var elId = this.selectedElementId;
-
-                if (elId) {
+                if (this.selectedElementId) {
                     PluginAPI.Editor.replaceElementById(
-                        elId,
+                        this.selectedElementId,
                         $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
                         function() {
-                            PluginAPI.Editor.markAsActive(elId);
+                            PluginAPI.Editor.markAsActive(this.selectedElementId);
                             this.hide();
                         }.bind(this)
                     );
                 } else {
-                    PluginAPI.Editor.insertElement(
-                        markup,
-                        { select: true },
-                        function() {
-                            this.hide();
-                        }.bind(this)
-                    );
+                    PluginAPI.Editor.insertElement(markup, {select: true}, this.hide);
                 }
             }.bind(this);
             if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
-                insertElement($(this.selectedElementMarkup).attr('data-internal-id'));
+                insertElement();
             } else {
                 PluginAPI.createEmbeddedObject(this.embeddedTypeId, insertElement);
             }
-        },
 
+        },
 
         insertAssetImage: function() {
             var thumbnailUri = this.buildImageUrl().maxSize({width:100, height: 100}).jpg().toString();
@@ -554,28 +502,23 @@ define([
             this.selectedElementId = e.id;
             PluginAPI.Editor.getHTMLById(e.id, function(html) {
                 this.selectedElementMarkup = html;
-
                 var el  = $(html),
                     img = el.find('img');
-
                 var transformations = img.data('transformations'),
                     imageIdentifier = img.data('image-identifier'),
                     cropParameters  = img.data('crop-parameters'),
                     cropAspectRatio = img.data('crop-aspect-ratio') || null;
-
                 this.trigger('editor-image-selected', [{
                     imageIdentifier: imageIdentifier,
                     transformations: transformations,
                     cropAspectRatio: cropAspectRatio,
                     cropParams:      cropParameters
                 }]);
-
             }.bind(this));
         },
 
         onEditorDeselectImage: function() {
             this.trigger('editor-image-deselected');
-
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
@@ -599,6 +542,27 @@ define([
         trigger: function(e, data) {
             this.events.trigger(e, data);
             return this;
+        },
+
+        switchSettingsTab: function(e) {
+            var button = $(e.target);
+            var ref = button.attr('data-ref');
+            $('.settings-tab').addClass('hidden');
+            $('.settings-tab.' + ref ).removeClass('hidden');
+            this.settingsTabButtons.removeClass('active');
+            button.addClass('active')
+        },
+
+        enableImageInsertion: function() {
+            this.editorPane.addClass('insertion-enabled');
+            this.editorPane.find('.settings-header button[data-ref="image"]').trigger('click');
+        },
+
+        disableImageInsertion: function() {
+            this.editorPane.removeClass('insertion-enabled');
+            this.editorPane.find('.settings-header button[data-ref="meta"]').trigger('click');
+            $('.settings-tab.image' ).addClass('hidden');
+            $('.settings-tab.meta' ).removeClass('hidden');
         }
     });
 

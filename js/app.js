@@ -167,6 +167,8 @@ define([
             }.bind(this));
         },
 
+        insertionEnabled: false,
+
         // When authentication has completed...
         onAuthed: function() {
             this.authed = true;
@@ -234,7 +236,7 @@ define([
             this.uploader.setUserInfo(this.user || {});
 
             // Initialize meta editor
-            this.metaEditor = new MetaEditor();
+            this.metaEditor = new MetaEditor(this);
             this.metaEditor.setTranslator(this.translator);
             this.metaEditor.setImboClient(this.imbo);
 
@@ -300,21 +302,6 @@ define([
             this.getImageList()
                 .on('scroll', this.onImageListScroll);
 
-            PluginAPI.on('assetFocus', _.bind(function(e) {
-                console.debug('stef: asset focus received (Imbo)', e.data.assetSource, PluginAPI.appName);
-                this.selectedPackageAsset = e.data;
-                if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
-                    this.previewImage(e.data.options);
-                }
-
-            }, this));
-
-            PluginAPI.on('assetBlur', _.bind(function(e) {
-                console.debug('stef: asset blur received (Imbo)', e.data);
-                this.selectedPackageAsset = null;
-                this.onEditorImageDeselected();
-            }, this));
-
 
             PluginAPI.on('receivedFocus', _.bind(function(e) {
                 console.debug('stef: received focus (Imbo)', e.data);
@@ -322,6 +309,32 @@ define([
                     return;
                 }
                 this.uploadScanpixImages(e.data.items);
+            }, this));
+
+
+            PluginAPI.on('assetFocus', _.bind(function(e) {
+                console.debug('stef: asset focus received (Imbo)', e.data.assetSource, PluginAPI.appName);
+                this.selectedPackageAsset = e.data;
+                this.enableImageInsertion();
+                if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
+                    this.previewImage(e.data.options);
+                }
+            }, this));
+
+            PluginAPI.on('assetBlur', _.bind(function(e) {
+                console.debug('stef: asset blur received (Imbo)', e.data);
+                this.selectedPackageAsset = null;
+                this.onEditorImageDeselected();
+                this.disableImageInsertion();
+            }, this));
+
+
+            PluginAPI.on('editorFocus', _.bind(function(e) {
+                this.enableImageInsertion();
+            }, this));
+
+            PluginAPI.on('editorsLostFocus', _.bind(function(e) {
+                this.disableImageInsertion();
             }, this));
         },
 
@@ -366,6 +379,8 @@ define([
                     width: item.data('width'),
                     height: item.data('height')
                 });
+
+
         },
 
         previewImage: function(options) {
@@ -386,14 +401,13 @@ define([
                 if (err) {
                     return console.error(err);
                 }
-
                 this.imageEditor
                     .show()
                     .loadImage(this.selectedImageOptions.imageIdentifier, {
                         width:  info[0].width,
                         height: info[0].height,
-                        crop:   this.selectedImageOptions.cropParams,
-                        cropAspectRatio: this.selectedImageOptions.cropAspectRatio,
+                        crop: this.selectedImageOptions.cropParams,
+                        cropAspectRatio: this.selectedImageOptions.cropRatio,
                         transformations: this.selectedImageOptions.transformations
                     });
             }.bind(this));
@@ -534,6 +548,7 @@ define([
             return (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
                 .replace(/\#file\-name/, fileName)
+                .replace(/\#file\-name/, fileName)
             );
         },
 
@@ -629,6 +644,7 @@ define([
 
         selectedPackageAsset: null,
 
+
         exportAssetImage: function(options, callback) {
             var data = {
                 dpArticleId:this.selectedPackageAsset.dpArticleId,
@@ -640,8 +656,19 @@ define([
                 renditions: options.renditions,
                 options: options.imboOptions
             }
-            console.debug('stef: imbo import asset image options', data);
             PluginAPI.Editor.updateAssetMedia(data, callback);
+        },
+
+        enableImageInsertion: function() {
+            this.insertionEnabled = true;
+            this.content.find('.image-list').addClass('insertion-enabled');
+            this.imageEditor.enableImageInsertion();
+        },
+
+        disableImageInsertion: function() {
+            this.insertionEnabled = false;
+            this.content.find('.image-list').removeClass('insertion-enabled');
+            this.imageEditor.disableImageInsertion();
         }
 
     });

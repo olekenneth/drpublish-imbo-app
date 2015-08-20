@@ -10,6 +10,7 @@ define(['underscore', 'language/en'], function(_, english) {
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Bruk bilde',
+        'USE_EDIT_IMAGE': 'Bruk eller rediger bilde',
         'SHOW_IMAGE_INFO': 'Vis informasjon',
         'DOWNLOAD_IMAGE': 'Last ned',
         'DELETE_IMAGE': 'Slett bilde',
@@ -32,7 +33,6 @@ define(['underscore', 'language/en'], function(_, english) {
         'META_EDITOR_IMAGE_AGENCY': 'Agentur',
         'META_EDITOR_IMAGE_EXIF': 'EXIF-data',
         'META_EDITOR_SOURCE_IMAGE': 'Originalbilde',
-        'META_EDITOR_CLOSE_PANE': 'Lukk bildeinfo',
         'META_EDITOR_SAVE_META_DATA': 'Lagre bildeinformasjon',
         'META_EDITOR_SAVING_METADATA': 'Lagrer bildeinformasjon...',
         'META_EDITOR_LOADING_METADATA': 'Laster bildeinformasjon...',

@@ -63,94 +63,106 @@
         </fieldset>
     </section>
 
-    <section class="meta-editor hidden">
-        <div class="tabs">
-            <ul class="tab-controller">
-                <li><button class="core active" data-tab="core"><i class="fa fa-info"></i> <span data-translate="META_EDITOR_CORE_TAB"></span></button></li>
-                <li><button class="exif" data-tab="exif"><i class="fa fa-picture-o"></i> <span data-translate="META_EDITOR_EXIF_TAB"></span></button></li>
-            </ul>
-
-            <section class="input-pane tab" data-tab="core">
-                <fieldset>
-                    <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
-                    <input type="text" name="drp:title">
-                </fieldset>
-
-                <fieldset>
-                    <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
-                    <textarea name="drp:description"></textarea>
-                </fieldset>
-
-                <fieldset>
-                    <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
-                    <input type="text" name="drp:photographer">
-                </fieldset>
-
-                <fieldset>
-                    <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
-                    <input type="text" name="drp:agency">
-                </fieldset>
-            </section>
-
-            <section class="exif-pane tab hidden" data-tab="exif">
-                &nbsp;
-            </section>
-
-            <div class="buttons">
-                <button class="close"><i class="fa fa-times"></i> <span data-translate="META_EDITOR_CLOSE_PANE"></span></button>
-                <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
-            </div>
-        </div>
-
-        <div class="image-container">
-            <h2 data-translate="META_EDITOR_SOURCE_IMAGE"></h2>
-
-            <div class="source"></div>
-        </div>
-    </section>
 
     <section class="image-editor hidden">
         <div class="settings-pane">
-            <fieldset>
-                <legend><i class="fa fa-crop"></i><span data-translate="IMAGE_EDITOR_CROP_SETTINGS"></span></legend>
-
-                <div class="crop-presets">
-
-                    <button class="ratio unlock active" data-ratio="0"><i class="fa fa-unlock-alt"></i> <span data-translate="IMAGE_EDITOR_CROP_RATIO_UNLOCK"></span></button>
-                </div>
-            </fieldset>
-
-            <fieldset class="controls">
-                <legend><i class="fa fa-adjust"></i><span data-translate="IMAGE_EDITOR_ADJUSTMENTS"></span></legend>
-
-                <div class="rotation">
-                    <label data-translate="IMAGE_EDITOR_ROTATION"></label>
-
-                    <button class="rotate" data-amount="-90"><i class="fa fa-rotate-left"></i></button>
-                    <button class="rotate" data-amount="90"><i class="fa fa-rotate-right"></i></button>
-                </div>
-
-                <form action="" class="sliders">
-                    <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
-                    <input type="range" min="0" max="200" step="1" value="100" name="saturation" id="slider-saturation">
-
-                    <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
-                    <input type="range" min="0" max="200" step="1" value="100" name="brightness" id="slider-brightness">
-
-                    <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
-                    <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
-
-                    <label for="slider-sharpen" data-translate="IMAGE_EDITOR_SHARPNESS"></label>
-                    <input type="range" min="0" max="4" step="1" value="0" name="sharpen" id="slider-sharpen">
-                </form>
-            </fieldset>
-
-            <div class="buttons">
-                <button class="reset"><i class="fa fa-thumbs-o-down"></i> <span data-translate="IMAGE_EDITOR_RESET_BUTTON"></span></button>
-                <button class="cancel"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
-                <button class="insert"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_INSERT_IMAGE"></span></button>
-                <button class="update hidden"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_UPDATE_IMAGE"></span></button>
+            <div class="settings-header">
+                <button data-ref="image" >
+                    <span data-translate="IMAGE_EDITOR_TITLE"></span>
+                </button>
+                <button data-ref="meta" class="active">
+                    <span data-translate="META_EDITOR_TITLE"></span>
+                </button>
             </div>
+
+            <div class="settings-tab image hidden">
+                <div><img src="" id="reference-image" style="width: 0; height: 0" /></div>
+                <fieldset>
+                    <legend><i class="fa fa-crop"></i><span data-translate="IMAGE_EDITOR_CROP_SETTINGS"></span></legend>
+
+                    <div class="crop-presets">
+                        <button class="ratio unlock active" data-ratio="0"><i class="fa fa-unlock-alt"></i> <span data-translate="IMAGE_EDITOR_CROP_RATIO_UNLOCK"></span></button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="rotates">
+                    <legend>
+                        <i class="fa fa-rotate-right"></i><span data-translate="IMAGE_EDITOR_ROTATION"></span>
+                    </legend>
+                    <div class="rotation">
+                        <button class="rotate" data-amount="-90"><i class="fa fa-rotate-left"></i></button>
+                        <button class="rotate" data-amount="90"><i class="fa fa-rotate-right"></i></button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="controls">
+                    <legend><i class="fa fa-adjust"></i><span data-translate="IMAGE_EDITOR_ADJUSTMENTS"></span></legend>
+
+                    <form action="" class="sliders">
+                        <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
+                        <input type="range" min="0" max="200" step="1" value="100" name="saturation" id="slider-saturation">
+
+                        <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
+                        <input type="range" min="0" max="200" step="1" value="100" name="brightness" id="slider-brightness">
+
+                        <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
+                        <input type="range" min="0" max="200" step="1" value="100" name="hue" id="slider-hue">
+
+                        <label for="slider-sharpen" data-translate="IMAGE_EDITOR_SHARPNESS"></label>
+                        <input type="range" min="0" max="4" step="1" value="0" name="sharpen" id="slider-sharpen">
+                    </form>
+                </fieldset>
+
+                <div class="buttons">
+                    <button class="reset"><i class="fa fa-thumbs-o-down"></i> <span data-translate="IMAGE_EDITOR_RESET_BUTTON"></span></button>
+                    <button class="cancel"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
+                    <button class="insert"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_INSERT_IMAGE"></span></button>
+                    <button class="update hidden"><i class="fa fa-save"></i> <span data-translate="IMAGE_EDITOR_UPDATE_IMAGE"></span></button>
+                </div>
+            </div>
+
+            <div class="settings-tab meta">
+                <div class="meta-editor">
+                            <div class="tabs">
+                                <ul class="tab-controller">
+                                    <li><button class="core active" data-tab="core"><i class="fa fa-info"></i> <span data-translate="META_EDITOR_CORE_TAB"></span></button></li>
+                                    <li><button class="exif" data-tab="exif"><i class="fa fa-picture-o"></i> <span data-translate="META_EDITOR_EXIF_TAB"></span></button></li>
+                                </ul>
+
+                                <section class="input-pane tab" data-tab="core">
+                                    <fieldset>
+                                        <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
+                                        <input type="text" name="drp:title">
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
+                                        <textarea name="drp:description"></textarea>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
+                                        <input type="text" name="drp:photographer">
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
+                                        <input type="text" name="drp:agency">
+                                    </fieldset>
+                                </section>
+
+                                <section class="exif-pane tab hidden" data-tab="exif">
+                                    &nbsp;
+                                </section>
+
+                                <div class="buttons">
+                                    <button class="close"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
+                                    <button class="save"><i class="fa fa-save"></i> <span data-translate="META_EDITOR_SAVE_META_DATA"></span></button>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+
         </div>
 
         <section class="image-container">
@@ -159,8 +171,10 @@
     </section>
 
     <aside class="image-toolbar hidden">
-        <button class="image-use" data-translate-title="USE_IMAGE" data-action="use-image"><i class="fa fa-plus-square-o"></i></button>
-        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="fa fa-info"></i></button>
+        <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
+            <span class="insert-image"><i class="fa fa-plus-square-o"></i>/</span><i class="fa fa-edit"></i>
+        </button>
+<!--        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="fa fa-info"></i></button>-->
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="fa fa-download"></i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="fa fa-trash-o"></i></button>
     </aside>

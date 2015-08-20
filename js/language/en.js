@@ -10,6 +10,7 @@ define([], function() {
 
         // Image toolbar tooltips
         'USE_IMAGE': 'Use image',
+        'USE_EDIT_IMAGE': 'Use or edit image',
         'SHOW_IMAGE_INFO': 'Show information',
         'DOWNLOAD_IMAGE': 'Download image',
         'DELETE_IMAGE': 'Delete image',
@@ -32,7 +33,7 @@ define([], function() {
         'META_EDITOR_IMAGE_AGENCY': 'Agency',
         'META_EDITOR_IMAGE_EXIF': 'EXIF-data',
         'META_EDITOR_SOURCE_IMAGE': 'Source image',
-        'META_EDITOR_CLOSE_PANE': 'Close metadata',
+        'CLOSE_PANE': 'Close',
         'META_EDITOR_SAVE_META_DATA': 'Save metadata',
         'META_EDITOR_SAVING_METADATA': 'Saving metadata...',
         'META_EDITOR_LOADING_METADATA': 'Loading metadata...',
