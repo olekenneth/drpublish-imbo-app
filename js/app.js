@@ -304,7 +304,6 @@ define([
 
 
             PluginAPI.on('receivedFocus', _.bind(function(e) {
-                console.debug('stef: received focus (Imbo)', e.data);
                 if (e.data.previousPluginName !== 'scanpix') {
                     return;
                 }
@@ -313,7 +312,6 @@ define([
 
 
             PluginAPI.on('assetFocus', _.bind(function(e) {
-                console.debug('stef: asset focus received (Imbo)', e.data.assetSource, PluginAPI.appName);
                 this.selectedPackageAsset = e.data;
                 this.enableImageInsertion();
                 if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
@@ -322,7 +320,6 @@ define([
             }, this));
 
             PluginAPI.on('assetBlur', _.bind(function(e) {
-                console.debug('stef: asset blur received (Imbo)', e.data);
                 this.selectedPackageAsset = null;
                 this.onEditorImageDeselected();
                 this.disableImageInsertion();
@@ -644,10 +641,26 @@ define([
 
         selectedPackageAsset: null,
 
+        exportEmbeddedImage: function (markup, options, callback) {
+            var data = {
+                // internal id not yet available at this point. Will be added by the PluginAPI
+                embeddedTypeId: options.embeddedTypeId,
+                externalId: options.externalId,
+                assetType: 'picture',
+                assetClass: options.assetClass,
+                assetSource: PluginAPI.appName,
+                resourceUri: options.resourceUri,
+                previewUri: options.previewUri,
+                renditions: options.renditions,
+                options: options.imboOptions
+            };
+            PluginAPI.Editor.insertEmbeddedMedia(markup, data, callback);
+        },
 
         exportAssetImage: function(options, callback) {
             var data = {
                 dpArticleId:this.selectedPackageAsset.dpArticleId,
+                externalId: options.imageIdentifier,
                 assetElementId: this.selectedPackageAsset.assetElementId,
                 assetType: 'picture',
                 assetSource: PluginAPI.appName,
@@ -655,7 +668,7 @@ define([
                 previewUri: options.previewUri,
                 renditions: options.renditions,
                 options: options.imboOptions
-            }
+            };
             PluginAPI.Editor.updateAssetMedia(data, callback);
         },
 

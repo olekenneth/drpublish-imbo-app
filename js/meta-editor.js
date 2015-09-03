@@ -104,13 +104,10 @@ define([
         },
 
         loadDataForImage: function(imageId) {
-            console.debug('stef: loadDataForImage', imageId);
             // Reset state so we're not showing old data
             this.resetState();
-
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
-
             this.imbo.getMetadata(imageId, this.onImageDataLoaded);
         },
 

@@ -4,14 +4,14 @@ define([
     'template',
     'drp-plugin-api',
     'jcrop'
-], function(_, $, template, PluginAPI) {
+], function (_, $, template, PluginAPI) {
 
-    var ImageEditor = function(imboApp) {
+    var ImageEditor = function (imboApp) {
         this.initialize(imboApp);
     };
 
     _.extend(ImageEditor.prototype, {
-        MAX_IMAGE_WIDTH:  924,
+        MAX_IMAGE_WIDTH: 924,
         MAX_IMAGE_HEIGHT: 693,
         CROP_FORMATS: {
             '4:3': 4 / 3,
@@ -30,18 +30,18 @@ define([
             4: 'extreme'
         },
 
-        initialize: function(imboApp) {
+        initialize: function (imboApp) {
             this.imboApp = imboApp;
             _.bindAll(this);
             this.imageClassName = 'dp-picture';
-            this.editorPane   = $('.image-editor');
-            this.controls     = this.editorPane.find('.controls, .rotates');
-            this.cropRatios   = this.editorPane.find('.crop-presets');
-            this.imageView    = this.editorPane.find('.image-container');
+            this.editorPane = $('.image-editor');
+            this.controls = this.editorPane.find('.controls, .rotates');
+            this.cropRatios = this.editorPane.find('.crop-presets');
+            this.imageView = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
             this.imagePreviewReference = $('#reference-image');
             this.settingsTabButtons = $('.settings-header > button');
-            this.imageSize    = { width: 0, height: 0 };
+            this.imageSize = {width: 0, height: 0};
             this.embeddedTypeId = null;
             this.events = $({});
             this.initEmbeddedTypeId();
@@ -54,9 +54,9 @@ define([
 
         settingsTabButtons: null,
 
-        initEmbeddedTypeId: function() {
-            PluginAPI.getEmbeddedObjectTypes(function(types) {
-                types.forEach(function(type) {
+        initEmbeddedTypeId: function () {
+            PluginAPI.getEmbeddedObjectTypes(function (types) {
+                types.forEach(function (type) {
                     if (type.cssClass === this.imageClassName) {
                         this.embeddedTypeId = type.typeId;
                     }
@@ -64,7 +64,7 @@ define([
             }.bind(this));
         },
 
-        initTransformations: function() {
+        initTransformations: function () {
             this.transformationDefaults = {
                 modulate: {
                     brightness: 100,
@@ -83,7 +83,7 @@ define([
             this.transformations = _.cloneDeep(this.transformationDefaults);
         },
 
-        bindEvents: function() {
+        bindEvents: function () {
             this.editorPane
                 .find('.cancel')
                 .on('click', this.hide);
@@ -111,12 +111,12 @@ define([
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
             PluginAPI.addListeners({
-                pluginElementClicked: this.onEditorSelectImage,
-                pluginElementDeselected: this.onEditorDeselectImage
+                embeddedAssetSelected: this.onEditorSelectImage,
+                embeddedAssetBlur: this.onEditorDeselectImage
             });
         },
 
-        initRatioPickers: function() {
+        initRatioPickers: function () {
             var format, value;
             for (format in this.CROP_FORMATS) {
                 value = this.CROP_FORMATS[format];
@@ -126,18 +126,18 @@ define([
             }
         },
 
-        setTranslator: function(translator) {
+        setTranslator: function (translator) {
             this.translator = translator;
         },
 
-        setImboClient: function(imboClient) {
+        setImboClient: function (imboClient) {
             this.imbo = imboClient;
         },
 
-        setCropper: function(cropParams) {
+        setCropper: function (cropParams) {
             var img = this.imagePreview.get(0);
             var rotated = (this.imageSize.width !== img.naturalWidth);
-            this.imageSize.width  = img.naturalWidth;
+            this.imageSize.width = img.naturalWidth;
             this.imageSize.height = img.naturalHeight;
             var options = {
                 onChange: this.onCropChange
@@ -159,7 +159,7 @@ define([
             }
             if (this.cropper) {
                 this.cropper.setImage(this.imagePreview.attr('src'));
-                window.setTimeout(function(imageEditor) {
+                window.setTimeout(function (imageEditor) {
                     imageEditor.cropper.setOptions(options);
                 }, 100, this);
             } else {
@@ -168,7 +168,7 @@ define([
         },
 
 
-        show: function() {
+        show: function () {
             // Maximize app window (if in app context)
             PluginAPI.Article.maximizeAppWindow(
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
@@ -181,11 +181,11 @@ define([
             return this;
         },
 
-        setImagePreviewSrc: function(src) {
+        setImagePreviewSrc: function (src) {
             this.imagePreview.attr('src', src);
         },
 
-        hide: function() {
+        hide: function () {
             $('body').removeClass('editor-view');
             this.imageIdentifier = null;
             this.reset();
@@ -195,11 +195,11 @@ define([
             PluginAPI.hideLoader();
         },
 
-        resetState: function() {
+        resetState: function () {
             this.setImagePreviewSrc('img/clearpix.png');
         },
 
-        loadImage: function(imageId, options) {
+        loadImage: function (imageId, options) {
             this.resetState();
             PluginAPI.showLoader('Loading image');
             // Ensure app knows which image to change metadata on
@@ -232,14 +232,14 @@ define([
             }
             // Load metadata for image
             this.imageMetadata = {};
-            this.imbo.getMetadata(imageId, function(err, data) {
+            this.imbo.getMetadata(imageId, function (err, data) {
                 this.imageMetadata = data;
             }.bind(this));
             this.updateImageView();
             this.imboApp.metaEditor.loadDataForImage(this.imageIdentifier);
         },
 
-        applyTransformations: function(transformations) {
+        applyTransformations: function (transformations) {
             var transformation, i;
             for (i = 0; i < transformations.length; i++) {
                 transformation = this.parseTransformation(transformations[i]);
@@ -252,7 +252,7 @@ define([
             }
         },
 
-        applyTransformation: function(t) {
+        applyTransformation: function (t) {
             // We need to translate some param names for modulate
             if (t.name === 'modulate') {
                 this.transformations.modulate = {
@@ -272,20 +272,20 @@ define([
             );
         },
 
-        parseTransformation: function(t) {
-            var parts  = t.split(':'),
-                name   = parts.shift(),
+        parseTransformation: function (t) {
+            var parts = t.split(':'),
+                name = parts.shift(),
                 params = parts.join(':').split(','),
-                args   = {};
+                args = {};
             for (var i = 0; i < params.length; i++) {
                 parts = params[i].split('=');
                 args[parts.shift()] = parts.join('=');
             }
-            return { name: name, params: args };
+            return {name: name, params: args};
         },
 
-        buildImageUrl: function(preview, preventCropping) {
-            var crop = preventCropping ? null: this.cropParams;
+        buildImageUrl: function (preview, preventCropping) {
+            var crop = preventCropping ? null : this.cropParams;
             // Reset URL
             this.url.reset().jpg();
             if (preview) {
@@ -314,12 +314,12 @@ define([
 
             // @todo Find a better way to handle unintentional crops
             if (crop && crop.w > 25 && crop.h > 25) {
-                this.url.crop({ x: crop.x, y: crop.y, width: crop.w, height: crop.h });
+                this.url.crop({x: crop.x, y: crop.y, width: crop.w, height: crop.h});
             }
             return this.url;
         },
 
-        updateImageView: function() {
+        updateImageView: function () {
             $('#editor-image-loading').show();
             // Build new image URL based on transformation states
             this.buildImageUrl(true, true);
@@ -335,9 +335,9 @@ define([
             //this.cropper.setImage(imageUrl);
         },
 
-        onAdjustSlider: function(e) {
-            var el    = $(e.target),
-                name  = el.attr('name'),
+        onAdjustSlider: function (e) {
+            var el = $(e.target),
+                name = el.attr('name'),
                 value = e.target.valueAsNumber || e.target.value;
             if (_.contains(['brightness', 'saturation', 'hue'], name)) {
                 this.transformations.modulate[name] = value;
@@ -352,13 +352,13 @@ define([
             this.updateImageView();
         },
 
-        onImageLoaded: function() {
+        onImageLoaded: function () {
             this.setCropper(this.cropParams);
             PluginAPI.hideLoader();
         },
 
 
-        onLockRatio: function(e) {
+        onLockRatio: function (e) {
             var el = $(e.currentTarget);
             el.addClass('active').siblings().removeClass('active');
             // If there is no active crop, add a preview crop
@@ -367,21 +367,21 @@ define([
             }
             // Now set the ratio to the given aspect ratio
             if (this.cropper) {
-                this.cropper.setOptions({ aspectRatio: el.data('ratio') });
+                this.cropper.setOptions({aspectRatio: el.data('ratio')});
             }
             // Make sure the app knows about the selected ratio
             this.cropAspectRatio = el.data('ratio');
         },
 
-        onCropChange: function(coords) {
+        onCropChange: function (coords) {
             this.cropParams = coords;
         },
 
-        rotateImage: function(e) {
-            var amount    = parseInt($(e.currentTarget).data('amount'), 10),
-                current   = this.transformations.rotate.angle,
+        rotateImage: function (e) {
+            var amount = parseInt($(e.currentTarget).data('amount'), 10),
+                current = this.transformations.rotate.angle,
                 newAmount = (current + amount) % 360,
-                trueSize  = [
+                trueSize = [
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
@@ -400,7 +400,7 @@ define([
 
         },
 
-        reset: function() {
+        reset: function () {
             // Remove transformations
             this.transformations = _.cloneDeep(this.transformationDefaults);
             // Reset sliders
@@ -417,7 +417,7 @@ define([
             this.updateImageView();
         },
 
-        insertToArticle: function() {
+        insertToArticle: function () {
             if (!this.imboApp.insertionEnabled) {
                 return;
             }
@@ -428,141 +428,146 @@ define([
             }
         },
 
-        insertEmbeddedImage: function() {
-            var insertElement = function() {
-                var url  = this.buildImageUrl(false);
-                // Use template to build markup
-                var markup = template({
-                    url: url.maxSize({ width: 552 }).jpg().toString(),
-                    drPublishId: $(this.selectedElementMarkup).attr('data-internal-id'),
-                    className: this.imageClassName,
-                    width: 552,
-                    title: this.imageMetadata['drp:title']             || '',
-                    author: this.imageMetadata['drp:photographer']     || '',
-                    source: this.imageMetadata['drp:agency']           || '',
-                    description: this.imageMetadata['drp:description'] || '',
+        insertEmbeddedImage: function () {
+            var options = {
+                embeddedTypeId: this.embeddedTypeId,
+                externalId: this.imageIdentifier,
+                assetClass: this.imageClassName,
+                resourceUri: this.buildImageUrl().maxSize({width: 8000}).jpg().toString(),
+                previewUri: this.buildImageUrl().maxSize({width: 552}).jpg().toString(),
+                previewWidth: 552,
+                renditions: this.buildRenditions(),
+                imboOptions: {
                     imageIdentifier: this.imageIdentifier,
-                    cropParams: JSON.stringify(_.mapValues(this.cropParams, Math.floor)),
-                    cropRatio: JSON.stringify(this.cropAspectRatio),
-                    transformations: JSON.stringify(url.getTransformations())
-                });
-                if (this.selectedElementId) {
-                    PluginAPI.Editor.replaceElementById(
-                        this.selectedElementId,
-                        $(this.selectedElementMarkup).html(markup).get(0).innerHTML,
-                        function() {
-                            PluginAPI.Editor.markAsActive(this.selectedElementId);
-                            this.hide();
-                        }.bind(this)
-                    );
-                } else {
-                    PluginAPI.Editor.insertElement(markup, {select: true}, this.hide);
+                    title: this.imageMetadata['drp:title'] || '',
+                    description: this.imageMetadata['drp:description'] || '',
+                    author: this.imageMetadata['drp:photographer'] || '',
+                    source: this.imageMetadata['drp:agency'] || '',
+                    cropParams: this.cropParams,
+                    cropRatio: this.cropAspectRatio,
+                    transformations: this.buildImageUrl().getTransformations()
                 }
+            };
+            // build custom markup
+            var markup = template(options);
+            var onDone = function() {
+               this.hide();
+               PluginAPI.Editor.markAsActive(this.selectedElementId);
             }.bind(this);
-            if (parseInt($(this.selectedElementMarkup).attr('data-internal-id')) > 0) {
-                insertElement();
-            } else {
-                PluginAPI.createEmbeddedObject(this.embeddedTypeId, insertElement);
-            }
-
+            this.imboApp.exportEmbeddedImage(markup, options, onDone);
         },
 
-        insertAssetImage: function() {
-            var thumbnailUri = this.buildImageUrl().maxSize({width:100, height: 100}).jpg().toString();
-            var resourceUri =  this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
-            var previewUri =   this.buildImageUrl().maxSize({width:800, height: 800}).jpg().toString();
-            //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
-            var renditions = {
-                highRes : {uri:resourceUri},
-                //custom: {uri: customUri},
-                thumbnail : {uri:thumbnailUri},
-                preview : {uri:previewUri}
-            }
+        insertAssetImage: function () {
+            var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
+            var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
             var options = {
                 resourceUri: resourceUri,
                 previewUri: previewUri,
-                renditions: renditions,
-                imboOptions : {
+                renditions: this.buildRenditions(),
+                imboOptions: {
                     imageIdentifier: this.imageIdentifier,
-                    title: this.imageMetadata['drp:title']             || '',
-                    author: this.imageMetadata['drp:photographer']     || '',
-                    source: this.imageMetadata['drp:agency']           || '',
+                    title: this.imageMetadata['drp:title'] || '',
                     description: this.imageMetadata['drp:description'] || '',
+                    author: this.imageMetadata['drp:photographer'] || '',
+                    source: this.imageMetadata['drp:agency'] || '',
                     cropParams: this.cropParams,
                     cropRatio: this.cropAspectRatio,
                     transformations: this.buildImageUrl().getTransformations()
                 }
             }
 
-            this.imboApp.exportAssetImage(options,  function() {PluginAPI.hideLoader()});
+            this.imboApp.exportAssetImage(options, function () {
+                PluginAPI.hideLoader()
+            });
             this.hide();
         },
 
-        onEditorSelectImage: function(e) {
-            this.selectedElementId = e.id;
-            PluginAPI.Editor.getHTMLById(e.id, function(html) {
-                this.selectedElementMarkup = html;
-                var el  = $(html),
-                    img = el.find('img');
-                var transformations = img.data('transformations'),
-                    imageIdentifier = img.data('image-identifier'),
-                    cropParameters  = img.data('crop-parameters'),
-                    cropAspectRatio = img.data('crop-aspect-ratio') || null;
-                this.trigger('editor-image-selected', [{
-                    imageIdentifier: imageIdentifier,
-                    transformations: transformations,
-                    cropAspectRatio: cropAspectRatio,
-                    cropParams:      cropParameters
-                }]);
-            }.bind(this));
+        buildRenditions: function()
+        {
+            var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
+            var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
+            var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
+            //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
+            return  {
+                highRes: {uri: resourceUri},
+                //custom: {uri: customUri},
+                thumbnail: {uri: thumbnailUri},
+                preview: {uri: previewUri}
+            }
         },
 
-        onEditorDeselectImage: function() {
+        onEditorSelectImage: function (data) {
+            this.selectedElementId = data.id;
+            this.trigger('editor-image-selected', [{
+                imageIdentifier: data.externalId,
+                transformations: data.transformations,
+                cropAspectRatio: data.cropAspectRatio,
+                cropParams: data.cropParameters
+            }]);
+
+            //PluginAPI.Editor.getHTMLById(data.id, function (html) {
+            //    this.selectedElementMarkup = html;
+            //    var el = $(html),
+            //        img = el.find('img');
+            //    var transformations = img.data('transformations'),
+            //        imageIdentifier = img.data('image-identifier'),
+            //        cropParameters = img.data('crop-parameters'),
+            //        cropAspectRatio = img.data('crop-aspect-ratio') || null;
+            //    this.trigger('editor-image-selected', [{
+            //        imageIdentifier: imageIdentifier,
+            //        transformations: transformations,
+            //        cropAspectRatio: cropAspectRatio,
+            //        cropParams: cropParameters
+            //    }]);
+            //}.bind(this));
+        },
+
+        onEditorDeselectImage: function () {
             this.trigger('editor-image-deselected');
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
         },
 
-        setEditMode: function(editing) {
+        setEditMode: function (editing) {
             this.editorPane.find('button.insert').toggleClass('hidden', editing);
             this.editorPane.find('button.update').toggleClass('hidden', !editing);
         },
 
-        on: function(e, handler) {
+        on: function (e, handler) {
             this.events.on(e, handler);
             return this;
         },
 
-        off: function(e, handler) {
+        off: function (e, handler) {
             this.events.off(e, handler);
             return this;
         },
 
-        trigger: function(e, data) {
+        trigger: function (e, data) {
             this.events.trigger(e, data);
             return this;
         },
 
-        switchSettingsTab: function(e) {
+        switchSettingsTab: function (e) {
             var button = $(e.target);
             var ref = button.attr('data-ref');
             $('.settings-tab').addClass('hidden');
-            $('.settings-tab.' + ref ).removeClass('hidden');
+            $('.settings-tab.' + ref).removeClass('hidden');
             this.settingsTabButtons.removeClass('active');
             button.addClass('active')
         },
 
-        enableImageInsertion: function() {
+        enableImageInsertion: function () {
             this.editorPane.addClass('insertion-enabled');
             this.editorPane.find('.settings-header button[data-ref="image"]').trigger('click');
         },
 
-        disableImageInsertion: function() {
+        disableImageInsertion: function () {
             this.editorPane.removeClass('insertion-enabled');
             this.editorPane.find('.settings-header button[data-ref="meta"]').trigger('click');
-            $('.settings-tab.image' ).addClass('hidden');
-            $('.settings-tab.meta' ).removeClass('hidden');
+            $('.settings-tab.image').addClass('hidden');
+            $('.settings-tab.meta').removeClass('hidden');
         }
     });
 
