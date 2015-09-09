@@ -218,7 +218,6 @@ define([
             );
 
             var callback = function() {
-                console.debug('stef: meta data saved');
                 PluginAPI.hideLoader();
             }
 

@@ -111,7 +111,9 @@ define([
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
             PluginAPI.addListeners({
-                embeddedAssetSelected: this.onEditorSelectImage,
+                embeddedAssetSelected: function(data) {
+                    this.onEditorSelectImage(data.id, data.options);
+                }.bind(this),
                 embeddedAssetBlur: this.onEditorDeselectImage
             });
         },
@@ -357,7 +359,6 @@ define([
             PluginAPI.hideLoader();
         },
 
-
         onLockRatio: function (e) {
             var el = $(e.currentTarget);
             el.addClass('active').siblings().removeClass('active');
@@ -429,6 +430,7 @@ define([
         },
 
         insertEmbeddedImage: function () {
+
             var options = {
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
@@ -439,6 +441,7 @@ define([
                 renditions: this.buildRenditions(),
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
+                    externalId: this.imageIdentifier,
                     title: this.imageMetadata['drp:title'] || '',
                     description: this.imageMetadata['drp:description'] || '',
                     author: this.imageMetadata['drp:photographer'] || '',
@@ -450,11 +453,14 @@ define([
             };
             // build custom markup
             var markup = template(options);
-            var onDone = function() {
-               this.hide();
-               PluginAPI.Editor.markAsActive(this.selectedElementId);
+            var onDone = function(imboOptions) {
+                this.hide();
+                PluginAPI.Editor.markAsActive(this.selectedElementId);
+                this.onEditorSelectImage(this.selectedElementId, imboOptions);
             }.bind(this);
-            this.imboApp.exportEmbeddedImage(markup, options, onDone);
+
+
+            this.imboApp.exportEmbeddedImage(markup, options, function(){onDone(options.imboOptions)});
         },
 
         insertAssetImage: function () {
@@ -496,13 +502,13 @@ define([
             }
         },
 
-        onEditorSelectImage: function (data) {
-            this.selectedElementId = data.id;
+        onEditorSelectImage: function (elementId, data) {
+            this.selectedElementId = elementId;
             this.trigger('editor-image-selected', [{
                 imageIdentifier: data.externalId,
                 transformations: data.transformations,
                 cropAspectRatio: data.cropAspectRatio,
-                cropParams: data.cropParameters
+                cropParams: data.cropParams
             }]);
 
             //PluginAPI.Editor.getHTMLById(data.id, function (html) {
