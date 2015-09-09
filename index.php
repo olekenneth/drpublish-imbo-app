@@ -36,9 +36,12 @@
             <div class="progress clear hidden"></div>
         </fieldset>
 
-        <fieldset class="selected-image hidden">
+        <fieldset class="selected-image">
             <legend data-translate="SELECTED_IMAGE_TITLE"></legend>
-            <img src="img/blank.gif" class="image-preview" alt="">
+            <img src="img/clearpix.png" class="image-preview" alt="" />
+            <div class="loading">
+                <? include 'imbo-loader.html' ?>
+            </div>
             <div class="action-buttons">
                 <button class="edit-image"><i class="fa fa-edit"></i> <span data-translate="SELECTED_IMAGE_EDIT_IMAGE"></span></button>
             </div>

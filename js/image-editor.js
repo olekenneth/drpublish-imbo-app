@@ -430,7 +430,7 @@ define([
         },
 
         insertEmbeddedImage: function () {
-
+            PluginAPI.showLoader('Importing image...')
             var options = {
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
@@ -454,12 +454,11 @@ define([
             // build custom markup
             var markup = template(options);
             var onDone = function(imboOptions) {
+                PluginAPI.hideLoader();
                 this.hide();
                 PluginAPI.Editor.markAsActive(this.selectedElementId);
                 this.onEditorSelectImage(this.selectedElementId, imboOptions);
             }.bind(this);
-
-
             this.imboApp.exportEmbeddedImage(markup, options, function(){onDone(options.imboOptions)});
         },
 

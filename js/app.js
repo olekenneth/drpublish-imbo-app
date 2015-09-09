@@ -231,6 +231,10 @@ define([
             // Find DOM-element for "selected image"-GUI
             this.selectedImage = $('fieldset.selected-image');
 
+            this.selectedImage.find('img').load(function() {
+               $('.selected-image .loading .imbo-spinner').hide();
+            });
+
             // Initialize the uploader
             this.uploader = new Uploader(this.imbo);
             this.uploader.setUserInfo(this.user || {});
@@ -340,8 +344,7 @@ define([
         },
 
         onWindowResize: function() {
-            this.getImageList()
-                .css('max-height', this.window.height() - 155);
+            //this.getImageList().css('max-height', this.window.height() - 155);
         },
 
         onToolbarClick: function(e) {
@@ -382,14 +385,33 @@ define([
 
         previewImage: function(options) {
             var url = this.imbo.getImageUrl(options.imageIdentifier);
+            var maxDimension = 225;
             for (var key in options.transformations) {
                 url.append(options.transformations[key]);
             }
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
-                .attr('src', url.maxSize({ width: 225, height: 225 }).toString());
-            this.selectedImage.removeClass('hidden');
+                .attr('src', url.maxSize({ width: maxDimension, height: maxDimension }).toString());
+            //this.selectedImage.removeClass('hidden');
+            $('.selected-image .loading .imbo-spinner').show();
+            this.selectedImage.animate({ height: maxDimension + 20 });
+            $("html, body").animate(
+                { scrollTop: 0 },
+                "slow",
+                function() {this.selectedImage.find('img, legend, .edit-image').show();}.bind(this)
+            );
+        },
+
+        unpreviewImage: function() {
+            this.selectedImage.find('img, legend, .edit-image').hide();
+            this.selectedImage.animate(
+                { height: 0 },
+                function() {
+                   // this.selectedImage.addClass('hidden');
+                }.bind(this)
+            );
+
         },
 
         editImageInArticle: function(e) {
@@ -586,7 +608,7 @@ define([
         },
 
         onEditorImageDeselected: function(e) {
-            this.selectedImage.addClass('hidden');
+            this.unpreviewImage();
         },
 
         onImageSearch: function(e) {

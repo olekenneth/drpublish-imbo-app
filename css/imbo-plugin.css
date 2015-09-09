@@ -8,7 +8,6 @@ body.editor-view {
 .content > fieldset {
     margin: 0;
     padding: 6px 12px;
-    min-height: 60px;
     border: none;
 }
 
@@ -16,7 +15,6 @@ body.editor-view {
     margin: 6px 0 0 0;
     font-size: 15px;
 }
-
 
 /* Override default background color on buttons */
 input[type="button"],
@@ -148,12 +146,10 @@ fieldset.current-images {
     height: 160px;
     background: #fff;
     border: 1px solid #DDD;
-
     display: -webkit-flexbox;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-
     -webkit-flex-align: center;
     -ms-flex-align: center;
     -webkit-align-items: center;
@@ -437,10 +433,27 @@ fieldset.current-images {
     width: 80%;
 }
 
-.selected-image .image-preview {
+.selected-image {
+    height: 0;
+}
+
+.selected-image .edit-image, .selected-image legend {
+    display: none;
+}
+
+.selected-image .loading .imbo-spinner {
+    display: none;
+    height: 75px;
+    margin: 40px 185px;
+    width: 75px;
+}
+
+.selected-image img {
     float: left;
     margin: 0 10px 10px 0;
+    display: none;
 }
+
 
 /** MEDIA QUERIES **/
 @media all and (max-width: 546px) and (min-width: 370px) {
