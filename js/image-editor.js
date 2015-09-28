@@ -111,7 +111,7 @@ define([
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
 
             PluginAPI.addListeners({
-                embeddedAssetSelected: function(data) {
+                embeddedAssetFocus: function (data) {
                     this.onEditorSelectImage(data.id, data.options);
                 }.bind(this),
                 embeddedAssetBlur: this.onEditorDeselectImage
@@ -453,13 +453,15 @@ define([
             };
             // build custom markup
             var markup = template(options);
-            var onDone = function(imboOptions) {
+            var onDone = function (imboOptions) {
                 PluginAPI.hideLoader();
                 this.hide();
                 PluginAPI.Editor.markAsActive(this.selectedElementId);
                 this.onEditorSelectImage(this.selectedElementId, imboOptions);
             }.bind(this);
-            this.imboApp.exportEmbeddedImage(markup, options, function(){onDone(options.imboOptions)});
+            this.imboApp.exportEmbeddedAsset(markup, options, function () {
+                onDone(options.imboOptions)
+            });
         },
 
         insertAssetImage: function () {
@@ -487,13 +489,12 @@ define([
             this.hide();
         },
 
-        buildRenditions: function()
-        {
+        buildRenditions: function () {
             var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
             var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
             var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
             //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
-            return  {
+            return {
                 highRes: {uri: resourceUri},
                 //custom: {uri: customUri},
                 thumbnail: {uri: thumbnailUri},

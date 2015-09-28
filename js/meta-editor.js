@@ -3,31 +3,31 @@ define([
     'jquery',
     'exif',
     'drp-plugin-api'
-], function(_, $, Exif, PluginApi) {
+], function (_, $, Exif, PluginApi) {
 
-    var MetaEditor = function(imboApp) {
+    var MetaEditor = function (imboApp) {
         this.initialize(imboApp);
     };
 
     _.extend(MetaEditor.prototype, {
-        MAX_IMAGE_WIDTH:  1464,
+        MAX_IMAGE_WIDTH: 1464,
         MAX_IMAGE_HEIGHT: 1104,
 
 
-        initialize: function(imboApp) {
+        initialize: function (imboApp) {
             _.bindAll(this);
             this.editorPane = $('.meta-editor');
-            this.tabCtrl    = $('.tab-controller');
-            this.exifPane   = $('.exif-pane');
-            this.inputPane  = $('.input-pane');
-            this.imageBox   = this.editorPane.find('.image-container');
-            this.imageView  = this.imageBox.find('.source');
+            this.tabCtrl = $('.tab-controller');
+            this.exifPane = $('.exif-pane');
+            this.inputPane = $('.input-pane');
+            this.imageBox = this.editorPane.find('.image-container');
+            this.imageView = this.imageBox.find('.source');
             this.events = $({});
             this.bindEvents();
             this.imboApp = imboApp;
         },
 
-        bindEvents: function() {
+        bindEvents: function () {
             $(window)
                 .on('resize', _.debounce(this.resizePanes, 150))
                 .trigger('resize');
@@ -45,26 +45,26 @@ define([
                 .on('click', this.switchTab);
         },
 
-        setTranslator: function(translator) {
+        setTranslator: function (translator) {
             this.translator = translator;
         },
 
-        setImboClient: function(imboClient) {
+        setImboClient: function (imboClient) {
             this.imbo = imboClient;
         },
 
-        resizePanes: function() {
+        resizePanes: function () {
             this.imageBox.css('height', $(window).height() - 50);
         },
 
-        switchTab: function(e) {
-            var el    = $(e.currentTarget),
-                tab   = el.data('tab'),
+        switchTab: function (e) {
+            var el = $(e.currentTarget),
+                tab = el.data('tab'),
                 tabEl = this.editorPane.find('.tab[data-tab="' + tab + '"]');
 
             tabEl.removeClass('hidden')
-                 .siblings('.tab')
-                 .addClass('hidden');
+                .siblings('.tab')
+                .addClass('hidden');
 
             el
                 .closest('.tab-controller')
@@ -76,7 +76,7 @@ define([
 
         imboApp: null,
 
-        show: function() {
+        show: function () {
             // Maximize app window (if in app context)
             //PluginApi.Article.maximizeAppWindow(
             //    this.translator.translate('META_EDITOR_TITLE'),
@@ -93,17 +93,17 @@ define([
             this.trigger('show');
         },
 
-        hide: function() {
+        hide: function () {
             this.imboApp.imageEditor.hide();
         },
 
-        resetState: function() {
+        resetState: function () {
             this.inputPane.find('input, textarea').val('');
             this.imageView.css('background-image', '');
             this.tabCtrl.find('button[data-tab]').removeClass('hidden');
         },
 
-        loadDataForImage: function(imageId) {
+        loadDataForImage: function (imageId) {
             // Reset state so we're not showing old data
             this.resetState();
             // Ensure app knows which image to change metadata on
@@ -111,18 +111,18 @@ define([
             this.imbo.getMetadata(imageId, this.onImageDataLoaded);
         },
 
-        setImageViewUrl: function(url) {
+        setImageViewUrl: function (url) {
             this.imageView.css(
                 'background-image',
                 'url(' + url.toString() + ')'
             );
         },
 
-        onImageDataLoaded: function(err, data) {
+        onImageDataLoaded: function (err, data) {
             if (!data) {
                 return;
             }
-            this.inputPane.find('input, textarea').each(function(i, el) {
+            this.inputPane.find('input, textarea').each(function (i, el) {
                 var name = el.getAttribute('name');
                 if (data[name]) {
                     el.value = data[name];
@@ -135,7 +135,7 @@ define([
             this.populateExifData(data);
         },
 
-        populateExifData: function(data) {
+        populateExifData: function (data) {
             this.exifPane.empty();
 
             var dl = $('<dl />'), table, value, parts, tags = 0;
@@ -152,7 +152,9 @@ define([
                     value = ($('<a />')
                         .attr('target', '_blank')
                         .attr('href', 'http://maps.google.com/?q=' + value.reverse().join(','))
-                        .text(value.reverse().map(function(i) { return i.toFixed(5); }).join(', ')));
+                        .text(value.reverse().map(function (i) {
+                            return i.toFixed(5);
+                        }).join(', ')));
                 } else {
                     value = (value + '').replace(/^\s+|\s+$/g, '');
                 }
@@ -198,17 +200,17 @@ define([
             }
         },
 
-        getMetadataFromInputs: function() {
+        getMetadataFromInputs: function () {
             return _.reduce(
                 this.inputPane.find('input, textarea'),
-                function(data, el) {
+                function (data, el) {
                     data[el.getAttribute('name')] = el.value;
                     return data;
                 }, {}
             );
         },
 
-        saveMetadata: function() {
+        saveMetadata: function () {
             if (!this.imageIdentifier) {
                 return console.error('Tried to save metadata, no image active');
             }
@@ -217,7 +219,7 @@ define([
                 this.translator.translate('META_EDITOR_SAVING_METADATA')
             );
 
-            var callback = function() {
+            var callback = function () {
                 PluginAPI.hideLoader();
             }
 
@@ -228,17 +230,17 @@ define([
             );
         },
 
-        on: function(e, handler) {
+        on: function (e, handler) {
             this.events.on(e, handler);
             return this;
         },
 
-        off: function(e, handler) {
+        off: function (e, handler) {
             this.events.off(e, handler);
             return this;
         },
 
-        trigger: function(e, handler) {
+        trigger: function (e, handler) {
             this.events.trigger(e, handler);
             return this;
         }

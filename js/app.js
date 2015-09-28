@@ -8,15 +8,15 @@ define([
     'meta-editor',
     'image-editor',
     'deparam'
-], function(_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam) {
+], function (_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam) {
     'use strict';
 
-    var ImboApp = function(config) {
+    var ImboApp = function (config) {
         this.setConfig(config);
     };
 
 
-    ImboApp.MAX_ITEMS_PER_PAGE  = 45;
+    ImboApp.MAX_ITEMS_PER_PAGE = 45;
     ImboApp.DEFAULT_IMAGE_SIZES = [
         {
             'name': 'default',
@@ -44,7 +44,7 @@ define([
 
         AppName: 'imbo-images',
 
-        initialize: function() {
+        initialize: function () {
 
 
             _.bindAll(this);
@@ -67,10 +67,10 @@ define([
             this.language = this.config.language;
 
             // Initialize a simple event-emitter based on jQuery
-            this.events   = $({});
+            this.events = $({});
 
             // Reveal the UI of the application once the translations have loaded
-            this.initTranslator(function() {
+            this.initTranslator(function () {
                 // Init DrPublish editor
                 this.initializeEditor();
 
@@ -87,7 +87,7 @@ define([
             }
         },
 
-        initializeEditor: function() {
+        initializeEditor: function () {
             PluginAPI.Editor.initMenu(['simplePluginMenu', 'editContext', 'deleteButton']);
 
             PluginAPI.Editor.registerMenuAction({
@@ -103,12 +103,12 @@ define([
             });
         },
 
-        setConfig: function(config) {
+        setConfig: function (config) {
             this.config = config || {};
             this.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES || [];
         },
 
-        getImageResizeActions: function() {
+        getImageResizeActions: function () {
             var actions = [], sizes = this.imageSizes;
             for (var i = 0; i < sizes.length; i++) {
                 actions.push({
@@ -120,11 +120,11 @@ define([
             return actions;
         },
 
-        resizeSelectedImage: function(options, id, clickedElementId) {
+        resizeSelectedImage: function (options, id, clickedElementId) {
             var floats = ['dp-float-left', 'dp-float-right', 'dp-float-none'];
 
-            PluginAPI.Editor.getHTMLById(id, function(html) {
-                var el  = $(html),
+            PluginAPI.Editor.getHTMLById(id, function (html) {
+                var el = $(html),
                     img = el.find('img[data-transformations]');
 
                 // Remove all existing floats
@@ -143,26 +143,28 @@ define([
                 imgUrl.reset();
 
                 // Re-apply all transformations except any maxSize
-                transformations.filter(function(t) {
+                transformations.filter(function (t) {
                     return t.indexOf('maxSize') !== 0;
                 }).map(imgUrl.append, imgUrl);
 
                 // Apply new image size
-                imgUrl.maxSize({ width: options.width });
+                imgUrl.maxSize({width: options.width});
 
                 // Replace the image source
                 img
                     .attr('src', imgUrl.toString())
                     .attr('width', options.width)
                     .attr(
-                        'data-transformations',
-                        JSON.stringify(imgUrl.getTransformations())
-                    );
+                    'data-transformations',
+                    JSON.stringify(imgUrl.getTransformations())
+                );
 
                 PluginAPI.Editor.replaceElementById(
                     id,
                     el.get(0).outerHTML,
-                    function() { PluginAPI.Editor.markAsActive(id); }
+                    function () {
+                        PluginAPI.Editor.markAsActive(id);
+                    }
                 );
             }.bind(this));
         },
@@ -170,14 +172,14 @@ define([
         insertionEnabled: false,
 
         // When authentication has completed...
-        onAuthed: function() {
+        onAuthed: function () {
             this.authed = true;
-            this.user   = {};
+            this.user = {};
             PluginAPI.getCurrentUser(this.onUserInfoReceived);
         },
 
         // When user info has been received, cache info
-        onUserInfoReceived: function(user) {
+        onUserInfoReceived: function (user) {
             this.user = user;
 
             // Since we're loading async, uploader might
@@ -187,19 +189,19 @@ define([
             }
         },
 
-        initTranslator: function(callback) {
+        initTranslator: function (callback) {
             this.translator = new Translator(this.language);
-            this.translate  = this.translator.translate.bind(this.translator);
+            this.translate = this.translator.translate.bind(this.translator);
             this.translator.on('loaded', callback);
             this.translator.initialize();
 
             document.body.classList.add('lang-' + this.translator.getLanguage());
         },
 
-        translateElement: function(i, el) {
+        translateElement: function (i, el) {
             el = $(el);
 
-            var text  = el.data('translate'),
+            var text = el.data('translate'),
                 title = el.data('translate-title');
 
             if (text) {
@@ -211,11 +213,11 @@ define([
             }
         },
 
-        translateGui: function() {
+        translateGui: function () {
             $('[data-translate], [data-translate-title]').each(this.translateElement);
         },
 
-        loadGui: function() {
+        loadGui: function () {
 
             // Translate all GUI-elements to the correct language
             this.translateGui();
@@ -231,8 +233,8 @@ define([
             // Find DOM-element for "selected image"-GUI
             this.selectedImage = $('fieldset.selected-image');
 
-            this.selectedImage.find('img').load(function() {
-               $('.selected-image .loading .imbo-spinner').hide();
+            this.selectedImage.find('img').load(function () {
+                $('.selected-image .loading .imbo-spinner').hide();
             });
 
             // Initialize the uploader
@@ -266,7 +268,7 @@ define([
             this.loadImages();
         },
 
-        bindEvents: function() {
+        bindEvents: function () {
 
             this.window
                 .on('resize', _.debounce(this.onWindowResize, 100))
@@ -290,7 +292,7 @@ define([
             this.imageEditor
                 .on('show', this.hideGui)
                 .on('hide', this.showGui)
-                .on('editor-image-selected',   this.onEditorImageSelected)
+                .on('editor-image-selected', this.onEditorImageSelected)
                 .on('editor-image-deselected', this.onEditorImageDeselected);
 
             this.selectedImage
@@ -306,8 +308,7 @@ define([
             this.getImageList()
                 .on('scroll', this.onImageListScroll);
 
-
-            PluginAPI.on('receivedFocus', _.bind(function(e) {
+            PluginAPI.on('receivedFocus', _.bind(function (e) {
                 if (e.data.previousPluginName !== 'scanpix') {
                     return;
                 }
@@ -315,7 +316,7 @@ define([
             }, this));
 
 
-            PluginAPI.on('assetFocus', _.bind(function(e) {
+            PluginAPI.on('assetFocus', _.bind(function (e) {
                 this.selectedPackageAsset = e.data;
                 this.enableImageInsertion();
                 if (e.data && e.data.assetSource && e.data.assetSource === PluginAPI.appName) {
@@ -323,37 +324,39 @@ define([
                 }
             }, this));
 
-            PluginAPI.on('assetBlur', _.bind(function(e) {
+            PluginAPI.on('assetBlur', _.bind(function (e) {
                 this.selectedPackageAsset = null;
                 this.onEditorImageDeselected();
                 this.disableImageInsertion();
             }, this));
 
 
-            PluginAPI.on('editorFocus', _.bind(function(e) {
+            PluginAPI.on('editorFocus', _.bind(function (e) {
                 this.enableImageInsertion();
             }, this));
 
-            PluginAPI.on('editorsLostFocus', _.bind(function(e) {
+            PluginAPI.on('editorsLostFocus', _.bind(function (e) {
                 this.disableImageInsertion();
             }, this));
         },
 
-        uploadScanpixImages: function(scanpixImages) {
+        uploadScanpixImages: function (scanpixImages) {
             this.uploader.addScanpixImages(scanpixImages);
         },
 
-        onWindowResize: function() {
+        onWindowResize: function () {
             //this.getImageList().css('max-height', this.window.height() - 155);
         },
 
-        onToolbarClick: function(e) {
-            var el      = $(e.currentTarget),
-                item    = el.closest('li'),
-                action  = el.data('action'),
+        onToolbarClick: function (e) {
+            var el = $(e.currentTarget),
+                item = el.closest('li'),
+                action = el.data('action'),
                 imageId = item.data('image-identifier');
 
-            if (!action) { return; }
+            if (!action) {
+                return;
+            }
 
             switch (action) {
                 case 'delete-image':
@@ -365,7 +368,7 @@ define([
             }
         },
 
-        useImageInArticle: function(e) {
+        useImageInArticle: function (e) {
             e.preventDefault();
 
             if (this.standalone) {
@@ -383,7 +386,7 @@ define([
 
         },
 
-        previewImage: function(options) {
+        previewImage: function (options) {
             var url = this.imbo.getImageUrl(options.imageIdentifier);
             var maxDimension = 225;
             for (var key in options.transformations) {
@@ -392,38 +395,40 @@ define([
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
-                .attr('src', url.maxSize({ width: maxDimension, height: maxDimension }).toString());
+                .attr('src', url.maxSize({width: maxDimension, height: maxDimension}).toString());
             //this.selectedImage.removeClass('hidden');
             $('.selected-image .loading .imbo-spinner').show();
-            this.selectedImage.animate({ height: maxDimension + 20 });
+            this.selectedImage.animate({height: maxDimension + 20});
             $("html, body").animate(
-                { scrollTop: 0 },
+                {scrollTop: 0},
                 "slow",
-                function() {this.selectedImage.find('img, legend, .edit-image').show();}.bind(this)
+                function () {
+                    this.selectedImage.find('img, legend, .edit-image').show();
+                }.bind(this)
             );
         },
 
-        unpreviewImage: function() {
+        unpreviewImage: function () {
             this.selectedImage.find('img, legend, .edit-image').hide();
             this.selectedImage.animate(
-                { height: 0 },
-                function() {
-                   // this.selectedImage.addClass('hidden');
+                {height: 0},
+                function () {
+                    // this.selectedImage.addClass('hidden');
                 }.bind(this)
             );
 
         },
 
-        editImageInArticle: function(e) {
+        editImageInArticle: function (e) {
             var id = this.selectedImageOptions.imageIdentifier;
-            this.imbo.getImages(new Imbo.Query().ids([id]), function(err, info) {
+            this.imbo.getImages(new Imbo.Query().ids([id]), function (err, info) {
                 if (err) {
                     return console.error(err);
                 }
                 this.imageEditor
                     .show()
                     .loadImage(this.selectedImageOptions.imageIdentifier, {
-                        width:  info[0].width,
+                        width: info[0].width,
                         height: info[0].height,
                         crop: this.selectedImageOptions.cropParams,
                         cropAspectRatio: this.selectedImageOptions.cropRatio,
@@ -432,12 +437,12 @@ define([
             }.bind(this));
         },
 
-        deleteImage: function(imageId, listItem) {
+        deleteImage: function (imageId, listItem) {
             if (!confirm(this.translate('CONFIRM_DELETE_IMAGE'))) {
                 return false;
             }
 
-            this.imbo.deleteImage(imageId, function(err) {
+            this.imbo.deleteImage(imageId, function (err) {
                 if (err) {
                     return alert(this.translate('FAILED_TO_DELETE_IMAGE'));
                 }
@@ -449,18 +454,18 @@ define([
             }.bind(this));
         },
 
-        refreshImages: function() {
-            this.loadImages({ clear: true });
+        refreshImages: function () {
+            this.loadImages({clear: true});
         },
 
-        loadImages: function(options) {
+        loadImages: function (options) {
             options = options || {};
             var query = ((options.query || this.imageQuery || new Imbo.Query())
                 .metadata(true)
                 .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
-                .page(options.page   || 1));
+                .page(options.page || 1));
 
-            this.imbo.getImages(query, options.clear ? function() {
+            this.imbo.getImages(query, options.clear ? function () {
                 this.getImageList().empty();
                 this.onImagesLoaded.apply(this, arguments);
                 this.getImageList().get(0).scrollTop = 0;
@@ -469,21 +474,21 @@ define([
             this.isLoadingImages = true;
         },
 
-        queryImages: function(query) {
+        queryImages: function (query) {
             this.imageQuery = new Imbo.Query().metadataQuery(query);
             this.loadImages({
                 query: this.imageQuery
             });
         },
 
-        getImageList: function() {
+        getImageList: function () {
             this.currentImages = this.currentImages || $('.current-images');
             this.imageList = this.imageList || this.currentImages.find('.image-list');
 
             return this.imageList;
         },
 
-        onImagesLoaded: function(err, images, search) {
+        onImagesLoaded: function (err, images, search) {
             this.isLoadingImages = false;
             if (err) {
                 console.log('=== ERROR LOADING IMAGES ===');
@@ -502,22 +507,24 @@ define([
             );
         },
 
-        setImageDisplayCount: function(display, total) {
-            this.displayCount  = (this.displayCount  || this.currentImages.find('.display-count'));
+        setImageDisplayCount: function (display, total) {
+            this.displayCount = (this.displayCount || this.currentImages.find('.display-count'));
             this.totalHitCount = (this.totalHitCount || this.currentImages.find('.total-hit-count'));
 
             this.displayCount.text(display);
 
-            if (isNaN(total)) { return; }
+            if (isNaN(total)) {
+                return;
+            }
             this.totalHitCount.text(total);
         },
 
-        incImageDisplayCount: function(count, incTotalAmount) {
-            this.displayCount  = (this.displayCount  || this.currentImages.find('.display-count'));
+        incImageDisplayCount: function (count, incTotalAmount) {
+            this.displayCount = (this.displayCount || this.currentImages.find('.display-count'));
             this.totalHitCount = (this.totalHitCount || this.currentImages.find('.total-hit-count'));
 
             var display = parseInt(this.displayCount.text(), 10),
-                total   = parseInt(this.totalHitCount.text(), 10);
+                total = parseInt(this.totalHitCount.text(), 10);
 
             this.displayCount.text(display + (count || 1));
             if (incTotalAmount) {
@@ -525,18 +532,18 @@ define([
             }
         },
 
-        initScanpixUpload: function() {
+        initScanpixUpload: function () {
             PluginAPI.giveFocus('scanpix');
         },
 
-        onImageAdded: function(e, image) {
+        onImageAdded: function (e, image) {
             this.imageList.prepend(this.buildImageListItem('', image));
             this.incImageDisplayCount(1, true);
         },
 
-        onImageListScroll: function() {
-            var el   = this.imageList[0],
-                max  = parseInt(el.style.maxHeight, 10),
+        onImageListScroll: function () {
+            var el = this.imageList[0],
+                max = parseInt(el.style.maxHeight, 10),
                 curr = el.scrollTop + max,
                 prct = (curr / el.scrollHeight) * 100;
 
@@ -545,25 +552,26 @@ define([
             }
         },
 
-        loadNextPage: _.throttle(function() {
+        loadNextPage: _.throttle(function () {
             var nodes = this.getImageList().get(0).childNodes.length,
-                page  = Math.floor(nodes / ImboApp.MAX_ITEMS_PER_PAGE) + 1;
+                page = Math.floor(nodes / ImboApp.MAX_ITEMS_PER_PAGE) + 1;
 
             if (nodes < ImboApp.MAX_ITEMS_PER_PAGE || nodes >= this.totalImageCount) {
                 return;
             }
 
-            this.loadImages({ page: page });
-        }, 2500, { trailing: false }),
+            this.loadImages({page: page});
+        }, 2500, {trailing: false}),
 
-        showImageBatchMetadataDialog: function(e, batch) {},
+        showImageBatchMetadataDialog: function (e, batch) {
+        },
 
-        showImageMetadata: function(imageId) {
+        showImageMetadata: function (imageId) {
             this.metaEditor.loadDataForImage(imageId);
             this.metaEditor.show();
         },
 
-        getImageToolbarForImage: function(image, imageUrl, fileName) {
+        getImageToolbarForImage: function (image, imageUrl, fileName) {
             return (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
                 .replace(/\#file\-name/, fileName)
@@ -571,7 +579,7 @@ define([
             );
         },
 
-        buildImageListItem: function(html, image) {
+        buildImageListItem: function (html, image) {
             // Get file name
             var fileName = image.metadata['drp:filename'] || [image.imageIdentifier, image.extension].join('.');
 
@@ -587,10 +595,10 @@ define([
             // Set queryString on ImageUrl
             url = url.setQueryString(queryString);
 
-            var full  = url.toString(),
-                thumb = url.maxSize({ width: 158, height: 158 }).jpg().toString(),
-                name  = image.metadata['drp:filename'] || image.imageIdentifier,
-                el    = '';
+            var full = url.toString(),
+                thumb = url.maxSize({width: 158, height: 158}).jpg().toString(),
+                name = image.metadata['drp:filename'] || image.imageIdentifier,
+                el = '';
 
             el += '<li data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
@@ -603,15 +611,15 @@ define([
             return html;
         },
 
-        onEditorImageSelected: function(e, options) {
+        onEditorImageSelected: function (e, options) {
             this.previewImage(options);
         },
 
-        onEditorImageDeselected: function(e) {
+        onEditorImageDeselected: function (e) {
             this.unpreviewImage();
         },
 
-        onImageSearch: function(e) {
+        onImageSearch: function (e) {
             e.preventDefault();
 
             // Empty the current list of items
@@ -627,10 +635,10 @@ define([
             }
 
             // Set up queries for the default fields
-            var query = { '$or': [] }, sub;
-            ['drp:title', 'drp:filename', 'drp:description'].forEach(function(item) {
+            var query = {'$or': []}, sub;
+            ['drp:title', 'drp:filename', 'drp:description'].forEach(function (item) {
                 sub = {};
-                sub[item] = { '$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*' };
+                sub[item] = {'$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*'};
                 query.$or.push(sub);
             });
 
@@ -638,32 +646,32 @@ define([
             this.queryImages(query);
         },
 
-        hideGui: function() {
+        hideGui: function () {
             this.content.addClass('hidden');
         },
 
-        showGui: function() {
+        showGui: function () {
             this.content.removeClass('hidden');
         },
 
-        on: function(e, handler) {
+        on: function (e, handler) {
             this.events.on(e, handler);
             return this;
         },
 
-        off: function(e, handler) {
+        off: function (e, handler) {
             this.events.off(e, handler);
             return this;
         },
 
-        trigger: function(e, handler) {
+        trigger: function (e, handler) {
             this.events.trigger(e, handler);
             return this;
         },
 
         selectedPackageAsset: null,
 
-        exportEmbeddedImage: function (markup, options, callback) {
+        exportEmbeddedAsset: function (markup, options, callback) {
             var data = {
                 // internal id not yet available at this point. Will be added by the PluginAPI
                 embeddedTypeId: options.embeddedTypeId,
@@ -676,12 +684,12 @@ define([
                 renditions: options.renditions,
                 options: options.imboOptions
             };
-            PluginAPI.Editor.insertEmbeddedMedia(markup, data, callback);
+            PluginAPI.Editor.insertEmbeddedAsset(markup, data, callback);
         },
 
-        exportAssetImage: function(options, callback) {
+        exportAssetImage: function (options, callback) {
             var data = {
-                dpArticleId:this.selectedPackageAsset.dpArticleId,
+                dpArticleId: this.selectedPackageAsset.dpArticleId,
                 externalId: options.imageIdentifier,
                 assetElementId: this.selectedPackageAsset.assetElementId,
                 assetType: 'picture',
@@ -691,16 +699,16 @@ define([
                 renditions: options.renditions,
                 options: options.imboOptions
             };
-            PluginAPI.Editor.updateAssetMedia(data, callback);
+            PluginAPI.Editor.updateAssetData(data, callback);
         },
 
-        enableImageInsertion: function() {
+        enableImageInsertion: function () {
             this.insertionEnabled = true;
             this.content.find('.image-list').addClass('insertion-enabled');
             this.imageEditor.enableImageInsertion();
         },
 
-        disableImageInsertion: function() {
+        disableImageInsertion: function () {
             this.insertionEnabled = false;
             this.content.find('.image-list').removeClass('insertion-enabled');
             this.imageEditor.disableImageInsertion();
