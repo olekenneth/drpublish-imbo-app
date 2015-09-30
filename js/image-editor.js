@@ -556,12 +556,12 @@ define([
         },
 
         switchSettingsTab: function (e) {
-            var button = $(e.target);
+            var button = $(e.target).closest('button');
             var ref = button.attr('data-ref');
             $('.settings-tab').addClass('hidden');
             $('.settings-tab.' + ref).removeClass('hidden');
             this.settingsTabButtons.removeClass('active');
-            button.addClass('active')
+            button.addClass('active');
         },
 
         enableImageInsertion: function () {
