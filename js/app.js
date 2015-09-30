@@ -40,6 +40,7 @@ define([
         }
     ];
 
+
     _.extend(ImboApp.prototype, {
 
         AppName: 'imbo-images',
@@ -689,7 +690,7 @@ define([
 
         exportAssetImage: function (options, callback) {
             var data = {
-                dpArticleId: this.selectedPackageAsset.dpArticleId,
+                internalId: this.selectedPackageAsset.dpArticleId,
                 externalId: options.imageIdentifier,
                 assetElementId: this.selectedPackageAsset.assetElementId,
                 assetType: 'picture',
