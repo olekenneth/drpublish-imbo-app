@@ -196,8 +196,6 @@ fieldset.current-images {
     display: inline;
 }
 
-
-
 .selected-image {
     height: 0;
 }
@@ -218,6 +216,7 @@ fieldset.current-images {
     margin: 0 10px 10px 0;
     display: none;
 }
+
 
 /* IMAGE TOOLBAR */
 
@@ -418,6 +417,7 @@ fieldset.current-images {
 .meta-editor fieldset input,
 .meta-editor fieldset textarea {
     width: 100%;
+    background: #ddd;
     border: 0;
 }
 
@@ -522,95 +522,6 @@ fieldset.current-images {
     border: 1px solid #666;
 }
 
-
-
-.image-editor .controls label {
-    display: block;
-    font-size: 1.1em;
-    font-weight: normal;
-    margin: 10px;
-}
-
-.image-editor .rotate:first-of-type {
-    margin-left: 6px;
-}
-.image-editor .rotate {
-    font-size: 2em;
-    padding: 0.2em .4em 1.6em;
-}
-
-.image-editor .image-loading {
-
-}
-
-.image-editor .settings-pane {
-    margin-top: 12px;
-    width: 24.5%;
-}
-
-.image-editor .settings-pane > div {
-
-}
-
-.image-editor .crop-presets {
-    min-height: 40px;
-}
-
-.image-editor .crop-presets .ratio {
-    margin: 0 5px 5px 0;
-}
-
-.image-editor .crop-presets .active {
-    background: #333;
-    border-color: #999;
-}
-
-.image-editor .settings-pane input[type=range] {
-    display: block;
-    margin: 0 auto;
-    width: 80%;
-}
-
-.selected-image {
-    height: 0;
-}
-
-.selected-image .edit-image, .selected-image legend {
-    display: none;
-}
-
-.selected-image .loading .imbo-spinner {
-    display: none;
-    height: 75px;
-    margin: 40px 185px;
-    width: 75px;
-}
-
-.selected-image img {
-    float: left;
-    margin: 0 10px 10px 0;
-    display: none;
-}
-
-
-/** MEDIA QUERIES **/
-@media all and (max-width: 546px) and (min-width: 370px) {
-    .image-list li {
-        width: 46%;
-    }
-}
-
-@media all and (max-width: 369px) {
-    .image-list li {
-        width: 92%;
-    }
-}
-
-.search-stats {
-    margin-bottom: 6px;
-}
-
-
 .image-editor .settings-header {
     display:none;
     padding: 0 0 0 12px;
@@ -644,11 +555,67 @@ fieldset.current-images {
     margin: 0 12px;
 }
 
-
-.image-list .insert-image {
-    display: none;
+.image-editor .controls label {
+    display: block;
+    font-size: 1.1em;
+    font-weight: normal;
+    margin: 10px;
 }
 
-.image-list.insertion-enabled .insert-image {
-    display: inline;
+.image-editor .rotate:first-of-type {
+    margin-left: 6px;
 }
+.image-editor .rotate {
+    font-size: 2em;
+    padding: 0.2em .4em 1.6em;
+}
+
+
+.image-editor .settings-pane {
+    margin-top: 12px;
+    width: 24.5%;
+}
+
+.image-editor .settings-pane > div {
+
+}
+
+.image-editor .crop-presets {
+    min-height: 40px;
+}
+
+.image-editor .crop-presets .ratio {
+    margin: 0 5px 5px 0;
+}
+
+.image-editor .crop-presets .active {
+    background: #333;
+    border-color: #999;
+}
+
+.image-editor .settings-pane input[type=range] {
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+}
+
+
+/** MEDIA QUERIES **/
+@media all and (max-width: 546px) and (min-width: 370px) {
+    .image-list li {
+        width: 46%;
+    }
+}
+
+@media all and (max-width: 369px) {
+    .image-list li {
+        width: 92%;
+    }
+}
+
+.search-stats {
+    margin-bottom: 6px;
+}
+
+
+
