@@ -68,6 +68,11 @@
 
 
     <section class="image-editor hidden">
+
+        <section class="image-container">
+            <img src="img/blank.gif" id="image-preview" alt="">
+        </section>
+
         <div class="settings-pane">
             <div class="settings-header">
                 <button data-ref="image" >
@@ -162,9 +167,7 @@
 
         </div>
 
-        <section class="image-container">
-            <img src="img/blank.gif" id="image-preview" alt="">
-        </section>
+
     </section>
 
     <aside class="image-toolbar hidden">
