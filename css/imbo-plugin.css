@@ -1,7 +1,7 @@
 /* Semi-defaults from Aptoma */
 body.editor-view {
     background-color: #444;
-    color: #CCC;
+    color: #ccc;
 }
 
 
@@ -24,13 +24,27 @@ button, div.button {
 }
 
 
+/* Utility classes */
+
 .droppable {
     background: #baeebc;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
+
+.clear:before, .clear:after {
+    content: " ";
+    display: table;
+}
+
+.clear:after {
+    clear: both;
+}
+
+
+/* INITIAL STATE - LOADING CONTENT (hide while loading) */
 
 .loading .content, .loading .meta-editor {
     display: none;
@@ -44,9 +58,14 @@ button, div.button {
     display: block;
 }
 
+/* CONTENT - first panel (add image, choose image) */
+
+
+/* Adding new images */
+
 fieldset.add-new-images {
     position: relative;
-    min-height: 55px;
+    padding-bottom: 30px;
 }
 
 .file-upload {
@@ -60,6 +79,7 @@ button.upload-scanpix-image {
     width: 225px;
     height: 30px;
     position: absolute;
+    cursor: pointer;
 }
 
 .file-upload, button.upload-local-file {
@@ -70,13 +90,9 @@ button.upload-scanpix-image {
     left: 250px;
 }
 
-.spacer {
-    visibility: hidden;
-    display: inline-block;
-    height: 30px;
+.file-upload:hover + .upload-local-file {
+    opacity: 1;
 }
-
-button.upload-local-file {}
 
 fieldset.current-images {
     padding: 0 0 0 12px;
@@ -85,12 +101,19 @@ fieldset.current-images {
 
 .search .image-search {
     width: 60%;
-    line-height: 25px;
+    float: left;
 }
 
 .search button {
     margin-left: 5px;
 }
+
+.search-stats {
+    margin-bottom: 6px;
+}
+
+
+/* IMAGE LIST  */
 
 .image-list {
     list-style-type: none;
@@ -129,32 +152,31 @@ fieldset.current-images {
     background: #fff;
 }
 
-.clear:before, .clear:after {
-    content: " ";
-    display: table;
-}
-
-.clear:after {
-    clear: both;
-}
 
 .image-list li {
     position: relative;
     float: left;
     width: 30.65%;
     margin: 5px;
-    height: 160px;
+    padding-bottom: 30px; /* will be occupied by image-toolbar */
+    height: 130px;
     background: #fff;
     border: 1px solid #DDD;
+
     display: -webkit-flexbox;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+
     -webkit-flex-align: center;
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
     text-align: center;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .image-list .full-image {
@@ -163,19 +185,57 @@ fieldset.current-images {
 
 .image-list .full-image img {
     max-width: 100%;
+    max-height: 120px;
 }
 
-.image-toolbar {
+.image-list .insert-image {
     display: none;
+}
+
+.image-list.insertion-enabled .insert-image {
+    display: inline;
+}
+
+
+
+.selected-image {
+    height: 0;
+}
+
+.selected-image .edit-image, .selected-image legend {
+    display: none;
+}
+
+.selected-image .loading .imbo-spinner {
+    display: none;
+    height: 75px;
+    margin: 40px 185px;
+    width: 75px;
+}
+
+.selected-image img {
+    float: left;
+    margin: 0 10px 10px 0;
+    display: none;
+}
+
+/* IMAGE TOOLBAR */
+
+.image-toolbar {
     position: absolute;
-    bottom: 1%;
+    bottom: 0;
     left: 0;
     width: 100%;
-    background: #CCDCE8;
+    background: #dee2e5;
+    opacity: .4;
+    transition: opacity .4s;
+}
+
+.image-list li:hover .image-toolbar {
+    opacity: 1;
 }
 
 .image-toolbar button {
-    font-size: 2em;
     background: none;
     opacity: 0.6;
 }
@@ -191,6 +251,9 @@ fieldset.current-images {
 .image-list li:hover .image-toolbar {
     display: block;
 }
+
+
+/* Progress bar */
 
 .progress {
     margin: -31px 0 10px 0;
@@ -241,43 +304,29 @@ fieldset.current-images {
 .progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
 .progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }
 
-.meta-editor {
-    padding-top: 12px;
 
-}
 
-.meta-editor .tab-controller, .meta-editor .tab-controller li {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
+/* AFTER CLICKING AN IMAGE, YOU're TAKEN TO THE EDITOR:  */
 
-.meta-editor .tab-controller li {
-    display: inline-block;
-}
 
-.meta-editor .tab-controller button {
-    font-size: 1.1em;
-    height: 2em;
-    margin-left: 6px;
-}
 
-.meta-editor fieldset, .image-editor fieldset {
-    padding: 3px 18px 3px 12px;
-    margin: 10px 5px;
-    border: none;
-}
+/* EDITOR / META INFO */
 
-.meta-editor fieldset input, .meta-editor fieldset textarea {
-    width: 100%;
-    border: 0;
-}
+/*
 
-.meta-editor .input-pane textarea {
-    height: 150px;
-    resize: none;
-    font-family: 'Open Sans', arial, sans-serif;
-}
+    Note:
+
+    Previously we had an image-editor and a meta-editor.
+    Now, all lives within the .image-editor, but meta stuff is wrapped in  .image-editor > .settings-pane > .settings-tab.meta > .meta-editor
+
+    So, now, these are the paths to the two different parts:
+
+    .image-editor > .settings-pane > .settings-tab.image
+    .image-editor > .settings-pane > .settings-tab.meta > .meta-editor >.tabs
+    .image-editor > .image-container
+
+
+*/
 
 
 .meta-editor .image-container,
@@ -286,56 +335,29 @@ fieldset.current-images {
     float: left;
 }
 
-.meta-editor .tabs .active {
-    background: #999;
-    color: #000;
+
+
+
+/* META EDITOR */
+
+.meta-editor {
+    padding-top: 12px;
+
 }
 
-.meta-editor .input-pane legend,
-.image-editor .settings-pane legend {
-    font-size: 1.2em;
-}
-
-.meta-editor .input-pane legend .fa,
-.image-editor .settings-pane legend .fa {
-    margin: 0 7px;
-}
-
-.meta-editor .image-container {
-    width: 67.5%;
-    margin-left: 32.5%;
-    background: #F5F5F5 none no-repeat 50% 50%;
-    min-height: 400px;
-    border: 1px solid #000;
-    display: table;
-}
-
-.meta-editor .image-container .source {
-    display: table-cell;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    width: 100%;
-    height: 100%;
-}
-
-.meta-editor .image-container h2, .image-editor .image-container h2 {
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 5px 15px;
-    position: absolute;
-}
-
-.meta-editor .buttons, .image-editor .buttons {
+.meta-editor .buttons,
+.image-editor .buttons {
     padding: 10px;
     text-align: center;
 }
 
-.meta-editor .buttons button, .image-editor .buttons button {
+.meta-editor .buttons button,
+.image-editor .buttons button {
     font-size: 1.2em;
 }
 
-.meta-editor button.close, .image-editor button.close {
+.meta-editor button.close,
+.image-editor button.close {
 
     margin: 0 auto;
 }
@@ -360,24 +382,72 @@ fieldset.current-images {
 
 /* End of degrade styling */
 
-.meta-editor .exif-pane dl {
-    margin: 10px 10px 10px 20px;
-    color: #DDD;
+
+
+.meta-editor .tab-controller,
+.meta-editor .tab-controller li {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.meta-editor .tab-controller li {
+    display: inline-block;
+}
+
+.meta-editor .tab-controller button {
     font-size: 1.1em;
+    height: 2em;
+    margin-left: 6px;
 }
 
-.meta-editor .exif-pane dt {
-    font-weight: bold;
+.meta-editor .tabs .active {
+    background: #999;
+    color: #000;
 }
 
-.image-editor fieldset legend {
-    color: #CCC;
+
+
+.meta-editor fieldset,
+.image-editor fieldset {
+    padding: 3px 18px 3px 12px;
+    margin: 10px 5px;
+    border: none;
 }
 
-.image-editor button {
-    color: #ccc;
-    background-color: #333;
-    border: solid #666 1px;
+.meta-editor fieldset input,
+.meta-editor fieldset textarea {
+    width: 100%;
+    border: 0;
+}
+
+
+.meta-editor .input-pane textarea {
+    height: 150px;
+    resize: none;
+    font-family: 'Open Sans', arial, sans-serif;
+}
+
+
+
+.meta-editor .input-pane legend,
+.image-editor .settings-pane legend {
+    font-size: 1.2em;
+}
+
+.meta-editor .input-pane legend .fa,
+.image-editor .settings-pane legend .fa {
+    margin: 0 7px;
+}
+
+/* This wouldn't hit anything?
+.meta-editor .image-container {
+    width: 67.5%;
+    margin-left: 32.5%;
+    background: #F5F5F5 none no-repeat 50% 50%;
+    min-height: 400px;
+    border: 1px solid #000;
+    display: table;
 }
 
 .image-editor .image-container {
@@ -385,6 +455,74 @@ fieldset.current-images {
     min-height: 400px;
     margin-top: 13px;
 }
+
+.meta-editor .image-container .source {
+    display: table-cell;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.meta-editor .image-container h2, .image-editor .image-container h2 {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px 15px;
+    position: absolute;
+}
+*/
+
+
+
+/* STYLING LIST OF EXIF DATA: */
+
+/* clearfix */
+.meta-editor .exif-pane dl:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.meta-editor .exif-pane	dl {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    clear: both;
+    width: 100%;
+    margin: 20px 0;
+    padding: 0;
+    border-bottom: 1px solid #6b6b6b;
+}
+
+.meta-editor .exif-pane dl dt {
+    clear: both;
+    width: 43%;
+    float: left;
+    margin: 0;
+    padding: 6px 1% 4px 4%;
+    font-weight: 600;
+    border-top: 1px solid #6b6b6b;
+}
+
+.meta-editor .exif-pane dl dd {
+    float: left;
+    width: 50%;
+    margin: 0;
+    padding: 6px 1%;
+    border-top: 1px solid #6b6b6b;
+}
+
+.image-editor fieldset legend {
+    color: #ccc;
+}
+
+.image-editor button {
+    color: #ccc;
+    background-color: #333;
+    border: 1px solid #666;
+}
+
+
 
 .image-editor .controls label {
     display: block;

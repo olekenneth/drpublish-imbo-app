@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/imbo-loader.css">
     <link rel="stylesheet" href="css/imbo-plugin.css?<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script>
         var Drp = window.Drp || {};
         Drp.ImboConfig = <?php echo json_encode($config); ?>;
@@ -31,7 +32,6 @@
             <input type="file" name="files[]" accept="image/*" class="file-upload"  multiple>
             <button class="upload-local-file"><i class="fa fa-upload"></i> <span data-translate="UPLOAD_LOCAL_IMAGE"></span></button>
             <button class="upload-scanpix-image"><i class="fa fa-upload"></i> <span data-translate="LOAD_FROM_SCANPIX"></span></button>
-            <span class="spacer">&nbsp;</span>
 
             <div class="progress clear hidden"></div>
         </fieldset>
@@ -126,37 +126,31 @@
 
             <div class="settings-tab meta">
                 <div class="meta-editor">
-                            <div class="tabs">
-                                <ul class="tab-controller">
-                                    <li><button class="core active" data-tab="core"><i class="fa fa-info"></i> <span data-translate="META_EDITOR_CORE_TAB"></span></button></li>
-                                    <li><button class="exif" data-tab="exif"><i class="fa fa-picture-o"></i> <span data-translate="META_EDITOR_EXIF_TAB"></span></button></li>
-                                </ul>
+                    <div class="tabs">
+                        <ul class="tab-controller">
+                            <li><button class="core active" data-tab="core"><i class="fa fa-info"></i> <span data-translate="META_EDITOR_CORE_TAB"></span></button></li>
+                            <li><button class="exif" data-tab="exif"><i class="fa fa-picture-o"></i> <span data-translate="META_EDITOR_EXIF_TAB"></span></button></li>
+                        </ul>
 
-                                <section class="input-pane tab" data-tab="core">
-                                    <fieldset>
-                                        <legend data-translate="META_EDITOR_IMAGE_TITLE"></legend>
-                                        <input type="text" name="drp:title">
-                                    </fieldset>
+                        <section class="input-pane tab" data-tab="core">
+                            <fieldset>
+                                <h3 data-translate="META_EDITOR_IMAGE_TITLE"></h3>
+                                <input type="text" name="drp:title">
 
-                                    <fieldset>
-                                        <legend data-translate="META_EDITOR_IMAGE_DESCRIPTION"></legend>
-                                        <textarea name="drp:description"></textarea>
-                                    </fieldset>
+                                <h3 data-translate="META_EDITOR_IMAGE_DESCRIPTION"></h3>
+                                <textarea name="drp:description"></textarea>
 
-                                    <fieldset>
-                                        <legend data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></legend>
-                                        <input type="text" name="drp:photographer">
-                                    </fieldset>
+                                <h3 data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></h3>
+                                <input type="text" name="drp:photographer">
 
-                                    <fieldset>
-                                        <legend data-translate="META_EDITOR_IMAGE_AGENCY"></legend>
-                                        <input type="text" name="drp:agency">
-                                    </fieldset>
-                                </section>
+                                <h3 data-translate="META_EDITOR_IMAGE_AGENCY"></h3>
+                                <input type="text" name="drp:agency">
+                            </fieldset>
+                        </section>
 
-                                <section class="exif-pane tab hidden" data-tab="exif">
-                                    &nbsp;
-                                </section>
+                        <section class="exif-pane tab hidden" data-tab="exif">
+                            &nbsp;
+                        </section>
 
                                 <div class="buttons">
                                     <button class="close"><i class="fa fa-times"></i> <span data-translate="IMAGE_EDITOR_CANCEL_BUTTON"></span></button>
@@ -175,11 +169,11 @@
 
     <aside class="image-toolbar hidden">
         <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
-            <span class="insert-image"><i class="fa fa-plus-square-o"></i>/</span><i class="fa fa-edit"></i>
+            <i class="material-icons">add_circle_outline</i>
         </button>
-<!--        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="fa fa-info"></i></button>-->
-        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="fa fa-download"></i></button></a>
-        <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="fa fa-trash-o"></i></button>
+        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons">info_outline</i></button>
+        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons">file_download</i></button></a>
+        <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
     </aside>
 </body>
 </html>
