@@ -124,16 +124,31 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
 
         addScanpixImages: function (images) {
             _.each(images, _.bind(function (image) {
-                this.uploadImageFromUrl(
-                    image.url,
-                    {
-                        'drp:description': image.caption,
-                        'scanpix:caption': image.caption,
-                        'scanpix:source': image.source,
-                        'scanpix:byline': image.byline,
-                        'scanpix:refPtr': image.refPtr
-                    }
-                );
+                var metadata = {
+                    'drp:description': image.caption,
+                    'scanpix:restrictions': false,
+                    'scanpix:caption': image.caption,
+                    'scanpix:source': image.source,
+                    'scanpix:byline': image.byline,
+                    'scanpix:imageId': image.refPtr,
+                    'scanpix:credit': image.rcredit,
+                    'scanpix:assignmentReference': image.assignmentNumber,
+                    'scanpix:date': image.dateCreated
+                };
+
+                if (image.specialInstruction && image.specialInstruction !== 'false') {
+                    metadata['scanpix:restrictions'] = image.specialInstruction;
+                }
+
+                if (image.countryName) {
+                    metadata['scanpix:country'] = image.countryName;
+                }
+
+                if (image.city) {
+                    metadata['scanpix:city'] = image.city;
+                }
+
+                this.uploadImageFromUrl(image.url, metadata);
             }, this));
         },
 
