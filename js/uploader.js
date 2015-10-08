@@ -131,7 +131,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
                     'scanpix:source': image.source,
                     'scanpix:byline': image.byline,
                     'scanpix:imageId': image.refPtr,
-                    'scanpix:credit': image.rcredit,
+                    'scanpix:credit': image.credit,
                     'scanpix:assignmentReference': image.assignmentNumber,
                     'scanpix:date': image.dateCreated
                 };
