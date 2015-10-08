@@ -4,18 +4,6 @@ body.editor-view {
     color: #ccc;
 }
 
-
-.content > fieldset {
-    margin: 0;
-    padding: 6px 12px;
-    border: none;
-}
-
-.content  fieldset legend {
-    margin: 6px 0 0 0;
-    font-size: 15px;
-}
-
 /* Override default background color on buttons */
 input[type="button"],
 input[type="submit"],
@@ -24,23 +12,126 @@ button, div.button {
 }
 
 
-/* Utility classes */
-
-.droppable {
-    background: #baeebc;
+/* Aptoma defaults for fieldsets */
+fieldset {
+    margin: 15px 0;
+    padding: 20px 12px;
+    min-height: 60px;
+    border: none;
+    border-bottom: solid 1px #dfdfdf;
 }
 
-.hidden {
-    display: none !important;
+/* Style labels, legends and subtitles */
+label,
+fieldset h3,
+fieldset legend {
+    font-size: 15px;
+    color: #666;
 }
 
-.clear:before, .clear:after {
-    content: " ";
-    display: table;
+fieldset h3 {
+    margin-top: 10px;
 }
 
-.clear:after {
-    clear: both;
+
+/* Fieldset for adding new images */
+fieldset.add-new-images {
+    position: relative;
+}
+
+
+/* Override fieldset defaults for selected image (when not visible) */
+.selected-image {
+    min-height: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-image .edit-image,
+.selected-image legend {
+    display: none;
+}
+
+/* Fieldset with list of images */
+fieldset.current-images {
+    padding-right: 0;
+}
+
+/* Fieldsets within settings-pane */
+
+.settings-pane fieldset {
+    padding: 3px 18px 3px 12px;
+    margin: 10px 5px;
+    border: none;
+}
+
+.settings-pane label,
+.settings-pane fieldset h3,
+.settings-pane fieldset legend {
+    color: #ccc;
+}
+
+
+/* Styling inputs and text areas */
+input[type="text"],
+input[type="search"],
+textarea {
+    display: block;
+    width: 90%;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-family: 'Open Sans', arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+
+    -webkit-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+}
+
+
+/* Specify colors for inputs in light grey panel */
+
+.search input[type="text"],
+.search input[type="search"] {
+    width: 60%;
+    float: left;
+    color: #444;
+    background: #fff;
+    border: 1px solid #9db1c2;
+}
+
+.search input[type="text"]:focus,
+.search input[type="search"]:focus {
+    border-color: #4e6f8a;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 5px rgba(78,111,138,0.4);
+}
+
+
+
+
+/* Specify colors for inputs in dark grey window */
+
+.settings-pane input[type="text"],
+.settings-pane input[type="search"],
+.settings-pane textarea {
+    width: 100%;
+    background: #ddd;
+    border: 1px solid #444;
+}
+
+.settings-pane textarea {
+    height: 150px;
+    resize: none;
+}
+
+.settings-pane input[type="text"]:focus,
+.settings-pane input[type="search"]:focus,
+.settings-pane textarea:focus {
+    border-color: #222;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 5px rgba(0, 0, 0 ,0.4);
 }
 
 
@@ -58,15 +149,13 @@ button, div.button {
     display: block;
 }
 
+
+
+
 /* CONTENT - first panel (add image, choose image) */
 
 
 /* Adding new images */
-
-fieldset.add-new-images {
-    position: relative;
-    padding-bottom: 30px;
-}
 
 .file-upload {
     opacity: 0;
@@ -79,11 +168,12 @@ button.upload-scanpix-image {
     width: 225px;
     height: 30px;
     position: absolute;
+    font-size: 15px;
     cursor: pointer;
 }
 
 .file-upload, button.upload-local-file {
-    left: 10px;
+    left: 12px;
 }
 
 button.upload-scanpix-image {
@@ -94,30 +184,38 @@ button.upload-scanpix-image {
     opacity: 1;
 }
 
-fieldset.current-images {
-    padding: 0 0 0 12px;
-}
-
-
-.search .image-search {
-    width: 60%;
-    float: left;
-}
-
 .search button {
     margin-left: 5px;
 }
 
 .search-stats {
-    margin-bottom: 6px;
+    clear: both;
+    margin: 30px 0 0;
+    color: #665;
 }
 
 
 /* IMAGE LIST  */
 
+
+
+.selected-image .loading .imbo-spinner {
+    display: none;
+    height: 75px;
+    margin: 40px 185px;
+    width: 75px;
+}
+
+.selected-image img {
+    float: left;
+    margin: 0 10px 10px 0;
+    display: none;
+}
+
+
 .image-list {
     list-style-type: none;
-    margin: 0;
+    margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
     overflow-y: auto;
@@ -196,26 +294,6 @@ fieldset.current-images {
     display: inline;
 }
 
-.selected-image {
-    height: 0;
-}
-
-.selected-image .edit-image, .selected-image legend {
-    display: none;
-}
-
-.selected-image .loading .imbo-spinner {
-    display: none;
-    height: 75px;
-    margin: 40px 185px;
-    width: 75px;
-}
-
-.selected-image img {
-    float: left;
-    margin: 0 10px 10px 0;
-    display: none;
-}
 
 
 /* IMAGE TOOLBAR */
@@ -407,26 +485,6 @@ fieldset.current-images {
 
 
 
-.meta-editor fieldset,
-.image-editor fieldset {
-    padding: 3px 18px 3px 12px;
-    margin: 10px 5px;
-    border: none;
-}
-
-.meta-editor fieldset input,
-.meta-editor fieldset textarea {
-    width: 100%;
-    background: #ddd;
-    border: 0;
-}
-
-
-.meta-editor .input-pane textarea {
-    height: 150px;
-    resize: none;
-    font-family: 'Open Sans', arial, sans-serif;
-}
 
 
 
@@ -599,6 +657,28 @@ fieldset.current-images {
     width: 80%;
 }
 
+/* Utility classes */
+
+.droppable {
+    background: #baeebc;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.clear:before, .clear:after {
+    content: " ";
+    display: table;
+}
+
+.clear:after {
+    clear: both;
+}
+
+
+
+
 
 /** MEDIA QUERIES **/
 @media all and (max-width: 546px) and (min-width: 370px) {
@@ -612,10 +692,3 @@ fieldset.current-images {
         width: 92%;
     }
 }
-
-.search-stats {
-    margin-bottom: 6px;
-}
-
-
-
