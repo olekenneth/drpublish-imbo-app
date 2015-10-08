@@ -54,13 +54,13 @@
                 <button type="submit"><i class="fa fa-search"></i> <span data-translate="IMAGE_SEARCH_BUTTON"></span></button>
                 <button type="button" class="refresh"><i class="fa fa-refresh"></i> <span data-translate="IMAGE_SEARCH_REFRESH_BUTTON"></span></button>
             </form>
-            <div class="search-stats">
+            <p class="search-stats">
                 <span data-translate="IMAGE_RESULT_SHOWING"></span>
                 <span class="display-count">0</span>
                 <span data-translate="IMAGE_RESULT_OUT_OF"></span>
                 <span class="total-hit-count">0</span>
-                <span data-translate="IMAGE_RESULT_TOTAL_HITS"></span>
-            </div>
+                <span data-translate="IMAGE_RESULT_TOTAL_HITS"></span>:
+            </p>
 
             <ul class="image-list clear"></ul>
         </fieldset>
