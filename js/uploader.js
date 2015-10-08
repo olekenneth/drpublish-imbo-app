@@ -122,33 +122,48 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
             this.trigger('scanpix-init-upload');
         },
 
-        addScanpixImages: function (images) {
-            _.each(images, _.bind(function (image) {
-                var metadata = {
-                    'drp:description': image.caption,
-                    'scanpix:restrictions': false,
-                    'scanpix:caption': image.caption,
-                    'scanpix:source': image.source,
-                    'scanpix:byline': image.byline,
-                    'scanpix:imageId': image.refPtr,
-                    'scanpix:credit': image.credit,
-                    'scanpix:assignmentReference': image.assignmentNumber,
-                    'scanpix:date': image.dateCreated
-                };
+        prepareScanpixMetadata: function(image) {
+            var metadata = {
+                'drp:description': image.caption,
 
-                if (image.specialInstruction && image.specialInstruction !== 'false') {
-                    metadata['scanpix:restrictions'] = image.specialInstruction;
-                }
+                'byline': image.byline,
+                'description': image.caption,
+                'credit': image.credit,
+
+                'scanpix': {
+                    'imageId': image.refPtr,
+                    'assignmentReference': image.assignmentNumber,
+                    'restrictions': false
+                },
+
+                'date': image.date
+            };
+
+            if (image.specialInstruction && image.specialInstruction !== 'false') {
+                metadata.scanpix.restrictions = image.specialInstruction;
+            }
+
+            if (image.countryName || image.city) {
+                metadata.location = {};
 
                 if (image.countryName) {
-                    metadata['scanpix:country'] = image.countryName;
+                    metadata.location.country = image.countryName;
                 }
 
                 if (image.city) {
-                    metadata['scanpix:city'] = image.city;
+                    metadata.location.city = image.city;
                 }
+            }
 
-                this.uploadImageFromUrl(image.url, metadata);
+            return metadata;
+        },
+
+        addScanpixImages: function (images) {
+            _.each(images, _.bind(function (image) {
+                this.uploadImageFromUrl(
+                    image.url,
+                    this.prepareScanpixMetadata(image)
+                );
             }, this));
         },
 
