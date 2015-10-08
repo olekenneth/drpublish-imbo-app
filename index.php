@@ -170,10 +170,10 @@
 
     </section>
 
-    <div class="meta-info" style="position: absolute; top: 170px; z-index: 100; height: 400px; width: 205%; background: #222;">
+ <!--   <div class="meta-info" style="position: absolute; top: 170px; z-index: 100; height: 400px; width: 205%; background: #222;">
         <p>Her kommer meta-info</p>
     </div>
-
+-->
     <aside class="image-toolbar hidden">
         <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
             <i class="material-icons add">add_circle_outline</i>
