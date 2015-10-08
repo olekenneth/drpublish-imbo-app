@@ -259,7 +259,7 @@ button.upload-scanpix-image {
     padding-bottom: 30px; /* will be occupied by image-toolbar */
     height: 130px;
     background: #fff;
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
 
     display: -webkit-flexbox;
     display: -ms-flexbox;
@@ -276,6 +276,12 @@ button.upload-scanpix-image {
     align-items: center;
     justify-content: center;
 }
+
+
+.image-list li.redmarked {
+    border-color: #f16b52;
+}
+
 
 .image-list .full-image {
     margin: 0 auto;
@@ -327,6 +333,16 @@ button.upload-scanpix-image {
 
 .image-list li:hover .image-toolbar {
     display: block;
+}
+
+/* redmarked toolbar */
+
+.image-list li.redmarked .image-toolbar {
+    background: #f6a191;
+}
+
+.image-list li.redmarked .image-toolbar button i {
+    color: #52150a;
 }
 
 

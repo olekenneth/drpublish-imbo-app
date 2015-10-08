@@ -170,12 +170,16 @@
 
     </section>
 
+    <div class="meta-info" style="position: absolute; top: 170px; z-index: 100; height: 400px; width: 205%; background: #222;">
+        <p>Her kommer meta-info</p>
+    </div>
+
     <aside class="image-toolbar hidden">
         <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
-            <i class="material-icons">add_circle_outline</i>
+            <i class="material-icons add">add_circle_outline</i>
         </button>
-        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons">info_outline</i></button>
-        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons">file_download</i></button></a>
+        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons info">info_outline</i></button>
+        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons download">file_download</i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
     </aside>
 </body>
