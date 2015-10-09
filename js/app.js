@@ -583,19 +583,45 @@ define([
 
             var openingMeta = !imageContainer.hasClass('meta-open');
 
-            $('.meta-info').addClass('hidden', openingMeta)
+            $('.meta-info').addClass('hidden', openingMeta);
             metaInfo.toggleClass('hidden', !openingMeta);
 
-            $('.image-list li').toggleClass('meta-open', !openingMeta)
+            $('.image-list li').removeClass('meta-open');
             imageContainer.toggleClass('meta-open', openingMeta);
         },
 
         getImageToolbarForImage: function (image, imageUrl, fileName) {
-            return (this.imageToolbar
+            var toolbar = (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
                 .replace(/\#file\-name/, fileName)
                 .replace(/\#file\-name/, fileName)
             );
+
+            var className = [];
+
+            if (_.get(image, 'metadata.scanpix.restrictions')) {
+                className.push('restrictions');
+                toolbar = toolbar.replace(/\#restriction-text/, image.metadata.scanpix.restrictions);
+            }
+
+            if (_.get(image, 'metadata.description')) {
+                className.push('caption');
+                toolbar = toolbar.replace(/\#caption-text/, image.metadata.description);
+            }
+
+            if (_.get(image, 'metadata.date')) {
+                className.push('date');
+                toolbar = toolbar.replace(/\#date/, image.metadata.date);
+            }
+
+            if (_.get(image, 'metadata.scanpix.imageId')) {
+                className.push('scanpix-id');
+                toolbar = toolbar.replace(/\#scanpix-id/, image.metadata.scanpix.imageId);
+            }
+
+            toolbar = toolbar.replace(/\#meta-class-name/, className.join(' '));
+
+            return toolbar;
         },
 
         buildImageListItem: function (html, image) {
