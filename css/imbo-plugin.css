@@ -218,7 +218,6 @@ button.upload-scanpix-image {
     margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
-    overflow-y: auto;
     min-height: 250px;
 }
 
