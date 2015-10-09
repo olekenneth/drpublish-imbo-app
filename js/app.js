@@ -7,12 +7,14 @@ define([
     'uploader',
     'meta-editor',
     'image-editor',
-    'deparam'
-], function (_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam) {
+    'deparam',
+    'helpers'
+], function (_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam, defaultHelpers) {
     'use strict';
 
-    var ImboApp = function (config) {
+    var ImboApp = function (config, helpers) {
         this.setConfig(config);
+        this.setHelpers(helpers);
     };
 
 
@@ -39,7 +41,6 @@ define([
             'float': 'right'
         }
     ];
-
 
     _.extend(ImboApp.prototype, {
 
@@ -107,6 +108,10 @@ define([
         setConfig: function (config) {
             this.config = config || {};
             this.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES || [];
+        },
+
+        setHelpers: function (helpers) {
+            this.helpers = _.merge({}, defaultHelpers, helpers);
         },
 
         getImageResizeActions: function () {
@@ -363,7 +368,7 @@ define([
                 case 'delete-image':
                     return this.deleteImage(imageId, item);
                 case 'show-image-info':
-                    return this.showImageMetadata(imageId);
+                    return this.showImageInformation(imageId);
                 case 'use-image':
                     return this.useImageInArticle(e);
             }
@@ -572,12 +577,51 @@ define([
             this.metaEditor.show();
         },
 
+        showImageInformation: function showImageInformation(imageId) {
+            var imageContainer = $('li[data-image-identifier="' + imageId + '"]');
+            var metaInfo = imageContainer.find('.meta-info');
+
+            var openingMeta = !imageContainer.hasClass('meta-open');
+
+            $('.meta-info').addClass('hidden', openingMeta);
+            metaInfo.toggleClass('hidden', !openingMeta);
+
+            $('.image-list li').removeClass('meta-open');
+            imageContainer.toggleClass('meta-open', openingMeta);
+        },
+
         getImageToolbarForImage: function (image, imageUrl, fileName) {
-            return (this.imageToolbar
+            var toolbar = (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
                 .replace(/\#file\-name/, fileName)
                 .replace(/\#file\-name/, fileName)
             );
+
+            var className = [];
+
+            if (_.get(image, 'metadata.scanpix.restrictions')) {
+                className.push('restrictions');
+                toolbar = toolbar.replace(/\#restriction-text/, image.metadata.scanpix.restrictions);
+            }
+
+            if (_.get(image, 'metadata.description')) {
+                className.push('caption');
+                toolbar = toolbar.replace(/\#caption-text/, image.metadata.description);
+            }
+
+            if (_.get(image, 'metadata.date')) {
+                className.push('date');
+                toolbar = toolbar.replace(/\#date/, image.metadata.date);
+            }
+
+            if (_.get(image, 'metadata.scanpix.imageId')) {
+                className.push('scanpix-id');
+                toolbar = toolbar.replace(/\#scanpix-id/, image.metadata.scanpix.imageId);
+            }
+
+            toolbar = toolbar.replace(/\#meta-class-name/, className.join(' '));
+
+            return toolbar;
         },
 
         buildImageListItem: function (html, image) {
@@ -601,7 +645,13 @@ define([
                 name = image.metadata['drp:filename'] || image.imageIdentifier,
                 el = '';
 
-            el += '<li data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
+            var containerClass = (
+                this.helpers.imageHasRestrictions(image) ?
+                'restricted' :
+                ''
+            );
+
+            el += '<li class="' + containerClass + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
             el += ' <img src="' + thumb + '" alt="">';
             el += '</a>';

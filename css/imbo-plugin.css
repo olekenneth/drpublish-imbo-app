@@ -218,7 +218,6 @@ button.upload-scanpix-image {
     margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
-    overflow-y: auto;
     min-height: 250px;
 }
 
@@ -278,7 +277,7 @@ button.upload-scanpix-image {
 }
 
 
-.image-list li.redmarked {
+.image-list li.restricted {
     border-color: #f16b52;
 }
 
@@ -305,6 +304,7 @@ button.upload-scanpix-image {
 /* IMAGE TOOLBAR */
 
 .image-toolbar {
+    z-index: 200;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -335,13 +335,13 @@ button.upload-scanpix-image {
     display: block;
 }
 
-/* redmarked toolbar */
+/* restricted toolbar */
 
-.image-list li.redmarked .image-toolbar {
+.image-list li.restricted .image-toolbar {
     background: #f6a191;
 }
 
-.image-list li.redmarked .image-toolbar button i {
+.image-list li.restricted .image-toolbar button i {
     color: #52150a;
 }
 
@@ -699,7 +699,7 @@ button.upload-scanpix-image {
 }
 
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 .clear:before, .clear:after {

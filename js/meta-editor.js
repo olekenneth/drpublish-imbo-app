@@ -4,6 +4,7 @@ define([
     'exif',
     'drp-plugin-api'
 ], function (_, $, Exif, PluginApi) {
+    'use strict';
 
     var MetaEditor = function (imboApp) {
         this.initialize(imboApp);
