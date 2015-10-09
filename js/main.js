@@ -40,7 +40,14 @@ require.config({
     }
 });
 
-require(['app', 'deparam', 'drp-plugin-api', 'drp-ah5-communicator', 'drp-article-communicator'], function(App, deparam) {
+require([
+    'app',
+    'publicationHelpers/getHelpers',
+    'deparam',
+    'drp-plugin-api',
+    'drp-ah5-communicator',
+    'drp-article-communicator'
+], function(App, getHelpers, deparam) {
     'use strict';
 
     if (!window.Drp || !Drp.ImboConfig) {
@@ -53,6 +60,9 @@ require(['app', 'deparam', 'drp-plugin-api', 'drp-ah5-communicator', 'drp-articl
     // Merge in Imbo-config
     config.imbo = Drp.ImboConfig;
 
+    // Get helpers for the current publication
+    var helpers = getHelpers(config.publicationId);
+
     // Initialize application
-    new App(config).initialize();
+    new App(config, helpers).initialize();
 });

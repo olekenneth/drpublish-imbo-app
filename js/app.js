@@ -7,12 +7,14 @@ define([
     'uploader',
     'meta-editor',
     'image-editor',
-    'deparam'
-], function (_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam) {
+    'deparam',
+    'helpers'
+], function (_, $, PluginAPI, Translator, Imbo, Uploader, MetaEditor, ImageEditor, deparam, defaultHelpers) {
     'use strict';
 
-    var ImboApp = function (config) {
+    var ImboApp = function (config, helpers) {
         this.setConfig(config);
+        this.setHelpers(helpers);
     };
 
 
@@ -39,7 +41,6 @@ define([
             'float': 'right'
         }
     ];
-
 
     _.extend(ImboApp.prototype, {
 
@@ -107,6 +108,10 @@ define([
         setConfig: function (config) {
             this.config = config || {};
             this.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES || [];
+        },
+
+        setHelpers: function (helpers) {
+            this.helpers = _.merge({}, defaultHelpers, helpers);
         },
 
         getImageResizeActions: function () {
@@ -601,7 +606,13 @@ define([
                 name = image.metadata['drp:filename'] || image.imageIdentifier,
                 el = '';
 
-            el += '<li data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
+            var containerClass = (
+                this.helpers.imageHasRestrictions(image) ?
+                'restricted' :
+                ''
+            );
+
+            el += '<li class="' + containerClass + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
             el += ' <img src="' + thumb + '" alt="">';
             el += '</a>';
