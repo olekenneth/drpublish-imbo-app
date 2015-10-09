@@ -30,7 +30,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'META_EDITOR_IMAGE_TITLE': 'Tittel',
         'META_EDITOR_IMAGE_DESCRIPTION': 'Beskrivelse',
         'META_EDITOR_IMAGE_PHOTOGRAPHER': 'Fotograf',
-        'META_EDITOR_IMAGE_AGENCY': 'Agentur',
+        'META_EDITOR_IMAGE_AGENCY': 'Byrå',
         'META_EDITOR_IMAGE_EXIF': 'EXIF-data',
         'META_EDITOR_SOURCE_IMAGE': 'Originalbilde',
         'META_EDITOR_SAVE_META_DATA': 'Lagre bildeinformasjon',
