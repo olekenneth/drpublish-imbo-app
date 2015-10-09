@@ -368,7 +368,7 @@ define([
                 case 'delete-image':
                     return this.deleteImage(imageId, item);
                 case 'show-image-info':
-                    return this.showImageMetadata(imageId);
+                    return this.showImageInformation(imageId);
                 case 'use-image':
                     return this.useImageInArticle(e);
             }
@@ -575,6 +575,19 @@ define([
         showImageMetadata: function (imageId) {
             this.metaEditor.loadDataForImage(imageId);
             this.metaEditor.show();
+        },
+
+        showImageInformation: function showImageInformation(imageId) {
+            var imageContainer = $('li[data-image-identifier="' + imageId + '"]');
+            var metaInfo = imageContainer.find('.meta-info');
+
+            var openingMeta = !imageContainer.hasClass('meta-open');
+
+            $('.meta-info').addClass('hidden', openingMeta)
+            metaInfo.toggleClass('hidden', !openingMeta);
+
+            $('.image-list li').toggleClass('meta-open', !openingMeta)
+            imageContainer.toggleClass('meta-open', openingMeta);
         },
 
         getImageToolbarForImage: function (image, imageUrl, fileName) {

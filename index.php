@@ -181,7 +181,7 @@
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons download">file_download</i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
 
-        <div class="meta-info"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
+        <div class="meta-info hidden"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
             <p>$filename</p>
 
             <dl>
@@ -196,6 +196,7 @@
 
                 <dt>Scanpix-ID</dt>
                 <dd>$scanpix-id</dd>
+            </dl>
         </div>
 
     </aside>

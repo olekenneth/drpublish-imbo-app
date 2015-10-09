@@ -304,6 +304,7 @@ button.upload-scanpix-image {
 /* IMAGE TOOLBAR */
 
 .image-toolbar {
+    z-index: 200;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -698,7 +699,7 @@ button.upload-scanpix-image {
 }
 
 .hidden {
-    display: none !important;
+    display: none;
 }
 
 .clear:before, .clear:after {
