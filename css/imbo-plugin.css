@@ -278,7 +278,7 @@ button.upload-scanpix-image {
 }
 
 
-.image-list li.redmarked {
+.image-list li.restricted {
     border-color: #f16b52;
 }
 
@@ -335,13 +335,13 @@ button.upload-scanpix-image {
     display: block;
 }
 
-/* redmarked toolbar */
+/* restricted toolbar */
 
-.image-list li.redmarked .image-toolbar {
+.image-list li.restricted .image-toolbar {
     background: #f6a191;
 }
 
-.image-list li.redmarked .image-toolbar button i {
+.image-list li.restricted .image-toolbar button i {
     color: #52150a;
 }
 
