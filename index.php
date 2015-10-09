@@ -170,17 +170,34 @@
 
     </section>
 
- <!--   <div class="meta-info" style="position: absolute; top: 170px; z-index: 100; height: 400px; width: 205%; background: #222;">
-        <p>Her kommer meta-info</p>
-    </div>
--->
+
+
     <aside class="image-toolbar hidden">
+
         <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
             <i class="material-icons add">add_circle_outline</i>
         </button>
         <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons info">info_outline</i></button>
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons download">file_download</i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
+
+        <div class="meta-info"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
+            <p>$filename</p>
+
+            <dl>
+                <dt>Restrictions</dt> <!-- only display if there ARE restrictions -->
+                <dd class="restrictions">$restriction-text</dd> <!-- only display if there ARE restrictions -->
+
+                <dt>Caption</dt>
+                <dd class="caption">$caption-text</dd>
+
+                <dt>Date:</dt>
+                <dd>$date DD.MM.YYYY HH:MM</dd>
+
+                <dt>Scanpix-ID</dt>
+                <dd>$scanpix-id</dd>
+        </div>
+
     </aside>
 </body>
 </html>

@@ -346,6 +346,25 @@ button.upload-scanpix-image {
 }
 
 
+
+/* META INFO in image-list */
+
+.meta-info {
+    position: absolute;
+    top: 40px;
+    z-index: 100;
+    min-height: 150px;
+    width: 205.5%;
+    color: #ddd;
+    background: #222;
+    text-align: left;
+}
+
+.meta-info dt {
+    display: none;
+}
+
+
 /* Progress bar */
 
 .progress {
