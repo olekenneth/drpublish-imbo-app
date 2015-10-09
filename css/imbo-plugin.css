@@ -1,19 +1,7 @@
 /* Semi-defaults from Aptoma */
 body.editor-view {
     background-color: #444;
-    color: #CCC;
-}
-
-
-.content > fieldset {
-    margin: 0;
-    padding: 6px 12px;
-    border: none;
-}
-
-.content  fieldset legend {
-    margin: 6px 0 0 0;
-    font-size: 15px;
+    color: #ccc;
 }
 
 /* Override default background color on buttons */
@@ -24,13 +12,130 @@ button, div.button {
 }
 
 
-.droppable {
-    background: #baeebc;
+/* Aptoma defaults for fieldsets */
+fieldset {
+    margin: 15px 0;
+    padding: 20px 12px;
+    min-height: 60px;
+    border: none;
+    border-bottom: solid 1px #dfdfdf;
 }
 
-.hidden {
+/* Style labels, legends and subtitles */
+label,
+fieldset h3,
+fieldset legend {
+    font-size: 15px;
+    color: #666;
+}
+
+fieldset h3 {
+    margin-top: 10px;
+}
+
+
+/* Fieldset for adding new images */
+fieldset.add-new-images {
+    position: relative;
+}
+
+
+/* Override fieldset defaults for selected image (when not visible) */
+.selected-image {
+    min-height: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.selected-image .edit-image,
+.selected-image legend {
     display: none;
 }
+
+/* Fieldset with list of images */
+fieldset.current-images {
+    padding-right: 0;
+}
+
+/* Fieldsets within settings-pane */
+
+.settings-pane fieldset {
+    padding: 3px 18px 3px 12px;
+    margin: 10px 5px;
+    border: none;
+}
+
+.settings-pane label,
+.settings-pane fieldset h3,
+.settings-pane fieldset legend {
+    color: #ccc;
+}
+
+
+/* Styling inputs and text areas */
+input[type="text"],
+input[type="search"],
+textarea {
+    display: block;
+    width: 90%;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    font-family: 'Open Sans', arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857;
+
+    -webkit-transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s,box-shadow ease-in-out 0.15s;
+}
+
+
+/* Specify colors for inputs in light grey panel */
+
+.search input[type="text"],
+.search input[type="search"] {
+    width: 60%;
+    float: left;
+    color: #444;
+    background: #fff;
+    border: 1px solid #9db1c2;
+}
+
+.search input[type="text"]:focus,
+.search input[type="search"]:focus {
+    border-color: #4e6f8a;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 5px rgba(78,111,138,0.4);
+}
+
+
+
+
+/* Specify colors for inputs in dark grey window */
+
+.settings-pane input[type="text"],
+.settings-pane input[type="search"],
+.settings-pane textarea {
+    width: 100%;
+    background: #ddd;
+    border: 1px solid #444;
+}
+
+.settings-pane textarea {
+    height: 150px;
+    resize: none;
+}
+
+.settings-pane input[type="text"]:focus,
+.settings-pane input[type="search"]:focus,
+.settings-pane textarea:focus {
+    border-color: #222;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075), 0 0 5px rgba(0, 0, 0 ,0.4);
+}
+
+
+/* INITIAL STATE - LOADING CONTENT (hide while loading) */
 
 .loading .content, .loading .meta-editor {
     display: none;
@@ -44,10 +149,13 @@ button, div.button {
     display: block;
 }
 
-fieldset.add-new-images {
-    position: relative;
-    min-height: 55px;
-}
+
+
+
+/* CONTENT - first panel (add image, choose image) */
+
+
+/* Adding new images */
 
 .file-upload {
     opacity: 0;
@@ -60,41 +168,54 @@ button.upload-scanpix-image {
     width: 225px;
     height: 30px;
     position: absolute;
+    font-size: 15px;
+    cursor: pointer;
 }
 
 .file-upload, button.upload-local-file {
-    left: 10px;
+    left: 12px;
 }
 
 button.upload-scanpix-image {
     left: 250px;
 }
 
-.spacer {
-    visibility: hidden;
-    display: inline-block;
-    height: 30px;
-}
-
-button.upload-local-file {}
-
-fieldset.current-images {
-    padding: 0 0 0 12px;
-}
-
-
-.search .image-search {
-    width: 60%;
-    line-height: 25px;
+.file-upload:hover + .upload-local-file {
+    opacity: 1;
 }
 
 .search button {
     margin-left: 5px;
 }
 
+.search-stats {
+    clear: both;
+    margin: 30px 0 0;
+    color: #665;
+}
+
+
+/* IMAGE LIST  */
+
+
+
+.selected-image .loading .imbo-spinner {
+    display: none;
+    height: 75px;
+    margin: 40px 185px;
+    width: 75px;
+}
+
+.selected-image img {
+    float: left;
+    margin: 0 10px 10px 0;
+    display: none;
+}
+
+
 .image-list {
     list-style-type: none;
-    margin: 0;
+    margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
     overflow-y: auto;
@@ -129,33 +250,38 @@ fieldset.current-images {
     background: #fff;
 }
 
-.clear:before, .clear:after {
-    content: " ";
-    display: table;
-}
-
-.clear:after {
-    clear: both;
-}
 
 .image-list li {
     position: relative;
     float: left;
     width: 30.65%;
     margin: 5px;
-    height: 160px;
+    padding-bottom: 30px; /* will be occupied by image-toolbar */
+    height: 130px;
     background: #fff;
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
+
     display: -webkit-flexbox;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+
     -webkit-flex-align: center;
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
     text-align: center;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
+
+
+.image-list li.redmarked {
+    border-color: #f16b52;
+}
+
 
 .image-list .full-image {
     margin: 0 auto;
@@ -163,19 +289,36 @@ fieldset.current-images {
 
 .image-list .full-image img {
     max-width: 100%;
+    max-height: 120px;
 }
 
-.image-toolbar {
+.image-list .insert-image {
     display: none;
+}
+
+.image-list.insertion-enabled .insert-image {
+    display: inline;
+}
+
+
+
+/* IMAGE TOOLBAR */
+
+.image-toolbar {
     position: absolute;
-    bottom: 1%;
+    bottom: 0;
     left: 0;
     width: 100%;
-    background: #CCDCE8;
+    background: #dee2e5;
+    opacity: .4;
+    transition: opacity .4s;
+}
+
+.image-list li:hover .image-toolbar {
+    opacity: 1;
 }
 
 .image-toolbar button {
-    font-size: 2em;
     background: none;
     opacity: 0.6;
 }
@@ -191,6 +334,38 @@ fieldset.current-images {
 .image-list li:hover .image-toolbar {
     display: block;
 }
+
+/* redmarked toolbar */
+
+.image-list li.redmarked .image-toolbar {
+    background: #f6a191;
+}
+
+.image-list li.redmarked .image-toolbar button i {
+    color: #52150a;
+}
+
+
+
+/* META INFO in image-list */
+
+.meta-info {
+    position: absolute;
+    top: 40px;
+    z-index: 100;
+    min-height: 150px;
+    width: 205.5%;
+    color: #ddd;
+    background: #222;
+    text-align: left;
+}
+
+.meta-info dt {
+    display: none;
+}
+
+
+/* Progress bar */
 
 .progress {
     margin: -31px 0 10px 0;
@@ -241,43 +416,29 @@ fieldset.current-images {
 .progress .file:nth-child(9) { background: rgba(40, 24, 0, 0.1); }
 .progress .file:nth-child(9) .bar { background: rgb(40, 24, 0); }
 
-.meta-editor {
-    padding-top: 12px;
 
-}
 
-.meta-editor .tab-controller, .meta-editor .tab-controller li {
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
+/* AFTER CLICKING AN IMAGE, YOU're TAKEN TO THE EDITOR:  */
 
-.meta-editor .tab-controller li {
-    display: inline-block;
-}
 
-.meta-editor .tab-controller button {
-    font-size: 1.1em;
-    height: 2em;
-    margin-left: 6px;
-}
 
-.meta-editor fieldset, .image-editor fieldset {
-    padding: 3px 18px 3px 12px;
-    margin: 10px 5px;
-    border: none;
-}
+/* EDITOR / META INFO */
 
-.meta-editor fieldset input, .meta-editor fieldset textarea {
-    width: 100%;
-    border: 0;
-}
+/*
 
-.meta-editor .input-pane textarea {
-    height: 150px;
-    resize: none;
-    font-family: 'Open Sans', arial, sans-serif;
-}
+    Note:
+
+    Previously we had an image-editor and a meta-editor.
+    Now, all lives within the .image-editor, but meta stuff is wrapped in  .image-editor > .settings-pane > .settings-tab.meta > .meta-editor
+
+    So, now, these are the paths to the two different parts:
+
+    .image-editor > .settings-pane > .settings-tab.image
+    .image-editor > .settings-pane > .settings-tab.meta > .meta-editor >.tabs
+    .image-editor > .image-container
+
+
+*/
 
 
 .meta-editor .image-container,
@@ -286,56 +447,29 @@ fieldset.current-images {
     float: left;
 }
 
-.meta-editor .tabs .active {
-    background: #999;
-    color: #000;
+
+
+
+/* META EDITOR */
+
+.meta-editor {
+    padding-top: 12px;
+
 }
 
-.meta-editor .input-pane legend,
-.image-editor .settings-pane legend {
-    font-size: 1.2em;
-}
-
-.meta-editor .input-pane legend .fa,
-.image-editor .settings-pane legend .fa {
-    margin: 0 7px;
-}
-
-.meta-editor .image-container {
-    width: 67.5%;
-    margin-left: 32.5%;
-    background: #F5F5F5 none no-repeat 50% 50%;
-    min-height: 400px;
-    border: 1px solid #000;
-    display: table;
-}
-
-.meta-editor .image-container .source {
-    display: table-cell;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    width: 100%;
-    height: 100%;
-}
-
-.meta-editor .image-container h2, .image-editor .image-container h2 {
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 5px 15px;
-    position: absolute;
-}
-
-.meta-editor .buttons, .image-editor .buttons {
+.meta-editor .buttons,
+.image-editor .buttons {
     padding: 10px;
     text-align: center;
 }
 
-.meta-editor .buttons button, .image-editor .buttons button {
+.meta-editor .buttons button,
+.image-editor .buttons button {
     font-size: 1.2em;
 }
 
-.meta-editor button.close, .image-editor button.close {
+.meta-editor button.close,
+.image-editor button.close {
 
     margin: 0 auto;
 }
@@ -360,24 +494,53 @@ fieldset.current-images {
 
 /* End of degrade styling */
 
-.meta-editor .exif-pane dl {
-    margin: 10px 10px 10px 20px;
-    color: #DDD;
+
+
+.meta-editor .tab-controller,
+.meta-editor .tab-controller li {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.meta-editor .tab-controller li {
+    display: inline-block;
+}
+
+.meta-editor .tab-controller button {
     font-size: 1.1em;
+    height: 2em;
+    margin-left: 6px;
 }
 
-.meta-editor .exif-pane dt {
-    font-weight: bold;
+.meta-editor .tabs .active {
+    background: #999;
+    color: #000;
 }
 
-.image-editor fieldset legend {
-    color: #CCC;
+
+
+
+
+
+.meta-editor .input-pane legend,
+.image-editor .settings-pane legend {
+    font-size: 1.2em;
 }
 
-.image-editor button {
-    color: #ccc;
-    background-color: #333;
-    border: solid #666 1px;
+.meta-editor .input-pane legend .fa,
+.image-editor .settings-pane legend .fa {
+    margin: 0 7px;
+}
+
+/* This wouldn't hit anything?
+.meta-editor .image-container {
+    width: 67.5%;
+    margin-left: 32.5%;
+    background: #F5F5F5 none no-repeat 50% 50%;
+    min-height: 400px;
+    border: 1px solid #000;
+    display: table;
 }
 
 .image-editor .image-container {
@@ -386,92 +549,71 @@ fieldset.current-images {
     margin-top: 13px;
 }
 
-.image-editor .controls label {
-    display: block;
-    font-size: 1.1em;
-    font-weight: normal;
-    margin: 10px;
+.meta-editor .image-container .source {
+    display: table-cell;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 100%;
 }
 
-.image-editor .rotate:first-of-type {
-    margin-left: 6px;
+.meta-editor .image-container h2, .image-editor .image-container h2 {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 5px 15px;
+    position: absolute;
 }
-.image-editor .rotate {
-    font-size: 2em;
-    padding: 0.2em .4em 1.6em;
-}
+*/
 
-.image-editor .image-loading {
 
-}
 
-.image-editor .settings-pane {
-    margin-top: 12px;
-    width: 24.5%;
-}
+/* STYLING LIST OF EXIF DATA: */
 
-.image-editor .settings-pane > div {
-
+/* clearfix */
+.meta-editor .exif-pane dl:after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
-.image-editor .crop-presets {
-    min-height: 40px;
+.meta-editor .exif-pane	dl {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    clear: both;
+    width: 100%;
+    margin: 20px 0;
+    padding: 0;
+    border-bottom: 1px solid #6b6b6b;
 }
 
-.image-editor .crop-presets .ratio {
-    margin: 0 5px 5px 0;
-}
-
-.image-editor .crop-presets .active {
-    background: #333;
-    border-color: #999;
-}
-
-.image-editor .settings-pane input[type=range] {
-    display: block;
-    margin: 0 auto;
-    width: 80%;
-}
-
-.selected-image {
-    height: 0;
-}
-
-.selected-image .edit-image, .selected-image legend {
-    display: none;
-}
-
-.selected-image .loading .imbo-spinner {
-    display: none;
-    height: 75px;
-    margin: 40px 185px;
-    width: 75px;
-}
-
-.selected-image img {
+.meta-editor .exif-pane dl dt {
+    clear: both;
+    width: 43%;
     float: left;
-    margin: 0 10px 10px 0;
-    display: none;
+    margin: 0;
+    padding: 6px 1% 4px 4%;
+    font-weight: 600;
+    border-top: 1px solid #6b6b6b;
 }
 
-
-/** MEDIA QUERIES **/
-@media all and (max-width: 546px) and (min-width: 370px) {
-    .image-list li {
-        width: 46%;
-    }
+.meta-editor .exif-pane dl dd {
+    float: left;
+    width: 50%;
+    margin: 0;
+    padding: 6px 1%;
+    border-top: 1px solid #6b6b6b;
 }
 
-@media all and (max-width: 369px) {
-    .image-list li {
-        width: 92%;
-    }
+.image-editor fieldset legend {
+    color: #ccc;
 }
 
-.search-stats {
-    margin-bottom: 6px;
+.image-editor button {
+    color: #ccc;
+    background-color: #333;
+    border: 1px solid #666;
 }
-
 
 .image-editor .settings-header {
     display:none;
@@ -506,11 +648,82 @@ fieldset.current-images {
     margin: 0 12px;
 }
 
-
-.image-list .insert-image {
-    display: none;
+.image-editor .controls label {
+    display: block;
+    font-size: 1.1em;
+    font-weight: normal;
+    margin: 10px;
 }
 
-.image-list.insertion-enabled .insert-image {
-    display: inline;
+.image-editor .rotate:first-of-type {
+    margin-left: 6px;
+}
+.image-editor .rotate {
+    font-size: 2em;
+    padding: 0.2em .4em 1.6em;
+}
+
+
+.image-editor .settings-pane {
+    margin-top: 12px;
+    width: 24.5%;
+}
+
+.image-editor .settings-pane > div {
+
+}
+
+.image-editor .crop-presets {
+    min-height: 40px;
+}
+
+.image-editor .crop-presets .ratio {
+    margin: 0 5px 5px 0;
+}
+
+.image-editor .crop-presets .active {
+    background: #333;
+    border-color: #999;
+}
+
+.image-editor .settings-pane input[type=range] {
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+}
+
+/* Utility classes */
+
+.droppable {
+    background: #baeebc;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.clear:before, .clear:after {
+    content: " ";
+    display: table;
+}
+
+.clear:after {
+    clear: both;
+}
+
+
+
+
+
+/** MEDIA QUERIES **/
+@media all and (max-width: 546px) and (min-width: 370px) {
+    .image-list li {
+        width: 46%;
+    }
+}
+
+@media all and (max-width: 369px) {
+    .image-list li {
+        width: 92%;
+    }
 }
