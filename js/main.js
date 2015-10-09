@@ -1,6 +1,6 @@
 require.config({
     paths: {
-        'underscore': '../vendor/lodash-2.4.1.min',
+        'underscore': '../vendor/lodash-3.10.1.min',
         'jquery': '../vendor/jquery-2.1.0.min',
         'postmessage': '../no.aptoma.plugin-api/js/vendors/jquery.postmessage',
         'deparam': '../vendor/jquery-deparam.min',
