@@ -125,15 +125,9 @@ define([
         },
 
         getPreviewContainerSize: function getPreviewContainerSize() {
-            var width = $(window).width() - $('.settings-pane').width();
-            var height = $(window).height();
-
-            var widthSafetyMargin = Math.min(width * 0.1, 50);
-            var heightSafetyMargin = Math.min(height * 0.1, 20);
-
             return [
-                width - widthSafetyMargin,
-                height - heightSafetyMargin
+                $(window).width() - $('.settings-pane').width(),
+                $(window).height()
             ];
         },
 
