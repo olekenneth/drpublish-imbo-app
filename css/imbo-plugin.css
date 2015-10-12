@@ -278,7 +278,7 @@ button.upload-scanpix-image {
 
 
 .image-list li.restricted {
-    border-color: #f16b52;
+    border-color: #f6a191;
 }
 
 
@@ -321,7 +321,7 @@ button.upload-scanpix-image {
 /* If user has clicked the info button to display meta info, it will always be visible */
 .meta-open .image-toolbar {
     opacity: 1;
-    z-index: 500;
+    z-index: 300;
 }
 
 .image-toolbar button {
@@ -359,16 +359,107 @@ button.upload-scanpix-image {
     position: absolute;
     top: 40px;
     z-index: 200;
-    min-height: 150px;
-    width: 205.5%;
+    min-height: 165px;
+    width: 100%;
+    margin-left: -1px;
     color: #ddd;
-    background: #222;
+    background: #486f89;
     text-align: left;
 }
 
+
+/** MEDIA QUERIES - Position based on number and window width **/
+/* Medium width - default in Dr. Pub: 2 and 2 */
+@media all and (max-width: 546px) and (min-width: 370px) {
+
+    .meta-info {
+        width: 205.5%
+    }
+
+    .image-list li:nth-child(even) .meta-info {
+        left: -105%;
+        margin-left: -2px;
+    }
+}
+
+/* Wide: 3 and 3 */
+@media all and (min-width: 546px) {
+
+    .meta-info {
+        width: 304.5%;
+    }
+
+    .image-list li:nth-child(3n+2) .meta-info {
+        left: -102%;
+    }
+
+    .image-list li:nth-child(3n+3) .meta-info {
+        left: -210%;
+    }
+}
+
+
+
+
+/* Style content of meta info */
+
+.meta-info p {
+    margin: 10px;
+    font-weight: 700;
+}
+
+.meta-info dl {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    margin: 10px;
+    width: 100%;
+
+}
 .meta-info dt {
     display: none;
+    clear: both;
+    width: 25%;
+    float: left;
+    margin: 10px 0;
+    padding: 2px;
+    border-top: 1px solid #859eae;
 }
+
+.meta-info dd {
+    display: none;
+    margin: 10px 0;
+    padding: 2px;
+    width: 70%;
+    float: left;
+    border-top: 1px solid #859eae;
+}
+
+
+/* Display/hide dt/dds depending on whether they have info */
+
+.meta-info.restrictions .meta-restrictions,
+.meta-info.caption .meta-caption,
+.meta-info.date .meta-date,
+.meta-info.scanpix-id .meta-scanpix-id {
+    display: inline-block;
+}
+
+
+/* If restrictions exist, color box red: */
+
+.restricted .meta-info {
+    background: #934d40;
+}
+
+.restricted .meta-info dt,
+.restricted .meta-info dd {
+    border-color: #ae8585;
+}
+
+.meta-restrictions {
+    font-weight: 700;
+}
+
 
 
 /* Progress bar */
@@ -425,7 +516,6 @@ button.upload-scanpix-image {
 
 
 /* AFTER CLICKING AN IMAGE, YOU're TAKEN TO THE EDITOR:  */
-
 
 
 /* EDITOR / META INFO */
