@@ -87,20 +87,26 @@ define([
             this.editorPane
                 .find('.cancel')
                 .on('click', this.hide);
+
             this.editorPane
                 .find('.reset')
                 .on('click', this.reset);
+
             this.editorPane
                 .find('.insert, .update')
                 .on('click', this.insertToArticle);
+
             this.controls
                 .find('input[type=range]')
                 .on('change', _.debounce(this.onAdjustSlider, 300));
+
             this.controls
                 .find('.rotate')
                 .on('click', this.rotateImage);
+
             this.cropRatios
                 .on('click', '.ratio', this.onLockRatio);
+
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
@@ -116,6 +122,19 @@ define([
                 }.bind(this),
                 embeddedAssetBlur: this.onEditorDeselectImage
             });
+        },
+
+        getPreviewContainerSize: function getPreviewContainerSize() {
+            var width = $(window).width() - $('.settings-pane').width();
+            var height = $(window).height();
+
+            var widthSafetyMargin = Math.min(width * 0.1, 50);
+            var heightSafetyMargin = Math.min(height * 0.1, 20);
+
+            return [
+                width - widthSafetyMargin,
+                height - heightSafetyMargin
+            ];
         },
 
         initRatioPickers: function () {
@@ -139,11 +158,18 @@ define([
         setCropper: function (cropParams) {
             var img = this.imagePreview.get(0);
             var rotated = (this.imageSize.width !== img.naturalWidth);
+
             this.imageSize.width = img.naturalWidth;
             this.imageSize.height = img.naturalHeight;
+
+            var previewContainerSize = this.getPreviewContainerSize();
+
             var options = {
-                onChange: this.onCropChange
+                onChange: this.onCropChange,
+                boxWidth: previewContainerSize[0],
+                boxHeight: previewContainerSize[1]
             };
+
             if (this.originalImageSize) {
                 options.trueSize = [
                     this.originalImageSize.width,
@@ -160,7 +186,19 @@ define([
                 ];
             }
             if (this.cropper) {
+                // Set the box width and height. Important because it's used
+                // when loading the image into the cropper
+                this.cropper.setOptions({
+                    boxWidth: options.boxWidth,
+                    boxHeight: options.boxHeight
+                });
+
+                // Set the new image
                 this.cropper.setImage(this.imagePreview.attr('src'));
+
+                // Set other options after a short delay. Not sure why it has been
+                // done like this, but probably to avoid redraws caused by updated
+                // options on the old picture
                 window.setTimeout(function (imageEditor) {
                     imageEditor.cropper.setOptions(options);
                 }, 100, this);
@@ -404,11 +442,14 @@ define([
         reset: function () {
             // Remove transformations
             this.transformations = _.cloneDeep(this.transformationDefaults);
+
             // Reset sliders
             this.editorPane.find('.sliders').get(0).reset();
+
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
+
             // Reset cropper
             if (this.cropper) {
                 this.cropper.release();
