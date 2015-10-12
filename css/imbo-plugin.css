@@ -450,7 +450,10 @@ button.upload-scanpix-image {
     float: left;
 }
 
-
+/* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
+.image-editor .image-container .jcrop-holder {
+    overflow: hidden;
+}
 
 /* IMAGE EDITOR */
 
