@@ -180,21 +180,22 @@
         <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons download">file_download</i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
 
-        <div class="meta-info"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
-            <p>$filename</p>
+        <div class="meta-info hidden #meta-class-name"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
+            <p>#file-name</p>
 
             <dl>
-                <dt>Restrictions</dt> <!-- only display if there ARE restrictions -->
-                <dd class="restrictions">$restriction-text</dd> <!-- only display if there ARE restrictions -->
+                <dt class="meta-restrictions">Restrictions</dt> <!-- only display if there ARE restrictions -->
+                <dd class="meta-restrictions">#restriction-text</dd> <!-- only display if there ARE restrictions -->
 
-                <dt>Caption</dt>
-                <dd class="caption">$caption-text</dd>
+                <dt class="meta-caption">Caption</dt>
+                <dd class="meta-caption">#caption-text</dd>
 
-                <dt>Date:</dt>
-                <dd>$date DD.MM.YYYY HH:MM</dd>
+                <dt class="meta-date">Date:</dt>
+                <dd class="meta-date">#date</dd>
 
-                <dt>Scanpix-ID</dt>
-                <dd>$scanpix-id</dd>
+                <dt class="meta-scanpix-id">Scanpix-ID</dt>
+                <dd class="meta-scanpix-id">#scanpix-id</dd>
+            </dl>
         </div>
 
     </aside>
