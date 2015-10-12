@@ -94,8 +94,8 @@
                         <i class="fa fa-rotate-right"></i><span data-translate="IMAGE_EDITOR_ROTATION"></span>
                     </legend>
                     <div class="rotation">
-                        <button class="rotate" data-amount="-90"><i class="fa fa-rotate-left"></i></button>
-                        <button class="rotate" data-amount="90"><i class="fa fa-rotate-right"></i></button>
+                        <button class="rotate" data-amount="-90"><i class="material-icons">rotate_left</i></button>
+                        <button class="rotate" data-amount="90"><i class="material-icons">rotate_right</i></button>
                     </div>
                 </fieldset>
 

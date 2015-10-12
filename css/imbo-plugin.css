@@ -476,7 +476,6 @@ button.upload-scanpix-image {
 
 
 
-
 /* universal image editor */
 
 .image-editor .buttons {
@@ -496,11 +495,6 @@ button.upload-scanpix-image {
     display: inline-block;
 }
 
-
-.image-editor fieldset legend {
-    color: #ccc;
-}
-
 .image-editor button {
     color: #ccc;
     background-color: #333;
@@ -512,37 +506,27 @@ button.upload-scanpix-image {
 /* settings pane */
 
 .image-editor .settings-pane {
-    margin-top: 12px;
     width: 24.5%;
+    margin-top: 12px;
+    background: red;
 }
 
 
-.image-editor .settings-pane > div {
-
-}
-
-
-.image-editor .settings-pane legend {
-    font-size: 1.2em;
-}
-
-.image-editor .settings-pane legend .fa {
-    margin: 0 7px;
-}
 
 
 /* settings header */
 
 
 .image-editor .settings-header {
-    display:none;
-    padding: 0 0 0 12px;
+    display: none;
 }
 
 .image-editor.insertion-enabled .settings-header {
     display:block;
 }
 
+
+/* buttons for toggling bilderedigering / bildeinformasjon */
 .image-editor .settings-header > button {
     display: inline-block;
     float: none;
@@ -600,6 +584,14 @@ button.upload-scanpix-image {
 
 /* IMAGE EDITING - within .settings-tab .image */
 
+
+
+/* target better.. which do this apply to? Buttons and image edit elements..  */
+.image-editor .settings-pane legend .fa {
+    margin: 0 7px;
+}
+
+
 .image-editor .crop-presets {
     min-height: 40px;
 }
@@ -617,8 +609,12 @@ button.upload-scanpix-image {
     margin-left: 6px;
 }
 .image-editor .rotate {
-    font-size: 2em;
-    padding: 0.2em .4em 1.6em;
+    font-size: 1.8em;
+    padding: .2em .2em 1.6em;
+}
+
+.image-editor .rotate .material-icons {
+    font-size: 1.4em;
 }
 
 .image-editor .controls label {
