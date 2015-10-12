@@ -275,7 +275,6 @@ define([
         },
 
         bindEvents: function () {
-
             this.window
                 .on('resize', _.debounce(this.onWindowResize, 100))
                 .trigger('resize');
