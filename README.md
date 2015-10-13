@@ -14,6 +14,10 @@ When this has been done, you need to activate the app in the publication config 
 
 The configuration file should have the name `config.php` and must be placed in the `config/` folder under the application root.
 
+## Developing
+
+Should you want to update the Imbo client to a new version, you will have to re-package a bundle that also includes the metadata extension. This can done by simply running `npm install`, then `npm run browserify`.
+
 ## License
 Copyright (c) 2014-2015, Verdens Gang AS and Aptoma AS
 
