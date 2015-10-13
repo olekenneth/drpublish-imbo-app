@@ -174,18 +174,18 @@
     <aside class="image-toolbar hidden">
 
         <button class="image-use" data-translate-title="USE_EDIT_IMAGE" data-action="use-image">
-            <i class="material-icons add">add_circle_outline</i>
+            <i class="material-icons">add_circle_outline</i>
         </button>
-        <button data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons info">info_outline</i></button>
-        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons download">file_download</i></button></a>
+        <button class="image-info" data-translate-title="SHOW_IMAGE_INFO" data-action="show-image-info"><i class="material-icons">info_outline</i></button>
+        <a href="#download-link" class="download-image" download="#file-name"><button data-translate-title="DOWNLOAD_IMAGE" data-action="download-image"><i class="material-icons">file_download</i></button></a>
         <button class="image-delete" data-translate-title="DELETE_IMAGE" data-action="delete-image"><i class="material-icons">delete</i></button>
 
         <div class="meta-info hidden #meta-class-name"> <!-- if image has restrictions, add class "restrictions" + if credit = VG, add class "vg", if other than VG, add "agency" - if no credit is given, add class "nocredit". I think. -->
             <p>#file-name</p>
 
             <dl>
-                <dt class="meta-restrictions">Restrictions</dt> <!-- only display if there ARE restrictions -->
-                <dd class="meta-restrictions">#restriction-text</dd> <!-- only display if there ARE restrictions -->
+                <dt class="meta-restrictions">Restrictions</dt>
+                <dd class="meta-restrictions">#restriction-text</dd>
 
                 <dt class="meta-caption">Caption</dt>
                 <dd class="meta-caption">#caption-text</dd>

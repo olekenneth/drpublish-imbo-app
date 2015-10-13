@@ -329,6 +329,7 @@ button.upload-scanpix-image {
     opacity: 0.6;
 }
 
+.meta-open .image-toolbar button.image-info,
 .image-toolbar button:hover {
     opacity: 1;
 }
