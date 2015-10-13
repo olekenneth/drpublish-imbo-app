@@ -5,5 +5,4 @@ return array(
     'privateKey' => 'privKey',
     'DrPublishURL' => '//publish-stage.vgnett.no/dev/drpublish',
     'bypassAuth' => false
-    'bypassAuth' => false
 );
