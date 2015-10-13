@@ -276,8 +276,7 @@ define([
 
         bindEvents: function () {
             this.window
-                .on('resize', _.debounce(this.onWindowResize, 100))
-                .trigger('resize');
+                .on('scroll', _.throttle(this.checkScrollPagination.bind(this), 75));
 
             this.content
                 .find('.image-list')
@@ -309,9 +308,6 @@ define([
 
             this.refreshButton
                 .on('click', this.refreshImages);
-
-            this.getImageList()
-                .on('scroll', this.onImageListScroll);
 
             PluginAPI.on('receivedFocus', _.bind(function (e) {
                 if (e.data.previousPluginName !== 'scanpix') {
@@ -347,10 +343,6 @@ define([
 
         uploadScanpixImages: function (scanpixImages) {
             this.uploader.addScanpixImages(scanpixImages);
-        },
-
-        onWindowResize: function () {
-            //this.getImageList().css('max-height', this.window.height() - 155);
         },
 
         onToolbarClick: function (e) {
@@ -546,11 +538,10 @@ define([
             this.incImageDisplayCount(1, true);
         },
 
-        onImageListScroll: function () {
-            var el = this.imageList[0],
-                max = parseInt(el.style.maxHeight, 10),
-                curr = el.scrollTop + max,
-                prct = (curr / el.scrollHeight) * 100;
+        checkScrollPagination: function () {
+            var max  = getDocumentHeight(),
+                curr = (window.scrollY || window.scrollTop) + window.innerHeight,
+                prct = (curr / max) * 100;
 
             if (prct > 95 && !this.isLoadingImages) {
                 this.loadNextPage();
@@ -765,5 +756,18 @@ define([
         }
 
     });
+
+    function getDocumentHeight() {
+        var d = document,
+            b = d.body,
+            el = d.documentElement;
+
+        return Math.max(
+            b.scrollHeight, el.scrollHeight,
+            b.offsetHeight, el.offsetHeight,
+            b.clientHeight, el.clientHeight
+        );
+    }
+
     return ImboApp;
 });
