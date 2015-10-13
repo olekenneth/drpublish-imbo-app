@@ -629,8 +629,8 @@ define([
 
             // Build query string
             var queryString = [
-                'name=' + encodeURIComponent(fileName),
-                'mimetype=' + encodeURIComponent(image.mime)
+                'name=' + fileName,
+                'mimetype=' + image.mime
             ].join('&');
 
             // Get ImageUrl
