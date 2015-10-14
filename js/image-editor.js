@@ -37,6 +37,7 @@ define([
             this.editorPane = $('.image-editor');
             this.controls = this.editorPane.find('.controls, .rotates');
             this.cropRatios = this.editorPane.find('.crop-presets');
+            this.poiHandle = this.editorPane.find('.image-poi');
             this.imageView = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
             this.imagePreviewReference = $('#reference-image');
@@ -109,6 +110,10 @@ define([
 
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
+
+            this.poiHandle.on('mousedown', _.bind(this.poiMouseDown, this));
+
+            this.imageView.on('mouseup', _.bind(this.poiMouseUp, this));
 
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
@@ -201,6 +206,50 @@ define([
             }
         },
 
+        setPoi: function(poi) {
+            if (!poi) {
+                return;
+            }
+
+            // Save POI to metadata
+
+            var resizeFactor = this.originalImageSize.width / this.imageSize.width;
+
+            var handleWidth = this.poiHandle.width();
+            var handleHeight = this.poiHandle.height();
+
+            var top = (poi.y / resizeFactor) - (handleWidth / 2);
+            var left = (poi.x / resizeFactor) - (handleHeight / 2);
+
+            this.poiHandle.css({
+                top: top + 'px',
+                left: left + 'px'
+            });
+        },
+
+        poiMouseDown: function(e) {
+            this.imageView.on('mousemove', _.bind(this.poiMove, this));
+        },
+
+        poiMouseUp: function() {
+            this.imageView.off('mousemove');
+        },
+
+        poiMove: function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            var parentOffset = this.imageView.offset();
+            var parentTop = parentOffset.top;
+            var parentLeft = parentOffset.left;
+
+            var resizeFactor = this.originalImageSize.width / this.imageSize.width;
+
+            this.setPoi({
+                x: Math.floor((e.clientX - parentLeft) * resizeFactor),
+                y: Math.floor((e.clientY - parentTop) * resizeFactor)
+            });
+        },
 
         show: function () {
             // Maximize app window (if in app context)
@@ -236,39 +285,48 @@ define([
         loadImage: function (imageId, options) {
             this.resetState();
             PluginAPI.showLoader('Loading image');
+
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
+
             // Set original image size
             this.originalImageSize = {
                 width: options.width,
                 height: options.height
             };
+
             // Start loading image
             this.url = this.imbo.getImageUrl(imageId).maxSize({
                 width: this.MAX_IMAGE_WIDTH,
                 height: this.MAX_IMAGE_HEIGHT
             }).jpg();
+
             // Set up crop params, if we have any
             this.cropParams = options.crop && options.crop.x2 ? options.crop : null;
             this.cropAspectRatio = options.cropAspectRatio || null;
+
             if (this.cropParams) {
                 this.cropParams.forceApply = true;
             }
+
             // Set a fixed crop aspect ratio, if any was selected
             if (options.cropAspectRatio) {
                 $('[data-ratio="' + options.cropAspectRatio + '"]').trigger('click');
             } else {
                 $('button.ratio').removeClass('active');
             }
+
             // Apply transformations to image and GUI
             if (options.transformations) {
                 this.applyTransformations(options.transformations);
             }
+
             // Load metadata for image
             this.imageMetadata = {};
             this.imbo.getMetadata(imageId, function (err, data) {
                 this.imageMetadata = data;
             }.bind(this));
+
             this.updateImageView();
             this.imboApp.metaEditor.loadDataForImage(this.imageIdentifier);
         },
@@ -388,6 +446,10 @@ define([
 
         onImageLoaded: function () {
             this.setCropper(this.cropParams);
+
+            // Fetch metadata and set POI if one exist in metadata
+            // this.setPoi(this.metadata.poi[0])
+
             PluginAPI.hideLoader();
         },
 
