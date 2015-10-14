@@ -43,6 +43,7 @@ define([
             this.imagePreviewReference = $('#reference-image');
             this.settingsTabButtons = $('.settings-header > button');
             this.imageSize = {width: 0, height: 0};
+            this.poi = {x: 0, y: 0};
             this.embeddedTypeId = null;
             this.events = $({});
             this.initEmbeddedTypeId();
@@ -111,9 +112,7 @@ define([
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
-            this.poiHandle.on('mousedown', this.poiMouseDown);
-
-            this.imageView.on('mouseup', this.poiMouseUp);
+            this.poiHandle.on('mousedown', this.poiMoveStart);
 
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
@@ -206,12 +205,23 @@ define([
             }
         },
 
+        /**
+         * Persist the updated POI in image metadata
+         */
+        saveMetadataPoi: function() {
+            this.imbo.editMetadata(this.imageIdentifier, {
+                poi: [this.poi]
+            }, function(err, res, body) {
+                console.log(err, res, body);
+            });
+        },
+
         setPoi: function(poi) {
             if (!poi) {
                 return;
             }
 
-            // Save POI to metadata
+            this.poi = poi;
 
             var resizeFactor = this.originalImageSize.width / this.imagePreview.width();
 
@@ -227,29 +237,27 @@ define([
             });
         },
 
-        poiMouseDown: function(e) {
+        poiMoveStart: function(e) {
             e.preventDefault();
             e.stopPropagation();
 
             this.editorPane.addClass('no-select');
 
             this.imageView.on('mousemove', this.poiMove);
-            this.imageView.on('mouseup', this.poiMouseUp);
+            this.imageView.on('mouseup', this.poiMoveEnd);
         },
 
-        poiMouseUp: function() {
+        poiMoveEnd: function() {
             this.editorPane.removeClass('no-select');
-            this.imageView.off('mousemove');
+            this.imageView.off('mousemove mouseup');
 
             // Trigger save of metadata
-            //this.saveMetadataPoi();
+            this.saveMetadataPoi();
 
             this.poiOnTheMove = false;
-
         },
 
         poiMove: function(e) {
-            e.stopPropagation();
             e.preventDefault();
 
             var parentOffset = this.imagePreview.offset();
@@ -269,21 +277,17 @@ define([
             var scrollX = e.view.scrollX;
             var scrollY = e.view.scrollY;
 
+            var posX = Math.floor((e.clientX + scrollX - parentLeft) * resizeFactor);
+            var posY = Math.floor((e.clientY + scrollY - parentTop) * resizeFactor);
+
+            // POI has been dragged outside the image. End move operation
+            if (minX > posX || maxX < posX || minY > posY || maxY < posY) {
+                return this.poiMoveEnd();
+            }
+
             this.setPoi({
-                x: Math.max(
-                    minX,
-                    Math.min(
-                        maxX,
-                        Math.floor((e.clientX + scrollX - parentLeft) * resizeFactor)
-                    )
-                ),
-                y: Math.max(
-                    minY,
-                    Math.min(
-                        maxY,
-                        Math.floor((e.clientY + scrollY - parentTop) * resizeFactor)
-                    )
-                )
+                x: Math.max(minX, Math.min(maxX, posX)),
+                y: Math.max(minY, Math.min(maxY, posY))
             });
         },
 
