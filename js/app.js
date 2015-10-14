@@ -627,7 +627,7 @@ define([
 
         buildImageListItem: function (html, image) {
             // Get file name
-            var fileName = image.metadata['drp:filename'] || [image.imageIdentifier, image.extension].join('.');
+            var fileName = image.metadata['filename'] || [image.imageIdentifier, image.extension].join('.');
 
             // Build query string
             var queryString = [
@@ -643,7 +643,7 @@ define([
 
             var full = url.toString(),
                 thumb = url.maxSize({width: 158, height: 158}).jpg().toString(),
-                name = image.metadata['drp:filename'] || image.imageIdentifier,
+                name = image.metadata['filename'] || image.imageIdentifier,
                 el = '';
 
             var containerClass = (
