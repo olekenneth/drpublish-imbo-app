@@ -44,13 +44,28 @@ fieldset.add-new-images {
 .selected-image {
     min-height: 0;
     border: none;
-    margin: 0;
+    margin: 0 15px;
     padding: 0;
+}
+
+.selected-image .loading .imbo-spinner {
+    display: none;
+    height: 75px;
+    margin: 40px 185px;
+    width: 75px;
+}
+
+.selected-image img {
+    float: left;
+    margin: 10px 10px 0 0;
+    display: none;
 }
 
 .selected-image .edit-image,
 .selected-image legend {
     display: none;
+    margin-top: 10px;
+    font-size: 15px;
 }
 
 /* Fieldset with list of images */
@@ -62,6 +77,7 @@ fieldset.current-images {
 /* Fieldsets within settings-pane */
 
 .settings-pane fieldset {
+    margin-top: 0;
     border: none;
 }
 
@@ -69,7 +85,7 @@ fieldset.current-images {
 .settings-pane label,
 .settings-pane fieldset h3,
 .settings-pane fieldset legend {
-    color: #ccc;
+    color: #c2c4c5;
 }
 
 
@@ -116,6 +132,7 @@ textarea {
 .settings-pane input[type="text"],
 .settings-pane input[type="search"],
 .settings-pane textarea {
+    margin-top: 4px;
     width: 90%;
     background: #ddd;
     border: 1px solid #444;
@@ -196,22 +213,6 @@ button.upload-scanpix-image {
 
 
 /* IMAGE LIST  */
-
-
-
-.selected-image .loading .imbo-spinner {
-    display: none;
-    height: 75px;
-    margin: 40px 185px;
-    width: 75px;
-}
-
-.selected-image img {
-    float: left;
-    margin: 0 10px 10px 0;
-    display: none;
-}
-
 
 .image-list {
     list-style-type: none;
@@ -381,7 +382,6 @@ button.upload-scanpix-image {
 
     .image-list li:nth-child(even) .meta-info {
         left: -105%;
-        margin-left: -2px;
     }
 }
 
@@ -578,7 +578,6 @@ button.upload-scanpix-image {
 }
 
 
-
 /* universal image editor */
 
 .image-editor .buttons {
@@ -686,11 +685,27 @@ button.upload-scanpix-image {
 
 
 
-/* target better.. which do this apply to? Buttons and image edit elements..  */
-.image-editor .settings-pane legend .fa {
+/* Sub-headings within image editing tab  */
+.image-editor .settings-tab.image legend {
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.image-editor .settings-tab.image legend .fa {
     margin: 0 7px;
 }
 
+
+.image-editor .crop-presets,
+.image-editor .rotation,
+.image-editor .sliders {
+    margin: 0 30px;
+}
+
+.image-editor .sliders {
+    margin-top: -20px;
+}
 
 .image-editor .crop-presets {
     min-height: 40px;
@@ -705,9 +720,7 @@ button.upload-scanpix-image {
     border-color: #999;
 }
 
-.image-editor .rotate:first-of-type {
-    margin-left: 6px;
-}
+
 .image-editor .rotate {
     font-size: 1.8em;
     padding: .2em .2em 1.6em;
@@ -717,20 +730,17 @@ button.upload-scanpix-image {
     font-size: 1.4em;
 }
 
-.image-editor .controls label {
+.image-editor .sliders label {
     display: block;
-    font-size: 1.1em;
     font-weight: normal;
-    margin: 10px;
+    margin: 20px 0 10px;
 }
 
-.image-editor .settings-pane input[type=range] {
+.image-editor .sliders input[type=range] {
     display: block;
     margin: 0 auto;
-    width: 80%;
+    width: 100%;
 }
-
-
 
 
 
