@@ -111,9 +111,9 @@ define([
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
-            this.poiHandle.on('mousedown', _.bind(this.poiMouseDown, this));
+            this.poiHandle.on('mousedown', this.poiMouseDown);
 
-            this.imageView.on('mouseup', _.bind(this.poiMouseUp, this));
+            this.imageView.on('mouseup', this.poiMouseUp);
 
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
@@ -228,7 +228,7 @@ define([
         },
 
         poiMouseDown: function(e) {
-            this.imageView.on('mousemove', _.bind(this.poiMove, this));
+            this.imageView.on('mousemove', this.poiMove);
         },
 
         poiMouseUp: function() {
@@ -245,9 +245,29 @@ define([
 
             var resizeFactor = this.originalImageSize.width / this.imageSize.width;
 
+            var actualPoiHandlerWidth = this.poiHandle.width() * resizeFactor;
+            var actualPoiHandlerHeight = this.poiHandle.height() * resizeFactor;
+
+            var minX = 0 + actualPoiHandlerWidth / 2;
+            var minY = 0 + actualPoiHandlerWidth / 2;
+            var maxX = this.originalImageSize.width - actualPoiHandlerWidth / 2;
+            var maxY = this.originalImageSize.height - actualPoiHandlerHeight / 2;
+
             this.setPoi({
-                x: Math.floor((e.clientX - parentLeft) * resizeFactor),
-                y: Math.floor((e.clientY - parentTop) * resizeFactor)
+                x: Math.max(
+                    minX,
+                    Math.min(
+                        maxX,
+                        Math.floor((e.clientX - parentLeft) * resizeFactor)
+                    )
+                ),
+                y: Math.max(
+                    minY,
+                    Math.min(
+                        maxY,
+                        Math.floor((e.clientY - parentTop) * resizeFactor)
+                    )
+                )
             });
         },
 
