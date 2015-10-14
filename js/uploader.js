@@ -31,7 +31,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
         setUserInfo: function (userInfo) {
             this.user = userInfo;
             this.userMeta = {
-                'drp:uploader': {
+                'uploader': {
                     'fullname': userInfo.fullname,
                     'username': userInfo.username
                 }
@@ -124,7 +124,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
 
         prepareScanpixMetadata: function(image) {
             var metadata = {
-                'drp:description': image.caption,
+                'description': image.caption,
 
                 'byline': image.byline,
                 'description': image.caption,
@@ -208,7 +208,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
 
             // Edit metadata for image
             var metadata = _.merge({}, this.userMeta, taskMetadata, {
-                'drp:filename': filename || imageIdentifier
+                'filename': filename || imageIdentifier
             });
 
             // Add additional metadata to the image

@@ -140,16 +140,16 @@
                         <section class="input-pane tab" data-tab="core">
                             <fieldset>
                                 <h3 data-translate="META_EDITOR_IMAGE_TITLE"></h3>
-                                <input type="text" name="drp:title">
+                                <input type="text" name="title">
 
                                 <h3 data-translate="META_EDITOR_IMAGE_DESCRIPTION"></h3>
-                                <textarea name="drp:description"></textarea>
+                                <textarea name="description"></textarea>
 
                                 <h3 data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></h3>
-                                <input type="text" name="drp:photographer">
+                                <input type="text" name="photographer">
 
                                 <h3 data-translate="META_EDITOR_IMAGE_AGENCY"></h3>
-                                <input type="text" name="drp:agency">
+                                <input type="text" name="agency">
                             </fieldset>
                         </section>
 
