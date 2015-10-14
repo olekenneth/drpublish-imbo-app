@@ -551,7 +551,7 @@ button.upload-scanpix-image {
 .image-editor .image-container {
     width: 74.5%;
     min-height: 400px;
-    margin-top: 13px;
+    margin-top: 42px;
 }
 
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
