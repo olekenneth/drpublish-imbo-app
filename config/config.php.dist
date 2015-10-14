@@ -1,8 +1,10 @@
 <?php
 return array(
     'host'       => 'http://some-imbo-host',
+    'user'       => 'user',
     'publicKey'  => 'pubKey',
     'privateKey' => 'privKey',
+    'searchUsers' => ['user', 'other-user'],
     'DrPublishURL' => '//publish-stage.vgnett.no/dev/drpublish',
     'bypassAuth' => false
 );

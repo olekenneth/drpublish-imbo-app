@@ -477,10 +477,10 @@ define([
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
                     externalId: this.imageIdentifier,
-                    title: this.imageMetadata['drp:title'] || '',
-                    description: this.imageMetadata['drp:description'] || '',
-                    author: this.imageMetadata['drp:photographer'] || '',
-                    source: this.imageMetadata['drp:agency'] || '',
+                    title: this.imageMetadata['title'] || '',
+                    description: this.imageMetadata['description'] || '',
+                    author: this.imageMetadata['photographer'] || '',
+                    source: this.imageMetadata['agency'] || '',
                     cropParams: this.cropParams,
                     cropRatio: this.cropAspectRatio,
                     transformations: this.buildImageUrl().getTransformations()
@@ -508,10 +508,10 @@ define([
                 renditions: this.buildRenditions(),
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
-                    title: this.imageMetadata['drp:title'] || '',
-                    description: this.imageMetadata['drp:description'] || '',
-                    author: this.imageMetadata['drp:photographer'] || '',
-                    source: this.imageMetadata['drp:agency'] || '',
+                    title: this.imageMetadata['title'] || '',
+                    description: this.imageMetadata['description'] || '',
+                    author: this.imageMetadata['photographer'] || '',
+                    source: this.imageMetadata['agency'] || '',
                     cropParams: this.cropParams,
                     cropRatio: this.cropAspectRatio,
                     transformations: this.buildImageUrl().getTransformations()

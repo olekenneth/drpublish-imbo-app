@@ -59,11 +59,12 @@ define([
             PluginAPI.setAppName(pluginParameters.appName);
 
             // Instantiate a new Imbo client
-            this.imbo = new Imbo.Client(
-                this.config.imbo.host,
-                this.config.imbo.publicKey,
-                this.config.imbo.privateKey
-            );
+            this.imbo = new Imbo.Client({
+                hosts: this.config.imbo.host,
+                user: this.config.imbo.user,
+                publicKey: this.config.imbo.publicKey,
+                privateKey: this.config.imbo.privateKey
+            });
 
             // Define language to use based on configuration
             this.language = this.config.language;
@@ -276,8 +277,7 @@ define([
 
         bindEvents: function () {
             this.window
-                .on('resize', _.debounce(this.onWindowResize, 100))
-                .trigger('resize');
+                .on('scroll', _.throttle(this.checkScrollPagination.bind(this), 75));
 
             this.content
                 .find('.image-list')
@@ -309,9 +309,6 @@ define([
 
             this.refreshButton
                 .on('click', this.refreshImages);
-
-            this.getImageList()
-                .on('scroll', this.onImageListScroll);
 
             PluginAPI.on('receivedFocus', _.bind(function (e) {
                 if (e.data.previousPluginName !== 'scanpix') {
@@ -347,10 +344,6 @@ define([
 
         uploadScanpixImages: function (scanpixImages) {
             this.uploader.addScanpixImages(scanpixImages);
-        },
-
-        onWindowResize: function () {
-            //this.getImageList().css('max-height', this.window.height() - 155);
         },
 
         onToolbarClick: function (e) {
@@ -470,19 +463,29 @@ define([
                 .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
                 .page(options.page || 1));
 
-            this.imbo.getImages(query, options.clear ? function () {
+            var onComplete = options.clear ? function () {
                 this.getImageList().empty();
                 this.onImagesLoaded.apply(this, arguments);
                 this.getImageList().get(0).scrollTop = 0;
-            }.bind(this) : this.onImagesLoaded);
+            }.bind(this) : this.onImagesLoaded;
+
+            if (options.metadataQuery) {
+                this.imbo.searchGlobalMetadata(options.metadataQuery, {
+                    users: this.config.imbo.searchUsers,
+                    metadata: true,
+                    limit: query.limit(),
+                    page: query.page()
+                }, onComplete);
+            } else {
+                this.imbo.getImages(query, onComplete);
+            }
 
             this.isLoadingImages = true;
         },
 
         queryImages: function (query) {
-            this.imageQuery = new Imbo.Query().metadataQuery(query);
             this.loadImages({
-                query: this.imageQuery
+                metadataQuery: query
             });
         },
 
@@ -546,11 +549,10 @@ define([
             this.incImageDisplayCount(1, true);
         },
 
-        onImageListScroll: function () {
-            var el = this.imageList[0],
-                max = parseInt(el.style.maxHeight, 10),
-                curr = el.scrollTop + max,
-                prct = (curr / el.scrollHeight) * 100;
+        checkScrollPagination: function () {
+            var max  = getDocumentHeight(),
+                curr = (window.scrollY || window.scrollTop) + window.innerHeight,
+                prct = (curr / max) * 100;
 
             if (prct > 95 && !this.isLoadingImages) {
                 this.loadNextPage();
@@ -625,7 +627,7 @@ define([
 
         buildImageListItem: function (html, image) {
             // Get file name
-            var fileName = image.metadata['drp:filename'] || [image.imageIdentifier, image.extension].join('.');
+            var fileName = image.metadata['filename'] || [image.imageIdentifier, image.extension].join('.');
 
             // Build query string
             var queryString = [
@@ -641,7 +643,7 @@ define([
 
             var full = url.toString(),
                 thumb = url.maxSize({width: 158, height: 158}).jpg().toString(),
-                name = image.metadata['drp:filename'] || image.imageIdentifier,
+                name = image.metadata['filename'] || image.imageIdentifier,
                 el = '';
 
             var containerClass = (
@@ -686,11 +688,12 @@ define([
 
             // Set up queries for the default fields
             var query = {'$or': []}, sub;
-            ['drp:title', 'drp:filename', 'drp:description'].forEach(function (item) {
+            ['description', 'location.country', 'location.city'].reduce(function(orClause, field) {
                 sub = {};
-                sub[item] = {'$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*'};
-                query.$or.push(sub);
-            });
+                sub[field] = q;
+                orClause.push(sub);
+                return orClause;
+            }, query.$or);
 
             // Run the query
             this.queryImages(query);
@@ -765,5 +768,18 @@ define([
         }
 
     });
+
+    function getDocumentHeight() {
+        var d = document,
+            b = d.body,
+            el = d.documentElement;
+
+        return Math.max(
+            b.scrollHeight, el.scrollHeight,
+            b.offsetHeight, el.offsetHeight,
+            b.clientHeight, el.clientHeight
+        );
+    }
+
     return ImboApp;
 });

@@ -127,9 +127,9 @@ define([
                 var name = el.getAttribute('name');
                 if (data[name]) {
                     el.value = data[name];
-                } else if (name === 'drp:title' && data['drp:filename']) {
-                    el.value = data['drp:filename'];
-                } else if (name === 'drp:photographer' && data['exif:Artist']) {
+                } else if (name === 'title' && data['filename']) {
+                    el.value = data['filename'];
+                } else if (name === 'photographer' && data['exif:Artist']) {
                     el.value = data['exif:Artist'];
                 }
             });
