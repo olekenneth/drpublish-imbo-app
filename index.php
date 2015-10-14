@@ -1,5 +1,12 @@
 <?php
-    $config = require 'config/config.php';
+    $publicationId = isset($_GET['publicationId']) ? $_GET['publicationId'] : null;
+
+    // Get the getConfig function
+    $getConfig = require 'config/config.php';
+
+    // Get the config by calling the getConfig with the publication id
+    $config = $getConfig($publicationId);
+
     $DrPublishURL = $config['DrPublishURL'];
 ?>
 <!DOCTYPE html>
