@@ -225,7 +225,6 @@ button.upload-scanpix-image {
 
 .image-list {
     list-style-type: none;
-    margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
     min-height: 250px;
@@ -251,7 +250,7 @@ button.upload-scanpix-image {
 
     color: #e1e5e7;
     -webkit-text-fill-color: transparent;
-    background: -webkit-linear-gradient(transparent, transparent), #9DB1C2;
+    background: -webkit-linear-gradient(transparent, transparent), #c0c5c7;
     background: -o-linear-gradient(transparent, transparent);
     -webkit-background-clip: text;
     text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
@@ -266,7 +265,7 @@ button.upload-scanpix-image {
     position: relative;
     float: left;
     width: 30.65%;
-    margin: 5px;
+    margin: 5px 15px 5px 0;
     padding-bottom: 30px; /* will be occupied by image-toolbar */
     height: 130px;
     background: #fff;
