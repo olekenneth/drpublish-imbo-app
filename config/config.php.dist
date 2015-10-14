@@ -1,10 +1,43 @@
 <?php
-return array(
-    'host'       => 'http://some-imbo-host',
-    'user'       => 'user',
+
+// Base config shared between configurations
+$config = [
+    'host'       => 'https://some-imbo-host',
     'publicKey'  => 'pubKey',
     'privateKey' => 'privKey',
-    'searchUsers' => ['user', 'other-user'],
     'DrPublishURL' => '//publish-stage.vgnett.no/dev/drpublish',
     'bypassAuth' => false
-);
+];
+
+// Mapping between publication and users. The user is used when inserting images
+// and should be something specific to the publication while the searchUsers defines
+// which users are searched for images.
+$publicationUserMapping = [
+    '1337' => [
+        'user' => 'user',
+        'searchUsers' => ['user', 'other-user-1', 'other-user-1']
+    ]
+];
+
+/**
+ * Build the config array with data from the base config and the publication user mapping
+ *
+ * @param int|string $publicationId Id of the publication to get config for
+ * @return array Config array
+ */
+return function($publicationId) use ($config, $publicationUserMapping) {
+    $publicationId = (string) $publicationId;
+
+    if (array_key_exists($publicationId, $publicationUserMapping)) {
+        $imboUser = $publicationUserMapping[$publicationId]['user'];
+        $imboSearchUsers = $publicationUserMapping[$publicationId]['searchUsers'];
+    } else {
+        $imboUser = $config['publicKey'];
+        $imboSearchUsers = [$imboUser];
+    }
+
+    return array_merge($config, [
+        'user' => $imboUser,
+        'searchUsers' => $imboSearchUsers
+    ]);
+};
