@@ -213,7 +213,7 @@ define([
 
             // Save POI to metadata
 
-            var resizeFactor = this.originalImageSize.width / this.imageSize.width;
+            var resizeFactor = this.originalImageSize.width / this.imagePreview.width();
 
             var handleWidth = this.poiHandle.width();
             var handleHeight = this.poiHandle.height();
@@ -228,24 +228,35 @@ define([
         },
 
         poiMouseDown: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             this.editorPane.addClass('no-select');
+
             this.imageView.on('mousemove', this.poiMove);
+            this.imageView.on('mouseup', this.poiMouseUp);
         },
 
         poiMouseUp: function() {
             this.editorPane.removeClass('no-select');
             this.imageView.off('mousemove');
+
+            // Trigger save of metadata
+            //this.saveMetadataPoi();
+
+            this.poiOnTheMove = false;
+
         },
 
         poiMove: function(e) {
             e.stopPropagation();
             e.preventDefault();
 
-            var parentOffset = this.imageView.offset();
+            var parentOffset = this.imagePreview.offset();
             var parentTop = parentOffset.top;
             var parentLeft = parentOffset.left;
 
-            var resizeFactor = this.originalImageSize.width / this.imageSize.width;
+            var resizeFactor = this.originalImageSize.width / this.imagePreview.width();
 
             var actualPoiHandlerWidth = this.poiHandle.width() * resizeFactor;
             var actualPoiHandlerHeight = this.poiHandle.height() * resizeFactor;
@@ -255,19 +266,22 @@ define([
             var maxX = this.originalImageSize.width - actualPoiHandlerWidth / 2;
             var maxY = this.originalImageSize.height - actualPoiHandlerHeight / 2;
 
+            var scrollX = e.view.scrollX;
+            var scrollY = e.view.scrollY;
+
             this.setPoi({
                 x: Math.max(
                     minX,
                     Math.min(
                         maxX,
-                        Math.floor((e.clientX - parentLeft) * resizeFactor)
+                        Math.floor((e.clientX + scrollX - parentLeft) * resizeFactor)
                     )
                 ),
                 y: Math.max(
                     minY,
                     Math.min(
                         maxY,
-                        Math.floor((e.clientY - parentTop) * resizeFactor)
+                        Math.floor((e.clientY + scrollY - parentTop) * resizeFactor)
                     )
                 )
             });
