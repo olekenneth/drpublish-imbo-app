@@ -228,10 +228,12 @@ define([
         },
 
         poiMouseDown: function(e) {
+            this.editorPane.addClass('no-select');
             this.imageView.on('mousemove', this.poiMove);
         },
 
         poiMouseUp: function() {
+            this.editorPane.removeClass('no-select');
             this.imageView.off('mousemove');
         },
 
