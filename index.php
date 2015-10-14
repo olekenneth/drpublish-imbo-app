@@ -171,6 +171,7 @@
         </div>
 
         <section class="image-container">
+            <div class="image-poi">X</div>
             <img src="img/blank.gif" id="image-preview" alt="">
         </section>
 

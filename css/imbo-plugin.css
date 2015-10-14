@@ -552,11 +552,33 @@ button.upload-scanpix-image {
     width: 74.5%;
     min-height: 400px;
     margin-top: 42px;
+    position: relative;
 }
 
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
 .image-editor .image-container .jcrop-holder {
     overflow: hidden;
+    z-index: 150;
+}
+
+/* POI marker */
+.image-editor .image-container .image-poi {
+    z-index: 200;
+
+    display: block;
+    position: absolute;
+    left: 400px;
+    top: 300px;
+
+    width: 50px;
+    height: 50px;
+
+    background-color: #f0f0f0;
+    opacity: 0.4
+}
+
+.image-editor .image-container .image-poi:hover {
+    opacity: 0.6;
 }
 
 /* what is this? */
