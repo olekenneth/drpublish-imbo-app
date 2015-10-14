@@ -58,13 +58,13 @@ fieldset.current-images {
     padding-right: 0;
 }
 
+
 /* Fieldsets within settings-pane */
 
 .settings-pane fieldset {
-    padding: 3px 18px 3px 12px;
-    margin: 10px 5px;
     border: none;
 }
+
 
 .settings-pane label,
 .settings-pane fieldset h3,
@@ -116,7 +116,7 @@ textarea {
 .settings-pane input[type="text"],
 .settings-pane input[type="search"],
 .settings-pane textarea {
-    width: 100%;
+    width: 90%;
     background: #ddd;
     border: 1px solid #444;
 }
@@ -541,20 +541,20 @@ button.upload-scanpix-image {
     float: left;
 }
 
-/* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
-.image-editor .image-container .jcrop-holder {
-    overflow: hidden;
-}
-
 /* IMAGE EDITOR */
 
 
 
-/* Image-container  NOW HOW DOES THIS WORK? */
+/* Image-container */
 .image-editor .image-container {
     width: 74.5%;
     min-height: 400px;
     margin-top: 13px;
+}
+
+/* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
+.image-editor .image-container .jcrop-holder {
+    overflow: hidden;
 }
 
 /* what is this? */
@@ -567,6 +567,7 @@ button.upload-scanpix-image {
     height: 100%;
 }
 
+/* ..and this? */
 .image-editor .image-container h2 {
     background: rgba(0, 0, 0, 0.5);
     color: #fff;
@@ -606,12 +607,10 @@ button.upload-scanpix-image {
 /* settings pane */
 
 .image-editor .settings-pane {
+    box-sizing: border-box;
     width: 24.5%;
-    margin-top: 12px;
-    background: red;
+    padding: 12px;
 }
-
-
 
 
 /* settings header */
@@ -655,7 +654,6 @@ button.upload-scanpix-image {
 
 .image-editor .settings-tab {
     background-color: #555;
-    margin: 0 12px;
 }
 
 
@@ -750,7 +748,6 @@ button.upload-scanpix-image {
 
 .exif-pane	dl {
     box-sizing: border-box;
-    -webkit-box-sizing: border-box;
     clear: both;
     width: 100%;
     margin: 20px 0;
