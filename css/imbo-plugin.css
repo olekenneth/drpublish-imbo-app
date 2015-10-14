@@ -575,6 +575,8 @@ button.upload-scanpix-image {
     position: absolute;
     left: 400px;
     top: 300px;
+    width: 36px;
+    height: 36px;
     cursor: move;
     cursor: -webkit-grabbing;
     color: #ffff8c;
