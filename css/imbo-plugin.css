@@ -40,6 +40,16 @@ fieldset.add-new-images {
 }
 
 
+/* Disable text selection */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Override fieldset defaults for selected image (when not visible) */
 .selected-image {
     min-height: 0;
@@ -87,7 +97,6 @@ fieldset.current-images {
 .settings-pane fieldset legend {
     color: #c2c4c5;
 }
-
 
 /* Styling inputs and text areas */
 input[type="text"],
