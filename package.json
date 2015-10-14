@@ -1,0 +1,27 @@
+{
+  "name": "drpublish-imbo-app",
+  "version": "1.0.0",
+  "description": "DrPublish image application for managing images stored in Imbo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "browserify": "browserify vendor/imbo-metadata-client.js -o vendor/imboclient-3.0.0.js -s Imbo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aptoma/drpublish-imbo-app.git"
+  },
+  "author": "Aptoma & VG Nett",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aptoma/drpublish-imbo-app/issues"
+  },
+  "homepage": "https://github.com/aptoma/drpublish-imbo-app#readme",
+  "dependencies": {
+    "imboclient": "^3.0.0",
+    "imboclient-metadata": "^1.0.2"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.6"
+  }
+}

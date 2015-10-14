@@ -1,3 +1,129 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Imbo = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+var request = require('imboclient').Client.request;
+var ImboQuery = require('imboclient').Query;
+
+/**
+ * Build the query object used to build the URI string
+ *
+ * @param {Object} opts - Metadata query options
+ * @param {bool} globalSearch - Whether we're searching globally or not
+ * @return {Query}
+ */
+function buildQuery(opts, globalSearch) {
+    var imboQuery = new ImboQuery();
+
+    imboQuery.page(opts.page);
+    imboQuery.limit(opts.limit);
+
+    if (opts.users && globalSearch) {
+        imboQuery.users(opts.users);
+    }
+
+    if (opts.fields) {
+        imboQuery.fields(opts.fields);
+    }
+
+    if (opts.sort) {
+        imboQuery.addSorts(opts.sort);
+    }
+
+    if (opts.metadata) {
+        imboQuery.metadata(opts.metadata);
+    }
+
+    return imboQuery;
+}
+
+/**
+ * Search globally for images using metadata
+ *
+ * @param {Object} query - Metadata search query
+ * @param {Object} opts - Metadata query options
+ * @param {Function} callback - Function to call with the search result
+ * @return {boolean}
+ * @this ImboClient
+ */
+function searchGlobalMetadata(query, opts, callback) {
+    if (typeof opts === 'function' && !callback) {
+        callback = opts;
+        opts = {};
+    }
+
+    var searchEndpointUrl = this.getResourceUrl({
+        path: '/images',
+        user: null,
+        query: buildQuery(opts, true).toString()
+    });
+
+    request({
+        method: 'SEARCH',
+        uri: searchEndpointUrl.toString(),
+        json: query,
+        header: {
+            'User-Agent': 'imboclient-js'
+        },
+        onComplete: function(err, res, body) {
+            callback(
+                err,
+                body ? body.images : [],
+                body ? body.search : {},
+                res
+            );
+        }
+    });
+
+    return true;
+}
+
+/**
+ * Search for images from a given user using metadata
+ *
+ * @param {String} user - User to search for images from
+ * @param {Object} query - Metadata search query
+ * @param {Object} opts - Metadata query options
+ * @param {Function} callback - Function to call with the search result
+ * @return {boolean}
+ * @this ImboClient
+ */
+function searchMetadata(user, query, opts, callback) {
+    if (typeof opts === 'function' && !callback) {
+        callback = opts;
+        opts = {};
+    }
+
+    var searchEndpointUrl = this.getResourceUrl({
+        path: '/users/' + user + '/images',
+        user: user,
+        query: buildQuery(opts).toString()
+    });
+
+    request({
+        method: 'SEARCH',
+        uri: searchEndpointUrl.toString(),
+        json: query,
+        header: {
+            'User-Agent': 'imboclient-js'
+        },
+        onComplete: function(err, res, body) {
+            callback(
+                err,
+                body ? body.images : [],
+                body ? body.search : {},
+                res
+            );
+        }
+    });
+
+    return true;
+}
+
+exports.searchMetadata = searchMetadata;
+exports.searchGlobalMetadata = searchGlobalMetadata;
+
+},{"imboclient":2}],2:[function(require,module,exports){
+(function (global){
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Imbo=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /**
  * This file is part of the imboclient-js package
@@ -3197,4 +3323,18 @@ module.exports={
 
 },{}]},{},[1])
 (1)
+});
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],3:[function(require,module,exports){
+'use strict';
+
+var Imbo = require('imboclient');
+var metadata = require('imboclient-metadata');
+
+Imbo.Client.prototype.searchMetadata = metadata.searchMetadata;
+Imbo.Client.prototype.searchGlobalMetadata = metadata.searchGlobalMetadata;
+
+module.exports = Imbo;
+
+},{"imboclient":2,"imboclient-metadata":1}]},{},[3])(3)
 });

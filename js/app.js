@@ -59,11 +59,12 @@ define([
             PluginAPI.setAppName(pluginParameters.appName);
 
             // Instantiate a new Imbo client
-            this.imbo = new Imbo.Client(
-                this.config.imbo.host,
-                this.config.imbo.publicKey,
-                this.config.imbo.privateKey
-            );
+            this.imbo = new Imbo.Client({
+                hosts: this.config.imbo.host,
+                user: this.config.imbo.user,
+                publicKey: this.config.imbo.publicKey,
+                privateKey: this.config.imbo.privateKey
+            });
 
             // Define language to use based on configuration
             this.language = this.config.language;
@@ -462,19 +463,29 @@ define([
                 .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
                 .page(options.page || 1));
 
-            this.imbo.getImages(query, options.clear ? function () {
+            var onComplete = options.clear ? function () {
                 this.getImageList().empty();
                 this.onImagesLoaded.apply(this, arguments);
                 this.getImageList().get(0).scrollTop = 0;
-            }.bind(this) : this.onImagesLoaded);
+            }.bind(this) : this.onImagesLoaded;
+
+            if (options.metadataQuery) {
+                this.imbo.searchGlobalMetadata(options.metadataQuery, {
+                    users: this.config.imbo.searchUsers,
+                    metadata: true,
+                    limit: query.limit(),
+                    page: query.page()
+                }, onComplete);
+            } else {
+                this.imbo.getImages(query, onComplete);
+            }
 
             this.isLoadingImages = true;
         },
 
         queryImages: function (query) {
-            this.imageQuery = new Imbo.Query().metadataQuery(query);
             this.loadImages({
-                query: this.imageQuery
+                metadataQuery: query
             });
         },
 
@@ -677,11 +688,12 @@ define([
 
             // Set up queries for the default fields
             var query = {'$or': []}, sub;
-            ['drp:title', 'drp:filename', 'drp:description'].forEach(function (item) {
+            ['description', 'location.country', 'location.city'].reduce(function(orClause, field) {
                 sub = {};
-                sub[item] = {'$wildcard': '*' + q.replace(/^\*|\*$/g, '') + '*'};
-                query.$or.push(sub);
-            });
+                sub[field] = q;
+                orClause.push(sub);
+                return orClause;
+            }, query.$or);
 
             // Run the query
             this.queryImages(query);
