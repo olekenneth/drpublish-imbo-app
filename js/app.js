@@ -239,10 +239,12 @@ define([
 
             // Find DOM-element for "selected image"-GUI
             this.selectedImage = $('fieldset.selected-image');
-
             this.selectedImage.find('img').load(function () {
                 $('.selected-image .loading .imbo-spinner').hide();
             });
+
+            // Cache the scanpix loading indicator
+            this.scanpixLoader = $('.scanpix-loading');
 
             // Initialize the uploader
             this.uploader = new Uploader(this.imbo);
@@ -288,6 +290,7 @@ define([
                 .on('image-uploaded', this.onImageAdded)
                 .on('image-batch-completed', this.showImageBatchMetadataDialog)
                 .on('image-batch-completed', this.refreshImages)
+                .on('image-batch-completed', this.hideScanpixLoader)
                 .on('scanpix-init-upload', this.initScanpixUpload);
 
             this.metaEditor
@@ -344,6 +347,11 @@ define([
 
         uploadScanpixImages: function (scanpixImages) {
             this.uploader.addScanpixImages(scanpixImages);
+            this.scanpixLoader.removeClass('hidden');
+        },
+
+        hideScanpixLoader: function () {
+            this.scanpixLoader.addClass('hidden');
         },
 
         onToolbarClick: function (e) {

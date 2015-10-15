@@ -41,6 +41,7 @@
             <button class="upload-scanpix-image"><i class="fa fa-upload"></i> <span data-translate="LOAD_FROM_SCANPIX"></span></button>
 
             <div class="progress clear hidden"></div>
+            <p class="scanpix-loading hidden">Laster opp bilder fra Scanpix...</p>
         </fieldset>
 
         <fieldset class="selected-image">
