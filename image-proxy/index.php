@@ -12,7 +12,7 @@ function disable_ob() {
             break;
         }
     }
-    
+
     // Disable apache output buffering/compression
     if (function_exists('apache_setenv')) {
         apache_setenv('no-gzip', '1');
@@ -35,14 +35,44 @@ $options = array(
     )
 );
 
+$urlParts = parse_url(urldecode($url));
+$up = (
+    isset($urlParts['username']) && isset($urlParts['password']) ?
+    ($urlParts['username'] . ':' . $urlParts['password'] . '@') : ''
+);
+
+$url = implode('', array(
+    $urlParts['scheme'] . '://',
+    $up,
+    $urlParts['host'],
+    isset($urlParts['port']) ? ':' . $urlParts['port'] : '',
+    implode('/', array_map('rawurlencode', explode('/', $urlParts['path']))),
+    isset($urlParts['query']) ? ('?' . $urlParts['query']) : ''
+));
+
 $ctx = stream_context_create($options);
 
-file_get_contents($url, false, $ctx);
-if (empty($http_response_header) || !preg_match('#^HTTP/\d\.\d 200#', $http_response_header[0])) {
+@file_get_contents($url, false, $ctx);
+
+if (empty($http_response_header)) {
     header('HTTP/1.0 400 Bad Url');
     header('Content-Type: application/json');
-    echo json_encode(array('error' => 'HTTP did not return a 200-response'));
+    echo json_encode(array(
+        'error' => 'Request for URL did not return an HTTP 200-response',
+        'url' => $url,
+    ));
     exit;
+} else {
+    $httpCode = (int) preg_replace('#^HTTP/\d\.\d (\d+).*#', '$1', $http_response_header[0]);
+    if ($httpCode !== 200) {
+        header('HTTP/1.0 400 Bad Url');
+        header('Content-Type: application/json');
+        echo json_encode(array(
+            'error' => 'Request for URL resulted in an HTTP ' . $httpCode,
+            'url' => $url,
+        ));
+        exit;
+    }
 }
 
 $ifModifiedSince = trim(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] : '');
