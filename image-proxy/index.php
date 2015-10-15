@@ -12,7 +12,7 @@ function disable_ob() {
             break;
         }
     }
-
+    
     // Disable apache output buffering/compression
     if (function_exists('apache_setenv')) {
         apache_setenv('no-gzip', '1');
@@ -20,8 +20,7 @@ function disable_ob() {
     }
 }
 
-$url = isset($_GET['url']) ? urlencode($_GET['url']) : false;
-
+$url = isset($_GET['url']) ? $_GET['url'] : false;
 if (empty($url) || !preg_match('#^https?://#', $url)) {
     header('HTTP/1.0 400 Bad Url');
     header('Content-Type: application/json');
@@ -38,7 +37,7 @@ $options = array(
 
 $ctx = stream_context_create($options);
 
-@file_get_contents($url, false, $ctx);
+file_get_contents($url, false, $ctx);
 if (empty($http_response_header) || !preg_match('#^HTTP/\d\.\d 200#', $http_response_header[0])) {
     header('HTTP/1.0 400 Bad Url');
     header('Content-Type: application/json');
