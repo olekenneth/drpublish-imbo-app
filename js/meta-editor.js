@@ -99,9 +99,13 @@ define([
         },
 
         resetState: function () {
+            this.tabCtrl
+                .find('button[data-tab]:first')
+                .trigger('click');
+
             this.inputPane.find('input, textarea').val('');
             this.imageView.css('background-image', '');
-            this.tabCtrl.find('button[data-tab]').removeClass('hidden');
+            this.tabCtrl.removeClass('hidden');
         },
 
         loadDataForImage: function (imageId) {
@@ -195,9 +199,7 @@ define([
             if (tags > 0) {
                 this.exifPane.append(dl);
             } else {
-                this.tabCtrl
-                    .find('[data-tab="exif"]')
-                    .addClass('hidden');
+                this.tabCtrl.addClass('hidden');
             }
         },
 
