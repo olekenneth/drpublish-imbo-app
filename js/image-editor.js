@@ -220,6 +220,10 @@ define([
             });
         },
 
+        hidePoi: function() {
+            this.poiHandle.addClass('hide');
+        },
+
         resetPoi: function() {
             this.setPoi({
                 x: this.originalImageSize.width / 2,
@@ -241,6 +245,10 @@ define([
 
             var top = (poi.y / resizeFactor) - (handleWidth / 2);
             var left = (poi.x / resizeFactor) - (handleHeight / 2);
+
+            if (this.poiHandle.hasClass('hide')) {
+                this.poiHandle.removeClass('hide');
+            }
 
             this.poiHandle.css({
                 top: top + 'px',
@@ -325,6 +333,7 @@ define([
             this.reset();
             this.editorPane.addClass('hidden');
             this.trigger('hide');
+            this.hidePoi();
             PluginAPI.Article.restoreAppWindow();
             PluginAPI.hideLoader();
         },
