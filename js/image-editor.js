@@ -174,6 +174,7 @@ define([
                     this.originalImageSize.height
                 ];
             }
+
             //if (cropParams && rotated === false ) {
             if (cropParams) {
                 options.setSelect = [
@@ -183,6 +184,7 @@ define([
                     cropParams.y2
                 ];
             }
+
             if (this.cropper) {
                 // Set the box width and height. Important because it's used
                 // when loading the image into the cropper
@@ -212,7 +214,20 @@ define([
             this.imbo.editMetadata(this.imageIdentifier, {
                 poi: [this.poi]
             }, function(err, res, body) {
-                console.log(err, res, body);
+                if (!err) {
+                    console.log(err);
+                }
+            });
+        },
+
+        hidePoi: function() {
+            this.poiHandle.addClass('hide');
+        },
+
+        resetPoi: function() {
+            this.setPoi({
+                x: this.originalImageSize.width / 2,
+                y: this.originalImageSize.height / 2
             });
         },
 
@@ -230,6 +245,10 @@ define([
 
             var top = (poi.y / resizeFactor) - (handleWidth / 2);
             var left = (poi.x / resizeFactor) - (handleHeight / 2);
+
+            if (this.poiHandle.hasClass('hide')) {
+                this.poiHandle.removeClass('hide');
+            }
 
             this.poiHandle.css({
                 top: top + 'px',
@@ -314,6 +333,7 @@ define([
             this.reset();
             this.editorPane.addClass('hidden');
             this.trigger('hide');
+            this.hidePoi();
             PluginAPI.Article.restoreAppWindow();
             PluginAPI.hideLoader();
         },
@@ -362,7 +382,7 @@ define([
             }
 
             // Load metadata for image
-            this.imageMetadata = {};
+            this.imageMetadata = {loadingMetadata: true};
             this.imbo.getMetadata(imageId, function (err, data) {
                 this.imageMetadata = data;
             }.bind(this));
@@ -487,8 +507,21 @@ define([
         onImageLoaded: function () {
             this.setCropper(this.cropParams);
 
-            // Fetch metadata and set POI if one exist in metadata
-            // this.setPoi(this.metadata.poi[0])
+            var waitForIt = setInterval(_.bind(function() {
+                if (this.imageMetadata.loadingMetadata) {
+                    return;
+                }
+
+                clearInterval(waitForIt);
+
+                var poi = _.get(this.imageMetadata, 'poi[0]');
+
+                if (poi) {
+                    this.setPoi(poi);
+                } else {
+                    this.resetPoi();
+                }
+            }, this), 25);
 
             PluginAPI.hideLoader();
         },

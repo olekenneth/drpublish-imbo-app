@@ -616,6 +616,34 @@ button.upload-scanpix-image {
     text-shadow: 1px 1px rgba(0,0,0,.2);
 }
 
+
+.lang-en .image-container .image-poi:hover:after {
+    content: "Move to set point of interest";
+}
+
+.lang-no .image-container .image-poi:hover:after {
+    content: "Flytt for å markere hovedfokuspunkt";
+}
+
+
+.image-container .image-poi:hover:after {
+    display: block;
+    padding: 4px;
+    color: #222;
+    background: #ffff8c;
+    position: absolute;
+    top: 50px;
+    width: 240px;
+    left: -105px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.image-poi .material-icons {
+    font-size: 36px;
+    text-shadow: 1px 1px rgba(0,0,0,.2);
+}
+
 .image-poi:hover .material-icons {
     text-shadow: 1px 1px rgba(0,0,0,.6);
 }
@@ -849,8 +877,6 @@ button.upload-scanpix-image {
 
 
 
-
-
 /* Utility classes */
 
 .droppable {
@@ -859,6 +885,10 @@ button.upload-scanpix-image {
 
 .hidden {
     display: none;
+}
+
+.hide {
+    display: none !important;
 }
 
 .clear:before, .clear:after {
