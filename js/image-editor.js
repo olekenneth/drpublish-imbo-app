@@ -316,10 +316,15 @@ define([
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
+
             // Show the editor pane and trigger a show-event
             this.editorPane.removeClass('hidden');
             this.trigger('show');
             $('body').addClass('editor-view');
+
+            // Hide POI handle until we have a correct placement
+            this.hidePoi();
+
             return this;
         },
 
@@ -333,7 +338,6 @@ define([
             this.reset();
             this.editorPane.addClass('hidden');
             this.trigger('hide');
-            this.hidePoi();
             PluginAPI.Article.restoreAppWindow();
             PluginAPI.hideLoader();
         },
