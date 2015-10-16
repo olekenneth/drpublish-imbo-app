@@ -184,8 +184,8 @@ textarea {
 /* Adding new images */
 
 .file-upload {
-    opacity: 0;
     z-index: 5;
+    opacity: 0;
 }
 
 .file-upload,
@@ -204,6 +204,16 @@ button.upload-scanpix-image {
 
 button.upload-scanpix-image {
     left: 250px;
+}
+
+.scanpix-loading {
+    margin-top: 50px;
+    color: #666;
+}
+
+.scanpix-loading i {
+    font-size: 1.5em;
+    margin-right: 5px;
 }
 
 .file-upload:hover + .upload-local-file {
@@ -476,7 +486,7 @@ button.upload-scanpix-image {
 /* Progress bar */
 
 .progress {
-    margin: -31px 0 10px 0;
+    margin: 36px 13px 10px 0;
     border: 1px solid #ddd;
     position: relative;
     background: #fff;
