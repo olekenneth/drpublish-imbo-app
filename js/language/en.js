@@ -50,6 +50,7 @@ define([], function() {
         'IMAGE_EDITOR_UPDATE_IMAGE': 'Update image',
         'IMAGE_EDITOR_ROTATION': 'Rotation',
         'IMAGE_EDITOR_SATURATION': 'Saturation',
+        'IMAGE_EDITOR_CONTRAST': 'Contrast',
         'IMAGE_EDITOR_BRIGHTNESS': 'Brightness',
         'IMAGE_EDITOR_HUE': 'Hue',
         'IMAGE_EDITOR_SHARPNESS': 'Sharpness',
