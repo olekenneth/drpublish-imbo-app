@@ -37,11 +37,13 @@ define([
             this.editorPane = $('.image-editor');
             this.controls = this.editorPane.find('.controls, .rotates');
             this.cropRatios = this.editorPane.find('.crop-presets');
+            this.poiHandle = this.editorPane.find('.image-poi');
             this.imageView = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
             this.imagePreviewReference = $('#reference-image');
             this.settingsTabButtons = $('.settings-header > button');
             this.imageSize = {width: 0, height: 0};
+            this.poi = {x: 0, y: 0};
             this.embeddedTypeId = null;
             this.events = $({});
             this.initEmbeddedTypeId();
@@ -110,6 +112,8 @@ define([
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
+            this.poiHandle.on('mousedown', this.poiMoveStart);
+
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
             this.imagePreviewReference.on('load', this.onImageLoaded);
@@ -170,6 +174,7 @@ define([
                     this.originalImageSize.height
                 ];
             }
+
             //if (cropParams && rotated === false ) {
             if (cropParams) {
                 options.setSelect = [
@@ -179,6 +184,7 @@ define([
                     cropParams.y2
                 ];
             }
+
             if (this.cropper) {
                 // Set the box width and height. Important because it's used
                 // when loading the image into the cropper
@@ -201,6 +207,108 @@ define([
             }
         },
 
+        /**
+         * Persist the updated POI in image metadata
+         */
+        saveMetadataPoi: function() {
+            this.imbo.editMetadata(this.imageIdentifier, {
+                poi: [this.poi]
+            }, function(err, res, body) {
+                if (!err) {
+                    console.log(err);
+                }
+            });
+        },
+
+        hidePoi: function() {
+            this.poiHandle.addClass('hide');
+        },
+
+        resetPoi: function() {
+            this.setPoi({
+                x: this.originalImageSize.width / 2,
+                y: this.originalImageSize.height / 2
+            });
+        },
+
+        setPoi: function(poi) {
+            if (!poi) {
+                return;
+            }
+
+            this.poi = poi;
+
+            var resizeFactor = this.originalImageSize.width / this.imagePreview.width();
+
+            var handleWidth = this.poiHandle.width();
+            var handleHeight = this.poiHandle.height();
+
+            var top = (poi.y / resizeFactor) - (handleWidth / 2);
+            var left = (poi.x / resizeFactor) - (handleHeight / 2);
+
+            if (this.poiHandle.hasClass('hide')) {
+                this.poiHandle.removeClass('hide');
+            }
+
+            this.poiHandle.css({
+                top: top + 'px',
+                left: left + 'px'
+            });
+        },
+
+        poiMoveStart: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.editorPane.addClass('no-select');
+
+            this.imageView.on('mousemove', this.poiMove);
+            this.imageView.on('mouseup', this.poiMoveEnd);
+        },
+
+        poiMoveEnd: function() {
+            this.editorPane.removeClass('no-select');
+            this.imageView.off('mousemove mouseup');
+
+            // Trigger save of metadata
+            this.saveMetadataPoi();
+
+            this.poiOnTheMove = false;
+        },
+
+        poiMove: function(e) {
+            e.preventDefault();
+
+            var parentOffset = this.imagePreview.offset();
+            var parentTop = parentOffset.top;
+            var parentLeft = parentOffset.left;
+
+            var resizeFactor = this.originalImageSize.width / this.imagePreview.width();
+
+            var actualPoiHandlerWidth = this.poiHandle.width() * resizeFactor;
+            var actualPoiHandlerHeight = this.poiHandle.height() * resizeFactor;
+
+            var minX = 0 + actualPoiHandlerWidth / 2;
+            var minY = 0 + actualPoiHandlerWidth / 2;
+            var maxX = this.originalImageSize.width - actualPoiHandlerWidth / 2;
+            var maxY = this.originalImageSize.height - actualPoiHandlerHeight / 2;
+
+            var scrollX = e.view.scrollX;
+            var scrollY = e.view.scrollY;
+
+            var posX = Math.floor((e.clientX + scrollX - parentLeft) * resizeFactor);
+            var posY = Math.floor((e.clientY + scrollY - parentTop) * resizeFactor);
+
+            // POI has been dragged outside the image. End move operation
+            if (minX > posX || maxX < posX || minY > posY || maxY < posY) {
+                return this.poiMoveEnd();
+            }
+
+            this.setPoi({
+                x: Math.max(minX, Math.min(maxX, posX)),
+                y: Math.max(minY, Math.min(maxY, posY))
+            });
+        },
 
         show: function () {
             // Maximize app window (if in app context)
@@ -208,10 +316,15 @@ define([
                 this.translator.translate('IMAGE_EDITOR_TITLE'),
                 this.hide
             );
+
             // Show the editor pane and trigger a show-event
             this.editorPane.removeClass('hidden');
             this.trigger('show');
             $('body').addClass('editor-view');
+
+            // Hide POI handle until we have a correct placement
+            this.hidePoi();
+
             return this;
         },
 
@@ -236,39 +349,48 @@ define([
         loadImage: function (imageId, options) {
             this.resetState();
             PluginAPI.showLoader('Loading image');
+
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
+
             // Set original image size
             this.originalImageSize = {
                 width: options.width,
                 height: options.height
             };
+
             // Start loading image
             this.url = this.imbo.getImageUrl(imageId).maxSize({
                 width: this.MAX_IMAGE_WIDTH,
                 height: this.MAX_IMAGE_HEIGHT
             }).jpg();
+
             // Set up crop params, if we have any
             this.cropParams = options.crop && options.crop.x2 ? options.crop : null;
             this.cropAspectRatio = options.cropAspectRatio || null;
+
             if (this.cropParams) {
                 this.cropParams.forceApply = true;
             }
+
             // Set a fixed crop aspect ratio, if any was selected
             if (options.cropAspectRatio) {
                 $('[data-ratio="' + options.cropAspectRatio + '"]').trigger('click');
             } else {
                 $('button.ratio').removeClass('active');
             }
+
             // Apply transformations to image and GUI
             if (options.transformations) {
                 this.applyTransformations(options.transformations);
             }
+
             // Load metadata for image
-            this.imageMetadata = {};
+            this.imageMetadata = {loadingMetadata: true};
             this.imbo.getMetadata(imageId, function (err, data) {
                 this.imageMetadata = data;
             }.bind(this));
+
             this.updateImageView();
             this.imboApp.metaEditor.loadDataForImage(this.imageIdentifier);
         },
@@ -388,6 +510,23 @@ define([
 
         onImageLoaded: function () {
             this.setCropper(this.cropParams);
+
+            var waitForIt = setInterval(_.bind(function() {
+                if (this.imageMetadata.loadingMetadata) {
+                    return;
+                }
+
+                clearInterval(waitForIt);
+
+                var poi = _.get(this.imageMetadata, 'poi[0]');
+
+                if (poi) {
+                    this.setPoi(poi);
+                } else {
+                    this.resetPoi();
+                }
+            }, this), 25);
+
             PluginAPI.hideLoader();
         },
 

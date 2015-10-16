@@ -172,6 +172,7 @@
         </div>
 
         <section class="image-container">
+            <div class="image-poi hide"><i class="material-icons">center_focus_weak</i></div>
             <img src="img/blank.gif" id="image-preview" alt="">
         </section>
 

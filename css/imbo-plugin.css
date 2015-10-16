@@ -40,6 +40,16 @@ fieldset.add-new-images {
 }
 
 
+/* Disable text selection */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 /* Override fieldset defaults for selected image (when not visible) */
 .selected-image {
     min-height: 0;
@@ -87,7 +97,6 @@ fieldset.current-images {
 .settings-pane fieldset legend {
     color: #c2c4c5;
 }
-
 
 /* Styling inputs and text areas */
 input[type="text"],
@@ -216,7 +225,6 @@ button.upload-scanpix-image {
 
 .image-list {
     list-style-type: none;
-    margin: 0 -5px; /* compensate for item margin */
     padding: 0;
     background: #F5F5F5;
     min-height: 250px;
@@ -242,7 +250,7 @@ button.upload-scanpix-image {
 
     color: #e1e5e7;
     -webkit-text-fill-color: transparent;
-    background: -webkit-linear-gradient(transparent, transparent), #9DB1C2;
+    background: -webkit-linear-gradient(transparent, transparent), #c0c5c7;
     background: -o-linear-gradient(transparent, transparent);
     -webkit-background-clip: text;
     text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
@@ -257,7 +265,7 @@ button.upload-scanpix-image {
     position: relative;
     float: left;
     width: 30.65%;
-    margin: 5px;
+    margin: 5px 15px 5px 0;
     padding-bottom: 30px; /* will be occupied by image-toolbar */
     height: 130px;
     background: #fff;
@@ -549,15 +557,97 @@ button.upload-scanpix-image {
 
 /* Image-container */
 .image-editor .image-container {
+    margin-top: 42px;
     width: 74.5%;
     min-height: 400px;
-    margin-top: 42px;
+    position: relative;
 }
 
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
 .image-editor .image-container .jcrop-holder {
     overflow: hidden;
+    z-index: 150;
 }
+
+/* POI marker */
+.image-container .image-poi {
+    z-index: 200;
+    display: block;
+    position: absolute;
+    left: 400px;
+    top: 300px;
+    width: 36px;
+    height: 36px;
+    cursor: move;
+    cursor: -webkit-grabbing;
+    color: #ffff8c;
+    opacity: 0.8;
+    transition: opacity .4s;
+}
+
+.image-container .image-poi:hover {
+    opacity: 1;
+}
+
+.lang-en .image-container .image-poi:hover:after {
+    content: "Move to set point of interest";
+}
+
+.lang-no .image-container .image-poi:hover:after {
+    content: "Flytt for å markere hovedfokuspunkt";
+}
+
+
+.image-container .image-poi:hover:after {
+    display: block;
+    padding: 4px;
+    color: #222;
+    background: #ffff8c;
+    position: absolute;
+    top: 50px;
+    width: 240px;
+    left: -105px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.image-poi .material-icons {
+    font-size: 36px;
+    text-shadow: 1px 1px rgba(0,0,0,.2);
+}
+
+
+.lang-en .image-container .image-poi:hover:after {
+    content: "Move to set point of interest";
+}
+
+.lang-no .image-container .image-poi:hover:after {
+    content: "Flytt for å markere hovedfokuspunkt";
+}
+
+
+.image-container .image-poi:hover:after {
+    display: block;
+    padding: 4px;
+    color: #222;
+    background: #ffff8c;
+    position: absolute;
+    top: 50px;
+    width: 240px;
+    left: -105px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.image-poi .material-icons {
+    font-size: 36px;
+    text-shadow: 1px 1px rgba(0,0,0,.2);
+}
+
+.image-poi:hover .material-icons {
+    text-shadow: 1px 1px rgba(0,0,0,.6);
+}
+
 
 /* what is this? */
 .meta-editor .image-container .source {
@@ -787,8 +877,6 @@ button.upload-scanpix-image {
 
 
 
-
-
 /* Utility classes */
 
 .droppable {
@@ -797,6 +885,10 @@ button.upload-scanpix-image {
 
 .hidden {
     display: none;
+}
+
+.hide {
+    display: none !important;
 }
 
 .clear:before, .clear:after {
