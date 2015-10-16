@@ -850,9 +850,9 @@ button.upload-scanpix-image {
     /* Generate stripes in the background @ 0, 25%, 50%, 75% */
     background: repeating-linear-gradient(
         to right,
-        #777,
-        #777 .1%,
-        transparent .2%,
+        transparent,
+        transparent 24.9%,
+        #777 24.9%,
         transparent 25%
     );
 
@@ -921,6 +921,7 @@ button.upload-scanpix-image {
     display: block;
     font-weight: normal;
     padding: 2px 0 3px;
+    margin-bottom: 3px;
     background: #555; /* "hide" stripes behind label text */
 }
 
