@@ -842,11 +842,86 @@ button.upload-scanpix-image {
     list-style: none;
 }
 
+.image-editor .sliders li {
+    position: relative;
+    margin: 0 0 10px;
+    padding: 0 0 15px;
+
+    /* Generate stripes in the background @ 0, 25%, 50%, 75% */
+    background: repeating-linear-gradient(
+        to right,
+        #777,
+        #777 .1%,
+        transparent .2%,
+        transparent 25%
+    );
+
+}
+
+.image-editor .controls-contrast {
+
+}
+
+.image-editor .controls-sharpness {
+
+}
+
+.image-editor .controls-brightness {
+
+}
+
+.image-editor .controls-saturation {
+
+}
+
+.image-editor .controls-hue {
+
+}
+
+.image-editor .controls-brightness:after,
+.image-editor .controls-saturation:after,
+.image-editor .controls-hue:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 8px;
+    position: absolute;
+    bottom: 0;
+}
+
+.image-editor .controls-brightness:after {
+    background: transparent; /* not working, so hide it */
+    background: -moz-linear-gradient(left, #000000 0%, #ffffff 100%);
+    background: -webkit-linear-gradient(left, #000000 0%, #ffffff 100%);
+    background: linear-gradient(to right, #000000 0%, #ffffff 100%);
+}
+
+.image-editor .controls-saturation:after {
+    background: transparent; /* not working, so hide it */
+    background: -moz-linear-gradient(left, #ebd9ea 0%, #e300db 100%);
+    background: -webkit-linear-gradient(left, #ebd9ea 0%, #e300db 100%);
+    background: linear-gradient(to right, #ebd9ea 0%, #e300db 100%);
+}
+
+.image-editor .controls-hue:after {
+    background: transparent; /* not working, so hide it */
+
+    background: linear-gradient(to right,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(255, 255, 0, 1) 15%,
+        rgba(0, 255, 0, 1) 30%,
+        rgba(0, 255, 255, 1) 50%,
+        rgba(0, 0, 255, 1) 65%,
+        rgba(255, 0, 255, 1) 80%,
+        rgba(255, 0, 0, 1) 100%);
+}
+
 
 .image-editor .sliders label {
     display: block;
     font-weight: normal;
-    margin: 20px 0 10px;
+    padding: 2px 0 3px;
+    background: #555; /* "hide" stripes behind label text */
 }
 
 .image-editor .sliders input[type=range] {
