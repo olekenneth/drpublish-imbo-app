@@ -573,13 +573,23 @@ button.upload-scanpix-image {
     position: relative;
 }
 
+.image-editor .rotation {
+    z-index: 200;
+    position: absolute;
+    top: 15px;
+    left: -15px;
+}
+
+
+
+
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
 .image-editor .image-container .jcrop-holder {
     overflow: hidden;
     z-index: 150;
 }
 
-/* POI marker */
+/* Point Of Interest marker */
 .image-container .image-poi {
     z-index: 200;
     display: block;
@@ -821,12 +831,16 @@ button.upload-scanpix-image {
 /* Rotating */
 
 .image-editor .rotate {
-    font-size: 1.8em;
-    padding: .2em .2em 1.6em;
+    padding: 2px;
+    opacity: .6;
+}
+
+.image-editor .rotate:hover {
+    opacity: 1;
 }
 
 .image-editor .rotate .material-icons {
-    font-size: 1.4em;
+    font-size: 24px;
 }
 
 

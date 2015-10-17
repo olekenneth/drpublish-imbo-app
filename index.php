@@ -97,16 +97,6 @@
                     </div>
                 </fieldset>
 
-                <fieldset class="rotates">
-                    <legend>
-                        <i class="fa fa-rotate-right"></i><span data-translate="IMAGE_EDITOR_ROTATION"></span>
-                    </legend>
-                    <div class="rotation">
-                        <button class="rotate" data-amount="-90"><i class="material-icons">rotate_left</i></button>
-                        <button class="rotate" data-amount="90"><i class="material-icons">rotate_right</i></button>
-                    </div>
-                </fieldset>
-
                 <fieldset class="controls">
                     <legend><i class="fa fa-adjust"></i><span data-translate="IMAGE_EDITOR_ADJUSTMENTS"></span></legend>
 
@@ -194,6 +184,10 @@
         </div>
 
         <section class="image-container">
+            <div class="rotation rotates">
+                <button class="rotate" data-amount="-90"><i class="material-icons">rotate_left</i></button>
+                <button class="rotate" data-amount="90"><i class="material-icons">rotate_right</i></button>
+            </div>
             <div class="image-poi hide"><i class="material-icons">center_focus_weak</i></div>
             <img src="img/blank.gif" id="image-preview" alt="">
         </section>
