@@ -874,7 +874,17 @@ button.upload-scanpix-image {
 
 .image-editor .sliders li button {
     position: absolute;
+    background-color: transparent;
+    border: none;
+    top: 16px;
+    font-weight: bold;
 }
+
+.image-editor .sliders li button:hover {
+    background: #4c4c4c;
+}
+
+
 .image-editor .sliders li .minus {
     left: -35px;
 }
