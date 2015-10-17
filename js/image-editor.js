@@ -11,8 +11,8 @@ define([
     };
 
     _.extend(ImageEditor.prototype, {
-        MAX_IMAGE_WIDTH: 924,
-        MAX_IMAGE_HEIGHT: 693,
+        MAX_IMAGE_WIDTH: 1500,
+        MAX_IMAGE_HEIGHT: 1125,
         CROP_FORMATS: {
             '4:3': 4 / 3,
             '3:2': 3 / 2,
