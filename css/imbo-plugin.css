@@ -847,7 +847,7 @@ button.upload-scanpix-image {
     margin: 0 0 10px;
     padding: 0 0 15px;
 
-    /* Generate stripes in the background @ 0, 25%, 50%, 75% */
+    /* Generate stripes in the background at 0, 25%, 50%, 75% */
     background: repeating-linear-gradient(
         to right,
         transparent,
@@ -855,8 +855,21 @@ button.upload-scanpix-image {
         #777 24.9%,
         transparent 25%
     );
-
 }
+
+
+.image-editor .sliders li button {
+    position: absolute;
+}
+.image-editor .sliders li .minus {
+    left: -35px;
+}
+
+.image-editor .sliders li .plus {
+    right: -35px;
+}
+
+
 
 .image-editor .controls-contrast {
 
@@ -878,6 +891,7 @@ button.upload-scanpix-image {
 
 }
 
+/* Creating bottom block for visual representation of settings */
 .image-editor .controls-brightness:after,
 .image-editor .controls-saturation:after,
 .image-editor .controls-hue:after {
@@ -905,7 +919,7 @@ button.upload-scanpix-image {
 
 .image-editor .controls-hue:after {
     background: transparent; /* not working, so hide it */
-
+    /* Rainbow - but it's not a true representation of what happens.. */
     background: linear-gradient(to right,
         rgba(255, 0, 0, 1) 0%,
         rgba(255, 255, 0, 1) 15%,
@@ -922,6 +936,7 @@ button.upload-scanpix-image {
     font-weight: normal;
     padding: 2px 0 3px;
     margin-bottom: 3px;
+    font-size: 12px;
     background: #555; /* "hide" stripes behind label text */
 }
 
@@ -930,7 +945,6 @@ button.upload-scanpix-image {
     margin: 0 auto;
     width: 100%;
 }
-
 
 
 

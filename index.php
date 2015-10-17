@@ -115,22 +115,32 @@
                         <ul>
                             <li class="controls-contrast">
                                 <label for="slider-contrast" data-translate="IMAGE_EDITOR_CONTRAST"></label>
+                                <button type="button" class="button-contrast minus">-</button>
+                                <button type="button" class="button-contrast plus">+</button>
                                 <input type="range" min="0" max="4" step="1" value="0" name="sharpen" id="slider-sharpen">
                             </li>
                             <li class="controls-sharpness">
                                 <label for="slider-sharpen" data-translate="IMAGE_EDITOR_SHARPNESS"></label>
+                                <button type="button" class="button-sharpness minus">-</button>
+                                <button type="button" class="button-sharpness plus">+</button>
                                 <input type="range" min="0" max="4" step="1" value="0" name="sharpen" id="slider-sharpen">
                             </li>
                             <li class="controls-brightness">
                                 <label for="slider-brightness" data-translate="IMAGE_EDITOR_BRIGHTNESS"></label>
+                                <button type="button" class="button-brightness minus">-</button>
+                                <button type="button" class="button-brightness plus">+</button>
                                 <input type="range" min="50" max="150" step="1" value="100" name="brightness" id="slider-brightness">
                             </li>
                             <li class="controls-saturation">
                                 <label for="slider-saturation" data-translate="IMAGE_EDITOR_SATURATION"></label>
+                                <button type="button" class="button-saturation minus">-</button>
+                                <button type="button" class="button-saturation plus">+</button>
                                 <input type="range" min="50" max="150" step="1" value="100" name="saturation" id="slider-saturation">
                             </li>
                             <li class="controls-hue">
                                 <label for="slider-hue" data-translate="IMAGE_EDITOR_HUE"></label>
+                                <button type="button" class="button-hue minus">-</button>
+                                <button type="button" class="button-hue plus">+</button>
                                 <input type="range" min="50" max="150" step="1" value="100" name="hue" id="slider-hue">
                             </li>
                         </ul>
