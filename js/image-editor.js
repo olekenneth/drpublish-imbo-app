@@ -211,8 +211,11 @@ define([
          * Persist the updated POI in image metadata
          */
         saveMetadataPoi: function() {
+            var poiData = this.imageMetadata.poi || [];
+            poiData[0] = this.poi;
+
             this.imbo.editMetadata(this.imageIdentifier, {
-                poi: [this.poi]
+                poi: poiData
             }, function(err, res, body) {
                 if (!err) {
                     console.log(err);
@@ -226,8 +229,8 @@ define([
 
         resetPoi: function() {
             this.setPoi({
-                x: this.originalImageSize.width / 2,
-                y: this.originalImageSize.height / 2
+                cx: this.originalImageSize.width / 2,
+                cy: this.originalImageSize.height / 2
             });
         },
 
@@ -243,8 +246,8 @@ define([
             var handleWidth = this.poiHandle.width();
             var handleHeight = this.poiHandle.height();
 
-            var top = (poi.y / resizeFactor) - (handleWidth / 2);
-            var left = (poi.x / resizeFactor) - (handleHeight / 2);
+            var top = (poi.cy / resizeFactor) - (handleWidth / 2);
+            var left = (poi.cx / resizeFactor) - (handleHeight / 2);
 
             if (this.poiHandle.hasClass('hide')) {
                 this.poiHandle.removeClass('hide');
@@ -305,8 +308,8 @@ define([
             }
 
             this.setPoi({
-                x: Math.max(minX, Math.min(maxX, posX)),
-                y: Math.max(minY, Math.min(maxY, posY))
+                cx: Math.max(minX, Math.min(maxX, posX)),
+                cy: Math.max(minY, Math.min(maxY, posY))
             });
         },
 
