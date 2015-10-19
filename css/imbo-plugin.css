@@ -865,8 +865,8 @@ button.upload-scanpix-image {
     background: repeating-linear-gradient(
         to right,
         transparent,
-        transparent 24.9%,
-        #777 24.9%,
+        transparent 24.2%,
+        #777 24.2%,
         transparent 25%
     );
 }
@@ -884,7 +884,6 @@ button.upload-scanpix-image {
     background: #4c4c4c;
 }
 
-
 .image-editor .sliders li .minus {
     left: -35px;
 }
@@ -895,25 +894,11 @@ button.upload-scanpix-image {
 
 
 
-.image-editor .controls-contrast {
-
-}
-
+.image-editor .controls-contrast,
 .image-editor .controls-sharpness {
-
+    padding-bottom: 10px;
 }
 
-.image-editor .controls-brightness {
-
-}
-
-.image-editor .controls-saturation {
-
-}
-
-.image-editor .controls-hue {
-
-}
 
 /* Creating bottom block for visual representation of settings */
 .image-editor .controls-brightness:after,
@@ -943,7 +928,12 @@ button.upload-scanpix-image {
 
 .image-editor .controls-hue:after {
     background: transparent; /* not working, so hide it */
-    /* Rainbow - but it's not a true representation of what happens.. */
+    background: -moz-linear-gradient(left, #87307a 0%, #008c4d 100%);
+    background: -webkit-linear-gradient(left, #87307a 0%, #008c4d 100%);
+    background: linear-gradient(to right, #87307a 0%, #008c4d 100%);
+}
+
+/* If we ever need a rainbow:
     background: linear-gradient(to right,
         rgba(255, 0, 0, 1) 0%,
         rgba(255, 255, 0, 1) 15%,
@@ -952,7 +942,8 @@ button.upload-scanpix-image {
         rgba(0, 0, 255, 1) 65%,
         rgba(255, 0, 255, 1) 80%,
         rgba(255, 0, 0, 1) 100%);
-}
+*/
+
 
 
 .image-editor .sliders label {
@@ -968,6 +959,17 @@ button.upload-scanpix-image {
     display: block;
     margin: 0 auto;
     width: 100%;
+}
+
+
+
+/* HIDE ELEMENTS UNTIL THEY WORK PROPERLY */
+
+.image-editor .sliders li button, /* Not implemented yet */
+.image-editor .controls-contrast, /* Not working yet */
+.image-editor .controls-hue /* As of right now, this is more confusing than helpful, so we hide it */
+ {
+    display: none;
 }
 
 
