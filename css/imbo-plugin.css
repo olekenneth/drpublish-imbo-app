@@ -970,7 +970,6 @@ button.upload-scanpix-image {
 
 /* HIDE ELEMENTS UNTIL THEY WORK PROPERLY */
 
-.image-editor .sliders li button, /* Not implemented yet */
 .image-editor .controls-hue /* As of right now, this is more confusing than helpful, so we hide it */
  {
     display: none;
