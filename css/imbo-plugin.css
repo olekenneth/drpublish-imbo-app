@@ -577,13 +577,23 @@ button.upload-scanpix-image {
     position: relative;
 }
 
+.image-editor .rotation {
+    z-index: 200;
+    position: absolute;
+    top: 15px;
+    left: -15px;
+}
+
+
+
+
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
 .image-editor .image-container .jcrop-holder {
     overflow: hidden;
     z-index: 150;
 }
 
-/* POI marker */
+/* Point Of Interest marker */
 .image-container .image-poi {
     z-index: 200;
     display: block;
@@ -792,7 +802,7 @@ button.upload-scanpix-image {
 /* Sub-headings within image editing tab  */
 .image-editor .settings-tab.image legend {
     text-transform: uppercase;
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 1px;
 }
 
@@ -807,9 +817,7 @@ button.upload-scanpix-image {
     margin: 0 30px;
 }
 
-.image-editor .sliders {
-    margin-top: -20px;
-}
+/* Cropping */
 
 .image-editor .crop-presets {
     min-height: 40px;
@@ -824,20 +832,131 @@ button.upload-scanpix-image {
     border-color: #999;
 }
 
+/* Rotating */
 
 .image-editor .rotate {
-    font-size: 1.8em;
-    padding: .2em .2em 1.6em;
+    padding: 2px;
+    opacity: .6;
+}
+
+.image-editor .rotate:hover {
+    opacity: 1;
 }
 
 .image-editor .rotate .material-icons {
-    font-size: 1.4em;
+    font-size: 24px;
 }
+
+
+/* Sliders for image adjustments | fieldset = .controls, form = .sliders */
+
+.image-editor .sliders {
+    margin-top: -20px;
+}
+
+.image-editor .sliders ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.image-editor .sliders li {
+    position: relative;
+    margin: 0 0 10px;
+    padding: 0 0 15px;
+
+    /* Generate stripes in the background at 0, 25%, 50%, 75% */
+    background: repeating-linear-gradient(
+        to right,
+        transparent,
+        transparent 24.2%,
+        #777 24.2%,
+        transparent 25%
+    );
+}
+
+
+.image-editor .sliders li button {
+    position: absolute;
+    background-color: transparent;
+    border: none;
+    top: 16px;
+    font-weight: bold;
+}
+
+.image-editor .sliders li button:hover {
+    background: #4c4c4c;
+}
+
+.image-editor .sliders li .minus {
+    left: -35px;
+}
+
+.image-editor .sliders li .plus {
+    right: -35px;
+}
+
+
+
+.image-editor .controls-contrast,
+.image-editor .controls-sharpness {
+    padding-bottom: 10px;
+}
+
+
+/* Creating bottom block for visual representation of settings */
+.image-editor .controls-brightness:after,
+.image-editor .controls-saturation:after,
+.image-editor .controls-hue:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 8px;
+    position: absolute;
+    bottom: 0;
+}
+
+.image-editor .controls-brightness:after {
+    background: transparent; /* not working, so hide it */
+    background: -moz-linear-gradient(left, #000000 0%, #ffffff 100%);
+    background: -webkit-linear-gradient(left, #000000 0%, #ffffff 100%);
+    background: linear-gradient(to right, #000000 0%, #ffffff 100%);
+}
+
+.image-editor .controls-saturation:after {
+    background: transparent; /* not working, so hide it */
+    background: -moz-linear-gradient(left, #ebd9ea 0%, #e300db 100%);
+    background: -webkit-linear-gradient(left, #ebd9ea 0%, #e300db 100%);
+    background: linear-gradient(to right, #ebd9ea 0%, #e300db 100%);
+}
+
+.image-editor .controls-hue:after {
+    background: transparent; /* not working, so hide it */
+    background: -moz-linear-gradient(left, #87307a 0%, #008c4d 100%);
+    background: -webkit-linear-gradient(left, #87307a 0%, #008c4d 100%);
+    background: linear-gradient(to right, #87307a 0%, #008c4d 100%);
+}
+
+/* If we ever need a rainbow:
+    background: linear-gradient(to right,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(255, 255, 0, 1) 15%,
+        rgba(0, 255, 0, 1) 30%,
+        rgba(0, 255, 255, 1) 50%,
+        rgba(0, 0, 255, 1) 65%,
+        rgba(255, 0, 255, 1) 80%,
+        rgba(255, 0, 0, 1) 100%);
+*/
+
+
 
 .image-editor .sliders label {
     display: block;
     font-weight: normal;
-    margin: 20px 0 10px;
+    padding: 2px 0 3px;
+    margin-bottom: 3px;
+    font-size: 12px;
+    background: #555; /* "hide" stripes behind label text */
 }
 
 .image-editor .sliders input[type=range] {
@@ -846,6 +965,16 @@ button.upload-scanpix-image {
     width: 100%;
 }
 
+
+
+/* HIDE ELEMENTS UNTIL THEY WORK PROPERLY */
+
+.image-editor .sliders li button, /* Not implemented yet */
+.image-editor .controls-contrast, /* Not working yet */
+.image-editor .controls-hue /* As of right now, this is more confusing than helpful, so we hide it */
+ {
+    display: none;
+}
 
 
 

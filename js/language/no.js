@@ -49,6 +49,7 @@ define(['underscore', 'language/en'], function(_, english) {
         'IMAGE_EDITOR_INSERT_IMAGE': 'Sett inn bilde',
         'IMAGE_EDITOR_ROTATION': 'Rotering',
         'IMAGE_EDITOR_SATURATION': 'Fargemetning',
+        'IMAGE_EDITOR_CONTRAST': 'Kontrast',
         'IMAGE_EDITOR_BRIGHTNESS': 'Lysstyrke',
         'IMAGE_EDITOR_HUE': 'Fargetone',
         'IMAGE_EDITOR_SHARPNESS': 'Skarphet',
