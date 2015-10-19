@@ -862,7 +862,7 @@ button.upload-scanpix-image {
 
 .image-editor .sliders li {
     position: relative;
-    margin: 0 0 10px;
+    margin: 12px 0;
     padding: 0 0 15px;
 
     /* Generate stripes in the background at 0, 25%, 50%, 75% */
@@ -897,10 +897,11 @@ button.upload-scanpix-image {
 }
 
 
+/* Less padding where there is no gradient indicator */
+.image-editor .sliders .controls-contrast,
+.image-editor .sliders .controls-sharpness {
+    padding-bottom: 5px;
 
-.image-editor .controls-contrast,
-.image-editor .controls-sharpness {
-    padding-bottom: 10px;
 }
 
 
