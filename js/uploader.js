@@ -136,7 +136,7 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
                     'restrictions': false
                 },
 
-                'date': image.date
+                'date': image.dateCreated
             };
 
             if (image.specialInstruction && image.specialInstruction !== 'false') {
