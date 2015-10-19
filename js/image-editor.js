@@ -211,8 +211,11 @@ define([
          * Persist the updated POI in image metadata
          */
         saveMetadataPoi: function() {
+            var poiData = this.imageMetadata.poi || [];
+            poiData[0] = this.poi;
+
             this.imbo.editMetadata(this.imageIdentifier, {
-                poi: [this.poi]
+                poi: poiData
             }, function(err, res, body) {
                 if (!err) {
                     console.log(err);
