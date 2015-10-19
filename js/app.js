@@ -602,8 +602,7 @@ define([
         getImageToolbarForImage: function (image, imageUrl, fileName) {
             var toolbar = (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
-                .replace(/\#file\-name/, fileName)
-                .replace(/\#file\-name/, fileName)
+                .replace(/\#file\-name/g, fileName)
             );
 
             var className = [];
