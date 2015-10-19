@@ -461,7 +461,11 @@ button.upload-scanpix-image {
 .meta-info.restrictions .meta-restrictions,
 .meta-info.caption .meta-caption,
 .meta-info.date .meta-date,
-.meta-info.scanpix-id .meta-scanpix-id {
+.meta-info.photographer .meta-photographer,
+.meta-info.scanpix-id .meta-scanpix-id,
+.meta-info.credit .meta-credit,
+.meta-info.credit-vg .meta-credit,
+.meta-info.credit-none .meta-credit {
     display: inline-block;
 }
 

@@ -202,6 +202,12 @@
                 <dt class="meta-date">Date:</dt>
                 <dd class="meta-date">#date</dd>
 
+                <dt class="meta-photographer">Photographer:</dt>
+                <dd class="meta-photographer">#photographer</dd>
+
+                <dt class="meta-credit">Credit:</dt>
+                <dd class="meta-credit">#credit</dd>
+
                 <dt class="meta-scanpix-id">Scanpix-ID</dt>
                 <dd class="meta-scanpix-id">#scanpix-id</dd>
             </dl>

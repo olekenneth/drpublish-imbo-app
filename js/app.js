@@ -622,6 +622,24 @@ define([
                 toolbar = toolbar.replace(/\#date/, image.metadata.date);
             }
 
+            if (_.get(image, 'metadata.byline')) {
+                className.push('photographer');
+                toolbar = toolbar.replace(/\#photographer/, image.metadata.byline);
+            }
+
+            if (_.get(image, 'metadata.credit')) {
+                if (image.metadata.credit.toLowerCase() === 'vg') {
+                    className.push('credit-vg');
+                } else {
+                    className.push('credit');
+                }
+
+                toolbar = toolbar.replace(/\#credit/, image.metadata.credit);
+            } else {
+                className.push('credit-none');
+                toolbar = toolbar.replace(/\#credit/, 'No credit set');
+            }
+
             if (_.get(image, 'metadata.scanpix.imageId')) {
                 className.push('scanpix-id');
                 toolbar = toolbar.replace(/\#scanpix-id/, image.metadata.scanpix.imageId);
