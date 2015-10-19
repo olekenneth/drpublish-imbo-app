@@ -602,8 +602,7 @@ define([
         getImageToolbarForImage: function (image, imageUrl, fileName) {
             var toolbar = (this.imageToolbar
                 .replace(/\#download\-link/, imageUrl)
-                .replace(/\#file\-name/, fileName)
-                .replace(/\#file\-name/, fileName)
+                .replace(/\#file\-name/g, fileName)
             );
 
             var className = [];
@@ -621,6 +620,24 @@ define([
             if (_.get(image, 'metadata.date')) {
                 className.push('date');
                 toolbar = toolbar.replace(/\#date/, image.metadata.date);
+            }
+
+            if (_.get(image, 'metadata.byline')) {
+                className.push('photographer');
+                toolbar = toolbar.replace(/\#photographer/, image.metadata.byline);
+            }
+
+            if (_.get(image, 'metadata.credit')) {
+                if (image.metadata.credit.toLowerCase() === 'vg') {
+                    className.push('credit-vg');
+                } else {
+                    className.push('credit');
+                }
+
+                toolbar = toolbar.replace(/\#credit/, image.metadata.credit);
+            } else {
+                className.push('credit-none');
+                toolbar = toolbar.replace(/\#credit/, 'No credit set');
             }
 
             if (_.get(image, 'metadata.scanpix.imageId')) {
