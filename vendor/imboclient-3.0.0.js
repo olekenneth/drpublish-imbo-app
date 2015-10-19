@@ -2342,6 +2342,30 @@ extend(ImageUrl.prototype, {
     },
 
     /**
+     * Adjust contrast in the image
+     *
+     * @param  {Object} [options={}]
+     * @param  {Number} [options.sharpen] Change in contrast given as number of steps up (positive
+     *                                    number) or down (negative number)
+     * @return {Imbo.ImageUrl}
+     */
+    contrast: function(options) {
+        var params = [],
+            opts = options || {},
+            transform = 'contrast';
+
+        if (opts.sharpen) {
+            params.push('sharpen=' + opts.sharpen);
+        }
+
+        if (params.length) {
+            transform += ':' + params.join(',');
+        }
+
+        return this.append(transform);
+    },
+
+    /**
      * Convert the image to the given file type
      *
      * @param  {String} type File extension ("jpg", "gif", "png")
@@ -3326,6 +3350,8 @@ module.exports={
 });
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
+arguments[4][2][0].apply(exports,arguments)
+},{"dup":2}],4:[function(require,module,exports){
 'use strict';
 
 var Imbo = require('imboclient');
@@ -3336,5 +3362,5 @@ Imbo.Client.prototype.searchGlobalMetadata = metadata.searchGlobalMetadata;
 
 module.exports = Imbo;
 
-},{"imboclient":2,"imboclient-metadata":1}]},{},[3])(3)
+},{"imboclient":3,"imboclient-metadata":1}]},{},[4])(4)
 });

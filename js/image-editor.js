@@ -32,7 +32,9 @@ define([
 
         initialize: function (imboApp) {
             this.imboApp = imboApp;
+
             _.bindAll(this);
+
             this.imageClassName = 'dp-picture';
             this.editorPane = $('.image-editor');
             this.controls = this.editorPane.find('.controls, .rotates');
@@ -73,9 +75,7 @@ define([
                     saturation: 100,
                     hue: 100
                 },
-                contrast: {
-                    sharpen: 0
-                },
+                contrast: {},
                 rotate: {
                     angle: 0
                 },
@@ -402,11 +402,13 @@ define([
             var transformation, i;
             for (i = 0; i < transformations.length; i++) {
                 transformation = this.parseTransformation(transformations[i]);
+
                 // For now, we're applying crop at a different stage
                 // Change this if multiple crops is supposed to work
                 if (transformation.name === 'crop') {
                     continue;
                 }
+
                 this.applyTransformation(transformation);
             }
         },
@@ -419,9 +421,11 @@ define([
                     saturation: t.params.s,
                     hue: t.params.h
                 };
+
                 for (var key in this.transformations.modulate) {
                     $('#slider-' + key).val(this.transformations.modulate[key]);
                 }
+
                 return;
             }
 
@@ -480,16 +484,19 @@ define([
 
         updateImageView: function () {
             $('#editor-image-loading').show();
+
             // Build new image URL based on transformation states
             this.buildImageUrl(true, true);
             var imageUrl = this.url.toString();
             this.setImagePreviewSrc(imageUrl);
+
             // Show a loading indicator while loading image
             if (!this.imagePreview.get(0).complete) {
                 PluginAPI.showLoader(
                     this.translator.translate('IMAGE_EDITOR_LOADING_IMAGE')
                 );
             }
+
             $('#reference-image').attr('src', imageUrl);
             //this.cropper.setImage(imageUrl);
         },
@@ -498,9 +505,11 @@ define([
             var el = $(e.target),
                 name = el.attr('name'),
                 value = e.target.valueAsNumber || e.target.value;
+
             if (_.contains(['brightness', 'saturation', 'hue'], name)) {
                 this.transformations.modulate[name] = value;
             }
+
             if (name === 'sharpen') {
                 if (value === 0) {
                     delete this.transformations.sharpen.preset;
@@ -508,6 +517,17 @@ define([
                     this.transformations.sharpen.preset = this.SHARPEN_LEVELS[value];
                 }
             }
+
+            if (name === 'contrast') {
+                if (value == 0) {
+                    delete this.transformations.contrast;
+                } else {
+                    this.transformations.contrast = {
+                        sharpen: (value < 0 ? value + 1 : value)
+                    };
+                }
+            }
+
             this.updateImageView();
         },
 

@@ -10,7 +10,7 @@ define(['underscore'], function(_) {
 
             return (
                 _.get(image, 'metadata.scanpix.restrictions') ||
-                (credit && credit.toLowerCase() == 'vg')
+                (credit && credit.toLowerCase() !== 'vg')
             );
         }
     };
