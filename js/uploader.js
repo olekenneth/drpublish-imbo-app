@@ -116,6 +116,12 @@ define(['underscore', 'jquery', 'async', 'draghover'], function (_, $, async) {
             }
 
             this.queue.push(tasks);
+
+            // Reset input field to bypass the bug where the same picture
+            // could not be uploaded twice. Not something you do too often
+            // but not really something that should be _impossible_ to do
+            // either.
+            this.fileInput.value = null;
         },
 
         onScanpixButtonClick: function () {
