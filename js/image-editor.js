@@ -449,20 +449,24 @@ define([
 
         buildImageUrl: function (preview, preventCropping) {
             var crop = preventCropping ? null : this.cropParams;
+
             // Reset URL
             this.url.reset().jpg();
+
             if (preview) {
                 this.url.maxSize({
                     width: this.MAX_IMAGE_WIDTH,
                     height: this.MAX_IMAGE_HEIGHT
                 });
             }
+
             // Find transformations with values that differ from the defaults
             var transformation, option, currentValue, defaultValue, diff = {};
             for (transformation in this.transformations) {
                 for (option in this.transformations[transformation]) {
                     currentValue = this.transformations[transformation][option];
                     defaultValue = this.transformationDefaults[transformation][option];
+
                     if (currentValue !== defaultValue) {
                         diff[transformation] = diff[transformation] || {};
                         diff[transformation][option] = currentValue;
