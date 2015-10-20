@@ -227,6 +227,10 @@ define([
             this.poiHandle.addClass('hide');
         },
 
+        showPoi: function() {
+            this.poiHandle.removeClass('hide');
+        },
+
         resetPoi: function() {
             this.setPoi({
                 cx: this.originalImageSize.width / 2,
@@ -248,10 +252,6 @@ define([
 
             var top = (poi.cy / resizeFactor) - (handleWidth / 2);
             var left = (poi.cx / resizeFactor) - (handleHeight / 2);
-
-            if (this.poiHandle.hasClass('hide')) {
-                this.poiHandle.removeClass('hide');
-            }
 
             this.poiHandle.css({
                 top: top + 'px',
@@ -548,6 +548,12 @@ define([
                 } else {
                     this.resetPoi();
                 }
+
+                if (this.transformations.rotate.angle === 0) {
+                    this.showPoi();
+                } else {
+                    this.hidePoi();
+                }
             }, this), 25);
 
             PluginAPI.hideLoader();
@@ -580,19 +586,22 @@ define([
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
+
             if (newAmount < 0) {
                 newAmount = 360 + newAmount;
             }
+
             if (newAmount === 90 || newAmount === 270) {
                 trueSize = trueSize.reverse();
             }
+
             this.cropper.setOptions({
                 'trueSize': trueSize
             });
+
             this.cropper.release();
             this.transformations.rotate.angle = newAmount;
             this.updateImageView();
-
         },
 
         reset: function () {
