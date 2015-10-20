@@ -112,7 +112,11 @@ define([
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
-            this.poiHandle.on('mousedown', this.poiMoveStart);
+            this.poiHandle
+                .on('mousedown', this.poiMoveStart);
+
+            this.editorPane
+                .on('click', '.sliders button', this.sliderButtonClick);
 
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
@@ -580,6 +584,20 @@ define([
 
         onCropChange: function (coords) {
             this.cropParams = coords;
+        },
+
+        sliderButtonClick: function(e) {
+            var button = $(e.currentTarget);
+            var input = button.siblings('input[type="range"]:first');
+            var step = parseFloat(input.attr('step'));
+
+            if (button.hasClass('minus')) {
+                input.val(parseFloat(input.val()) - step);
+            } else {
+                input.val(parseFloat(input.val()) + step);
+            }
+
+            input.trigger('change');
         },
 
         rotateImage: function (e) {
