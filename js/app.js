@@ -335,7 +335,6 @@ define([
                 this.disableImageInsertion();
             }, this));
 
-
             PluginAPI.on('editorFocus', _.bind(function (e) {
                 this.enableImageInsertion();
             }, this));
@@ -343,6 +342,8 @@ define([
             PluginAPI.on('editorsLostFocus', _.bind(function (e) {
                 this.disableImageInsertion();
             }, this));
+
+            PluginAPI.on('elementRemoved', this.onEditorImageDeselected);
         },
 
         uploadScanpixImages: function (scanpixImages) {
