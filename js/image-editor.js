@@ -112,7 +112,11 @@ define([
             this.settingsTabButtons
                 .on('click', this.switchSettingsTab);
 
-            this.poiHandle.on('mousedown', this.poiMoveStart);
+            this.poiHandle
+                .on('mousedown', this.poiMoveStart);
+
+            this.editorPane
+                .on('click', '.sliders button', this.sliderButtonClick);
 
             //this.imagePreview
             //    .on('load', this.onImageLoaded);
@@ -227,6 +231,10 @@ define([
             this.poiHandle.addClass('hide');
         },
 
+        showPoi: function() {
+            this.poiHandle.removeClass('hide');
+        },
+
         resetPoi: function() {
             this.setPoi({
                 cx: this.originalImageSize.width / 2,
@@ -248,10 +256,6 @@ define([
 
             var top = (poi.cy / resizeFactor) - (handleWidth / 2);
             var left = (poi.cx / resizeFactor) - (handleHeight / 2);
-
-            if (this.poiHandle.hasClass('hide')) {
-                this.poiHandle.removeClass('hide');
-            }
 
             this.poiHandle.css({
                 top: top + 'px',
@@ -449,20 +453,24 @@ define([
 
         buildImageUrl: function (preview, preventCropping) {
             var crop = preventCropping ? null : this.cropParams;
+
             // Reset URL
             this.url.reset().jpg();
+
             if (preview) {
                 this.url.maxSize({
                     width: this.MAX_IMAGE_WIDTH,
                     height: this.MAX_IMAGE_HEIGHT
                 });
             }
+
             // Find transformations with values that differ from the defaults
             var transformation, option, currentValue, defaultValue, diff = {};
             for (transformation in this.transformations) {
                 for (option in this.transformations[transformation]) {
                     currentValue = this.transformations[transformation][option];
                     defaultValue = this.transformationDefaults[transformation][option];
+
                     if (currentValue !== defaultValue) {
                         diff[transformation] = diff[transformation] || {};
                         diff[transformation][option] = currentValue;
@@ -548,6 +556,12 @@ define([
                 } else {
                     this.resetPoi();
                 }
+
+                if (this.transformations.rotate.angle === 0) {
+                    this.showPoi();
+                } else {
+                    this.hidePoi();
+                }
             }, this), 25);
 
             PluginAPI.hideLoader();
@@ -572,6 +586,20 @@ define([
             this.cropParams = coords;
         },
 
+        sliderButtonClick: function(e) {
+            var button = $(e.currentTarget);
+            var input = button.siblings('input[type="range"]:first');
+            var step = parseFloat(input.attr('step'));
+
+            if (button.hasClass('minus')) {
+                input.val(parseFloat(input.val()) - step);
+            } else {
+                input.val(parseFloat(input.val()) + step);
+            }
+
+            input.trigger('change');
+        },
+
         rotateImage: function (e) {
             var amount = parseInt($(e.currentTarget).data('amount'), 10),
                 current = this.transformations.rotate.angle,
@@ -580,19 +608,22 @@ define([
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
+
             if (newAmount < 0) {
                 newAmount = 360 + newAmount;
             }
+
             if (newAmount === 90 || newAmount === 270) {
                 trueSize = trueSize.reverse();
             }
+
             this.cropper.setOptions({
                 'trueSize': trueSize
             });
+
             this.cropper.release();
             this.transformations.rotate.angle = newAmount;
             this.updateImageView();
-
         },
 
         reset: function () {
