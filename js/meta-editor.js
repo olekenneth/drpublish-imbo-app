@@ -78,12 +78,6 @@ define([
         imboApp: null,
 
         show: function () {
-            // Maximize app window (if in app context)
-            //PluginApi.Article.maximizeAppWindow(
-            //    this.translator.translate('META_EDITOR_TITLE'),
-            //    this.hide
-            //);
-
             // Focus the first tab
             this.tabCtrl
                 .find('button[data-tab]:first')
@@ -111,6 +105,7 @@ define([
         loadDataForImage: function (imageId) {
             // Reset state so we're not showing old data
             this.resetState();
+
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
             this.imbo.getMetadata(imageId, this.onImageDataLoaded);

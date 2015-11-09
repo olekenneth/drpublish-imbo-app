@@ -426,13 +426,7 @@ define([
 
         unpreviewImage: function () {
             this.selectedImage.find('img, legend, .edit-image').hide();
-            this.selectedImage.animate(
-                {height: 0},
-                function () {
-                    // this.selectedImage.addClass('hidden');
-                }.bind(this)
-            );
-
+            this.selectedImage.animate({height: 0});
         },
 
         editImageInArticle: function (e) {
@@ -476,6 +470,7 @@ define([
 
         loadImages: function (options) {
             options = options || {};
+
             var query = ((options.query || this.imageQuery || new Imbo.Query())
                 .metadata(true)
                 .limit(options.limit || ImboApp.MAX_ITEMS_PER_PAGE)
