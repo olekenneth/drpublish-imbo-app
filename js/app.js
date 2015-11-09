@@ -270,6 +270,15 @@ define([
                 .removeClass('loading')
                 .find('.content');
 
+            // Check if a field is active or not and set the state accordingly
+            PluginAPI.Editor.getEditorType(_.bind(function(activeField) {
+                if (activeField) {
+                    this.enableImageInsertion();
+                } else {
+                    this.disableImageInsertion();
+                }
+            }, this));
+
             // Bind any DOM-events
             this.bindEvents();
 
