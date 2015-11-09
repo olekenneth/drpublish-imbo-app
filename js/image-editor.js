@@ -77,7 +77,8 @@ define([
                 },
                 contrast: {},
                 rotate: {
-                    angle: 0
+                    angle: 0,
+                    bg: "000000"
                 },
                 sharpen: {}
             };
@@ -457,7 +458,6 @@ define([
 
         buildImageUrl: function (preview, preventCropping) {
             var crop = preventCropping ? null : this.cropParams;
-            var currentAngle = parseInt(this.transformations.rotate.angle, 10);
 
             // Reset URL
             this.url.reset().jpg();
@@ -614,8 +614,8 @@ define([
         },
 
         rotateImage: function (e) {
-            var amount = this.transformations.rotate.angle,
-                current = parseInt(this.transformations.rotate.angle, 10) || 0,
+            var amount = parseInt($(e.currentTarget).data('amount'), 10),
+                current = parseInt(this.transformations.rotate.angle, 10),
                 newAmount = (current + amount) % 360,
                 trueSize = [
                     this.originalImageSize.width,
@@ -640,6 +640,7 @@ define([
 
             // Set rotation angle and update preview
             this.transformations.rotate.angle = newAmount;
+
             this.updateImageView();
         },
 
