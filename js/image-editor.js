@@ -157,7 +157,8 @@ define([
 
         setCropper: function (cropParams) {
             var img = this.imagePreview.get(0);
-            var rotated = (this.imageSize.width !== img.naturalWidth);
+            var currentAngle = parseInt(this.transformations.rotate.angle, 10);
+            var rotated = (currentAngle === 90 || currentAngle === 270);
 
             this.imageSize.width = img.naturalWidth;
             this.imageSize.height = img.naturalHeight;
@@ -175,6 +176,10 @@ define([
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
+
+                if (rotated) {
+                    options.trueSize = options.trueSize.reverse();
+                }
             }
 
             if (cropParams) {
@@ -452,6 +457,7 @@ define([
 
         buildImageUrl: function (preview, preventCropping) {
             var crop = preventCropping ? null : this.cropParams;
+            var currentAngle = parseInt(this.transformations.rotate.angle, 10);
 
             // Reset URL
             this.url.reset().jpg();
@@ -484,8 +490,14 @@ define([
 
             // @todo Find a better way to handle unintentional crops
             if (crop && crop.w > 25 && crop.h > 25) {
-                this.url.crop({x: crop.x, y: crop.y, width: crop.w, height: crop.h});
+                this.url.crop({
+                    x: crop.x,
+                    y: crop.y,
+                    width: crop.w,
+                    height: crop.h
+                });
             }
+
             return this.url;
         },
 
@@ -602,8 +614,8 @@ define([
         },
 
         rotateImage: function (e) {
-            var amount = parseInt($(e.currentTarget).data('amount'), 10),
-                current = this.transformations.rotate.angle,
+            var amount = this.transformations.rotate.angle,
+                current = parseInt(this.transformations.rotate.angle, 10) || 0,
                 newAmount = (current + amount) % 360,
                 trueSize = [
                     this.originalImageSize.width,
@@ -622,7 +634,11 @@ define([
                 'trueSize': trueSize
             });
 
+            // Reset crop area
             this.cropper.release();
+            this.cropParams = null;
+
+            // Set rotation angle and update preview
             this.transformations.rotate.angle = newAmount;
             this.updateImageView();
         },
