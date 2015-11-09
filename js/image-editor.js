@@ -77,7 +77,8 @@ define([
                 },
                 contrast: {},
                 rotate: {
-                    angle: 0
+                    angle: 0,
+                    bg: "000000"
                 },
                 sharpen: {}
             };
@@ -118,8 +119,6 @@ define([
             this.editorPane
                 .on('click', '.sliders button', this.sliderButtonClick);
 
-            //this.imagePreview
-            //    .on('load', this.onImageLoaded);
             this.imagePreviewReference.on('load', this.onImageLoaded);
             this.on('editor-image-selected', _.partial(this.setEditMode, true));
             this.on('editor-image-deselected', _.partial(this.setEditMode, false));
@@ -159,7 +158,8 @@ define([
 
         setCropper: function (cropParams) {
             var img = this.imagePreview.get(0);
-            var rotated = (this.imageSize.width !== img.naturalWidth);
+            var currentAngle = parseInt(this.transformations.rotate.angle, 10);
+            var rotated = (currentAngle === 90 || currentAngle === 270);
 
             this.imageSize.width = img.naturalWidth;
             this.imageSize.height = img.naturalHeight;
@@ -177,9 +177,12 @@ define([
                     this.originalImageSize.width,
                     this.originalImageSize.height
                 ];
+
+                if (rotated) {
+                    options.trueSize = options.trueSize.reverse();
+                }
             }
 
-            //if (cropParams && rotated === false ) {
             if (cropParams) {
                 options.setSelect = [
                     cropParams.x,
@@ -444,10 +447,12 @@ define([
                 name = parts.shift(),
                 params = parts.join(':').split(','),
                 args = {};
+
             for (var i = 0; i < params.length; i++) {
                 parts = params[i].split('=');
                 args[parts.shift()] = parts.join('=');
             }
+
             return {name: name, params: args};
         },
 
@@ -485,8 +490,14 @@ define([
 
             // @todo Find a better way to handle unintentional crops
             if (crop && crop.w > 25 && crop.h > 25) {
-                this.url.crop({x: crop.x, y: crop.y, width: crop.w, height: crop.h});
+                this.url.crop({
+                    x: crop.x,
+                    y: crop.y,
+                    width: crop.w,
+                    height: crop.h
+                });
             }
+
             return this.url;
         },
 
@@ -506,7 +517,6 @@ define([
             }
 
             $('#reference-image').attr('src', imageUrl);
-            //this.cropper.setImage(imageUrl);
         },
 
         onAdjustSlider: function (e) {
@@ -570,14 +580,17 @@ define([
         onLockRatio: function (e) {
             var el = $(e.currentTarget);
             el.addClass('active').siblings().removeClass('active');
+
             // If there is no active crop, add a preview crop
             if (!this.cropParams) {
                 this.setCropper([0, 0, 300, 300]);
             }
+
             // Now set the ratio to the given aspect ratio
             if (this.cropper) {
                 this.cropper.setOptions({aspectRatio: el.data('ratio')});
             }
+
             // Make sure the app knows about the selected ratio
             this.cropAspectRatio = el.data('ratio');
         },
@@ -602,7 +615,7 @@ define([
 
         rotateImage: function (e) {
             var amount = parseInt($(e.currentTarget).data('amount'), 10),
-                current = this.transformations.rotate.angle,
+                current = parseInt(this.transformations.rotate.angle, 10),
                 newAmount = (current + amount) % 360,
                 trueSize = [
                     this.originalImageSize.width,
@@ -621,8 +634,13 @@ define([
                 'trueSize': trueSize
             });
 
+            // Reset crop area
             this.cropper.release();
+            this.cropParams = null;
+
+            // Set rotation angle and update preview
             this.transformations.rotate.angle = newAmount;
+
             this.updateImageView();
         },
 
@@ -650,6 +668,7 @@ define([
             if (!this.imboApp.insertionEnabled) {
                 return;
             }
+
             if (this.imboApp.selectedPackageAsset !== null) {
                 return this.insertAssetImage();
             } else {
@@ -659,6 +678,7 @@ define([
 
         insertEmbeddedImage: function () {
             PluginAPI.showLoader('Importing image...')
+
             var options = {
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
@@ -679,6 +699,7 @@ define([
                     transformations: this.buildImageUrl().getTransformations()
                 }
             };
+
             // build custom markup
             var markup = template(options);
             var onDone = function (imboOptions) {
@@ -721,10 +742,8 @@ define([
             var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
             var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
             var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
-            //var customUri =    this.buildImageUrl().maxSize({width:1000, height: 1000}).jpg().toString();
             return {
                 highRes: {uri: resourceUri},
-                //custom: {uri: customUri},
                 thumbnail: {uri: thumbnailUri},
                 preview: {uri: previewUri}
             }
@@ -738,26 +757,11 @@ define([
                 cropAspectRatio: data.cropAspectRatio,
                 cropParams: data.cropParams
             }]);
-
-            //PluginAPI.Editor.getHTMLById(data.id, function (html) {
-            //    this.selectedElementMarkup = html;
-            //    var el = $(html),
-            //        img = el.find('img');
-            //    var transformations = img.data('transformations'),
-            //        imageIdentifier = img.data('image-identifier'),
-            //        cropParameters = img.data('crop-parameters'),
-            //        cropAspectRatio = img.data('crop-aspect-ratio') || null;
-            //    this.trigger('editor-image-selected', [{
-            //        imageIdentifier: imageIdentifier,
-            //        transformations: transformations,
-            //        cropAspectRatio: cropAspectRatio,
-            //        cropParams: cropParameters
-            //    }]);
-            //}.bind(this));
         },
 
         onEditorDeselectImage: function () {
             this.trigger('editor-image-deselected');
+
             // We're not selecting anything anymore
             this.selectedElementId = null;
             this.selectedElementMarkup = null;
@@ -786,6 +790,7 @@ define([
         switchSettingsTab: function (e) {
             var button = $(e.target).closest('button');
             var ref = button.attr('data-ref');
+
             $('.settings-tab').addClass('hidden');
             $('.settings-tab.' + ref).removeClass('hidden');
             this.settingsTabButtons.removeClass('active');
