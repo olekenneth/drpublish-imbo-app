@@ -469,7 +469,11 @@ define([
         },
 
         refreshImages: function () {
-            this.queryImages(this.searchQuery);
+            if (!this.searchQuery) {
+                this.loadImages({clear: true});
+            } else {
+                this.queryImages(this.searchQuery, {clear: true});
+            }
         },
 
         loadImages: function (options) {
@@ -500,10 +504,10 @@ define([
             this.isLoadingImages = true;
         },
 
-        queryImages: function (query) {
-            this.loadImages({
+        queryImages: function (query, options) {
+            this.loadImages(_.merge({
                 metadataQuery: query
-            });
+            }, options || {}));
 
             this.searchQuery = query;
         },
