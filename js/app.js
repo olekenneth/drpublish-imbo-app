@@ -72,6 +72,9 @@ define([
             // Initialize a simple event-emitter based on jQuery
             this.events = $({});
 
+            // Search query
+            this.searchQuery = {};
+
             // Reveal the UI of the application once the translations have loaded
             this.initTranslator(function () {
                 // Init DrPublish editor
@@ -465,7 +468,7 @@ define([
         },
 
         refreshImages: function () {
-            this.loadImages({clear: true});
+            this.queryImages(this.searchQuery);
         },
 
         loadImages: function (options) {
@@ -500,6 +503,8 @@ define([
             this.loadImages({
                 metadataQuery: query
             });
+
+            this.searchQuery = query;
         },
 
         getImageList: function () {
