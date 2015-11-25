@@ -408,7 +408,7 @@ define([
         },
 
         previewImage: function (options) {
-            var url = this.imbo.getImageUrl(options.imageIdentifier);
+            var url = this.imbo.user(options.user).getImageUrl(options.imageIdentifier);
             var maxDimension = 225;
 
             for (var key in options.transformations) {
