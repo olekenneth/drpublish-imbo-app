@@ -370,7 +370,7 @@ define([
             };
 
             // Start loading image
-            this.url = this.imbo.getImageUrl(imageId).maxSize({
+            this.url = this.imbo.user(options.user).getImageUrl(imageId).maxSize({
                 width: this.MAX_IMAGE_WIDTH,
                 height: this.MAX_IMAGE_HEIGHT
             }).jpg();

@@ -399,7 +399,8 @@ define([
                 .show()
                 .loadImage(imageId, {
                     width: item.data('width'),
-                    height: item.data('height')
+                    height: item.data('height'),
+                    user: item.data('image-user')
                 });
 
 
@@ -671,7 +672,7 @@ define([
             ].join('&');
 
             // Get ImageUrl
-            var url = this.imbo.getImageUrl(image.imageIdentifier);
+            var url = this.imbo.user(image.user).getImageUrl(image.imageIdentifier);
 
             // Set queryString on ImageUrl
             url = url.setQueryString(queryString);
@@ -687,7 +688,7 @@ define([
                 ''
             );
 
-            el += '<li class="' + containerClass + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
+            el += '<li class="' + containerClass + '" data-image-user="' + image.user + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
             el += ' <img src="' + thumb + '" alt="">';
             el += '</a>';
