@@ -26,6 +26,7 @@ $publicationUserMapping = [
  * @return array Config array
  */
 return function($publicationId) use ($config, $publicationUserMapping) {
+    $publicationNotSet = $publicationId === null;
     $publicationId = (string) $publicationId;
 
     if (array_key_exists($publicationId, $publicationUserMapping)) {
