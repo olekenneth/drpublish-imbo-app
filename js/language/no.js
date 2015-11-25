@@ -58,7 +58,7 @@ define(['underscore', 'language/en'], function(_, english) {
 
         // Selected image GUI
         'SELECTED_IMAGE_TITLE': 'Valgt bilde',
-        'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bilde',
+        'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bildet',
 
         // Exif info
         'EXIF_DATE': 'Dato',
