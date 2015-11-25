@@ -107,7 +107,7 @@
                                 <label for="slider-contrast" data-translate="IMAGE_EDITOR_CONTRAST"></label>
                                 <button type="button" class="button-contrast minus">-</button>
                                 <button type="button" class="button-contrast plus">+</button>
-                                <input type="range" min="-3" max="3" step="1" value="0" name="contrast" id="slider-contrast">
+                                <input type="range" min="-8" max="8" step="1" value="0" name="contrast" id="slider-contrast">
                             </li>
                             <li class="controls-sharpness">
                                 <label for="slider-sharpen" data-translate="IMAGE_EDITOR_SHARPNESS"></label>
