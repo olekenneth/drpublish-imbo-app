@@ -396,6 +396,7 @@ define([
             var item = $(e.currentTarget).closest('li'), imageId = item.data('image-identifier');
 
             this.imageEditor
+                .setUser(item.data('image-user'))
                 .show()
                 .loadImage(imageId, {
                     width: item.data('width'),
@@ -409,16 +410,19 @@ define([
         previewImage: function (options) {
             var url = this.imbo.getImageUrl(options.imageIdentifier);
             var maxDimension = 225;
+
             for (var key in options.transformations) {
                 url.append(options.transformations[key]);
             }
+
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
                 .attr('src', url.maxSize({width: maxDimension, height: maxDimension}).toString());
-            //this.selectedImage.removeClass('hidden');
+
             $('.selected-image .loading .imbo-spinner').show();
             this.selectedImage.animate({height: maxDimension + 20});
+
             $("html, body").animate(
                 {scrollTop: 0},
                 "slow",
@@ -441,9 +445,11 @@ define([
                 }
                 this.imageEditor
                     .show()
+                    .setUser(info[0].user)
                     .loadImage(this.selectedImageOptions.imageIdentifier, {
                         width: info[0].width,
                         height: info[0].height,
+                        user: info[0].user,
                         crop: this.selectedImageOptions.cropParams,
                         cropAspectRatio: this.selectedImageOptions.cropRatio,
                         transformations: this.selectedImageOptions.transformations
