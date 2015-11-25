@@ -31,6 +31,16 @@ return function($publicationId) use ($config, $publicationUserMapping) {
     if (array_key_exists($publicationId, $publicationUserMapping)) {
         $imboUser = $publicationUserMapping[$publicationId]['user'];
         $imboSearchUsers = $publicationUserMapping[$publicationId]['searchUsers'];
+    } elseif ($publicationNotSet) {
+        $imboUser = $config['publicKey'];
+
+        // Take all users from all searchUsers arrays
+        $imboSearchUsers = array_unique(call_user_func_array(
+            'array_merge',
+            array_map(function($data) {
+                return $data['searchUsers'];
+            }, $publicationUserMapping)
+        ));
     } else {
         $imboUser = $config['publicKey'];
         $imboSearchUsers = [$imboUser];
