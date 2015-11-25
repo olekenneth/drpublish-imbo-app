@@ -584,9 +584,6 @@ button.upload-scanpix-image {
     left: -15px;
 }
 
-
-
-
 /* Hack to avoid jcrop overlaying other content. Happens sometimes :( */
 .image-editor .image-container .jcrop-holder {
     overflow: hidden;
@@ -872,6 +869,17 @@ button.upload-scanpix-image {
         transparent 24.2%,
         #777 24.2%,
         transparent 25%
+    );
+}
+
+/* Six steps - so tweaking gradient */
+.image-editor .sliders .controls-contrast {
+    background: repeating-linear-gradient(
+        to right,
+        transparent,
+        transparent 16%,
+        #777 16%,
+        transparent 16.6%
     );
 }
 
