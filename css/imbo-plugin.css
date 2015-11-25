@@ -56,6 +56,7 @@ fieldset.add-new-images {
     border: none;
     margin: 0 15px;
     padding: 0;
+    position: relative;
 }
 
 .selected-image .loading .imbo-spinner {
@@ -66,7 +67,6 @@ fieldset.add-new-images {
 }
 
 .selected-image img {
-    float: left;
     margin: 10px 10px 0 0;
     display: none;
 }
