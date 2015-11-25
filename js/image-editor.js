@@ -40,6 +40,7 @@ define([
             this.controls = this.editorPane.find('.controls, .rotates');
             this.cropRatios = this.editorPane.find('.crop-presets');
             this.poiHandle = this.editorPane.find('.image-poi');
+            this.imageUser = '';
             this.imageView = this.editorPane.find('.image-container');
             this.imagePreview = $('#image-preview');
             this.imagePreviewReference = $('#reference-image');
@@ -318,6 +319,16 @@ define([
                 cx: Math.max(minX, Math.min(maxX, posX)),
                 cy: Math.max(minY, Math.min(maxY, posY))
             });
+        },
+
+        setUser: function(user) {
+            this.imageUser = user;
+
+            return this;
+        },
+
+        getUser: function() {
+            return this.imageUser;
         },
 
         show: function () {
@@ -683,12 +694,13 @@ define([
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
                 assetClass: this.imageClassName,
-                resourceUri: this.buildImageUrl().maxSize({width: 8000}).jpg().toString(),
+                resourceUri: this.buildImageUrl().jpg().toString(),
                 previewUri: this.buildImageUrl().maxSize({width: 552}).jpg().toString(),
                 previewWidth: 552,
                 renditions: this.buildRenditions(),
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
+                    user: this.getUser(),
                     externalId: this.imageIdentifier,
                     title: this.imageMetadata['title'] || '',
                     description: this.imageMetadata['description'] || '',
@@ -714,14 +726,17 @@ define([
         },
 
         insertAssetImage: function () {
-            var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
+            var resourceUri = this.buildImageUrl().jpg().toString();
             var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
+
             var options = {
                 resourceUri: resourceUri,
                 previewUri: previewUri,
                 renditions: this.buildRenditions(),
+                user: this.imageMetadata['user'],
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
+                    user: this.getUser(),
                     title: this.imageMetadata['title'] || '',
                     description: this.imageMetadata['description'] || '',
                     author: this.imageMetadata['photographer'] || '',
@@ -740,22 +755,25 @@ define([
 
         buildRenditions: function () {
             var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
-            var resourceUri = this.buildImageUrl().maxSize({width: 8000}).jpg().toString();
             var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
+            var highResUrl = this.buildImageUrl().jpg().toString();
+
             return {
-                highRes: {uri: resourceUri},
-                thumbnail: {uri: thumbnailUri},
-                preview: {uri: previewUri}
+                highRes: {uri: highResUrl},
+                preview: {uri: previewUri},
+                thumbnail: {uri: thumbnailUri}
             }
         },
 
         onEditorSelectImage: function (elementId, data) {
             this.selectedElementId = elementId;
+
             this.trigger('editor-image-selected', [{
                 imageIdentifier: data.externalId,
                 transformations: data.transformations,
                 cropAspectRatio: data.cropAspectRatio,
-                cropParams: data.cropParams
+                cropParams: data.cropParams,
+                user: data.user
             }]);
         },
 
