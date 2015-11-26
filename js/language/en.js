@@ -61,6 +61,12 @@ define([], function() {
         'SELECTED_IMAGE_TITLE': 'Selected image',
         'SELECTED_IMAGE_EDIT_IMAGE': 'Edit image',
 
+        // Meta info
+        'META_RESTRICTIONS': 'Restrictions',
+        'META_CAPTION': 'Caption',
+        'META_DATE': 'Dato',
+        'META_PHOTOGRAPHER': 'Photographer',
+
         // Exif info
         'EXIF_DATE': 'Date',
         'EXIF_APERTURE': 'Aperture',

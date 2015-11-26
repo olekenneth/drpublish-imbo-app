@@ -60,6 +60,12 @@ define(['underscore', 'language/en'], function(_, english) {
         'SELECTED_IMAGE_TITLE': 'Valgt bilde',
         'SELECTED_IMAGE_EDIT_IMAGE': 'Rediger bildet',
 
+        // Meta info
+        'META_RESTRICTIONS': 'Restriksjoner',
+        'META_CAPTION': 'Bildetekst',
+        'META_DATE': 'Dato',
+        'META_PHOTOGRAPHER': 'Fotograf',
+
         // Exif info
         'EXIF_DATE': 'Dato',
         'EXIF_APERTURE': 'Blenderåpning',

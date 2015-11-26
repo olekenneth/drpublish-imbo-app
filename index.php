@@ -209,22 +209,22 @@
             <p>#file-name</p>
 
             <dl>
-                <dt class="meta-restrictions">Restrictions</dt>
+                <dt class="meta-restrictions"><span data-translate="META_RESTRICTIONS"></span>:</dt>
                 <dd class="meta-restrictions">#restriction-text</dd>
 
-                <dt class="meta-caption">Caption</dt>
+                <dt class="meta-caption"><span data-translate="IMAGE_EDITOR_RESET_BUTTON"></span>:</dt>
                 <dd class="meta-caption">#caption-text</dd>
 
-                <dt class="meta-date">Date:</dt>
+                <dt class="meta-date"><span data-translate="META_DATE"></span>:</dt>
                 <dd class="meta-date">#date</dd>
 
-                <dt class="meta-photographer">Photographer:</dt>
+                <dt class="meta-photographer"><span data-translate="META_PHOTOGRAPHER"></span>:</dt>
                 <dd class="meta-photographer">#photographer</dd>
 
                 <dt class="meta-credit">Credit:</dt>
                 <dd class="meta-credit">#credit</dd>
 
-                <dt class="meta-scanpix-id">Scanpix-ID</dt>
+                <dt class="meta-scanpix-id">Scanpix-ID:</dt>
                 <dd class="meta-scanpix-id">#scanpix-id</dd>
             </dl>
         </div>
