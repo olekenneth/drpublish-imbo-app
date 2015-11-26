@@ -396,28 +396,33 @@ define([
             var item = $(e.currentTarget).closest('li'), imageId = item.data('image-identifier');
 
             this.imageEditor
+                .setUser(item.data('image-user'))
                 .show()
                 .loadImage(imageId, {
                     width: item.data('width'),
-                    height: item.data('height')
+                    height: item.data('height'),
+                    user: item.data('image-user')
                 });
 
 
         },
 
         previewImage: function (options) {
-            var url = this.imbo.getImageUrl(options.imageIdentifier);
+            var url = this.imbo.user(options.user).getImageUrl(options.imageIdentifier);
             var maxDimension = 225;
+
             for (var key in options.transformations) {
                 url.append(options.transformations[key]);
             }
+
             this.selectedImageOptions = options;
             this.selectedImage
                 .find('.image-preview')
                 .attr('src', url.maxSize({width: maxDimension, height: maxDimension}).toString());
-            //this.selectedImage.removeClass('hidden');
+
             $('.selected-image .loading .imbo-spinner').show();
             this.selectedImage.animate({height: maxDimension + 20});
+
             $("html, body").animate(
                 {scrollTop: 0},
                 "slow",
@@ -440,9 +445,11 @@ define([
                 }
                 this.imageEditor
                     .show()
+                    .setUser(info[0].user)
                     .loadImage(this.selectedImageOptions.imageIdentifier, {
                         width: info[0].width,
                         height: info[0].height,
+                        user: info[0].user,
                         crop: this.selectedImageOptions.cropParams,
                         cropAspectRatio: this.selectedImageOptions.cropRatio,
                         transformations: this.selectedImageOptions.transformations
@@ -468,7 +475,11 @@ define([
         },
 
         refreshImages: function () {
-            this.queryImages(this.searchQuery);
+            if (!this.searchQuery) {
+                this.loadImages({clear: true});
+            } else {
+                this.queryImages(this.searchQuery, {clear: true});
+            }
         },
 
         loadImages: function (options) {
@@ -499,10 +510,10 @@ define([
             this.isLoadingImages = true;
         },
 
-        queryImages: function (query) {
-            this.loadImages({
+        queryImages: function (query, options) {
+            this.loadImages(_.merge({
                 metadataQuery: query
-            });
+            }, options || {}));
 
             this.searchQuery = query;
         },
@@ -671,7 +682,7 @@ define([
             ].join('&');
 
             // Get ImageUrl
-            var url = this.imbo.getImageUrl(image.imageIdentifier);
+            var url = this.imbo.user(image.user).getImageUrl(image.imageIdentifier);
 
             // Set queryString on ImageUrl
             url = url.setQueryString(queryString);
@@ -687,7 +698,7 @@ define([
                 ''
             );
 
-            el += '<li class="' + containerClass + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
+            el += '<li class="' + containerClass + '" data-image-user="' + image.user + '" data-image-identifier="' + image.imageIdentifier + '" data-width="' + image.width + '" data-height="' + image.height + '">';
             el += '<a href="' + full + '" class="full-image" data-filename="' + name + '" target="_blank">';
             el += ' <img src="' + thumb + '" alt="">';
             el += '</a>';
