@@ -690,13 +690,21 @@ define([
         insertEmbeddedImage: function () {
             PluginAPI.showLoader('Importing image...')
 
+            var defaultWidth;
+            var defaultImageSize = _.find(this.imboApp.config.imageSizes, function(size) { return size.name === 'default' });
+            if (defaultImageSize) {
+                defaultWidth = defaultImageSize.width;
+            } else {
+                defaultWidth = this.imboApp.config.imageSizes[0];
+            }
+
             var options = {
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
                 assetClass: this.imageClassName,
                 resourceUri: this.buildImageUrl().jpg().toString(),
-                previewUri: this.buildImageUrl().maxSize({width: 552}).jpg().toString(),
-                previewWidth: 552,
+                previewUri: this.buildImageUrl().maxSize({width: defaultWidth}).jpg().toString(),
+                previewWidth: defaultWidth,
                 renditions: this.buildRenditions(),
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
