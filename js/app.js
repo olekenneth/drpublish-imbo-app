@@ -135,7 +135,7 @@ define([
 
             PluginAPI.Editor.getHTMLById(id, function (html) {
                 var el = $(html),
-                    img = el.find('img[data-transformations]');
+                    img = el.find('img');
 
                 // Remove all existing floats
                 el.removeClass(floats.join(' '));
