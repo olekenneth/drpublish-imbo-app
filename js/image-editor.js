@@ -762,15 +762,21 @@ define([
         },
 
         buildRenditions: function () {
-            var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
-            var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
-            var highResUrl = this.buildImageUrl().jpg().toString();
+            var renditions = {};
+            _.each(this.imboApp.config.imageSizes, _.bind(function(size) {
+                var maxSizeOptions = {};
+                if (size.width) {
+                    maxSizeOptions.width = size.width;
+                }
+                if (size.height) {
+                    maxSizeOptions.height = size.height;
+                }
 
-            return {
-                highRes: {uri: highResUrl},
-                preview: {uri: previewUri},
-                thumbnail: {uri: thumbnailUri}
-            }
+                var uri = this.buildImageUrl().maxSize(maxSizeOptions).jpg().toString();
+                renditions[size.name] = { uri: uri };
+            }, this));
+
+            return renditions;
         },
 
         onEditorSelectImage: function (elementId, data) {
