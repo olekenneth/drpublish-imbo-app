@@ -762,7 +762,11 @@ define([
         },
 
         buildRenditions: function () {
-            var renditions = {};
+            var renditions = {
+                highRes: {
+                    uri: this.buildImageUrl().reset().jpg().toString()
+                }
+            };
             _.each(this.imboApp.config.imageSizes, _.bind(function(size) {
                 var maxSizeOptions = {};
                 if (size.width) {
