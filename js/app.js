@@ -479,7 +479,7 @@ define([
         },
 
         refreshImages: function () {
-            if (!this.searchQuery) {
+            if (!this.searchQuery || Object.keys(this.searchQuery).length === 0) {
                 this.loadImages({clear: true});
             } else {
                 this.queryImages(this.searchQuery, {clear: true});
@@ -733,6 +733,7 @@ define([
             // If the query field is empty, show all images
             if (!q.length) {
                 this.imageQuery = null;
+                this.searchQuery = null;
                 return this.loadImages();
             }
 
