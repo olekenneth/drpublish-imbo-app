@@ -173,6 +173,9 @@ define([
                     JSON.stringify(imgUrl.getTransformations())
                 );
 
+                // Set container max-width to new resized size
+                el.find('.dp-article-image-container').css({'max-width': options.width + 'px'});
+
                 PluginAPI.Editor.replaceElementById(
                     id,
                     el.get(0).outerHTML,

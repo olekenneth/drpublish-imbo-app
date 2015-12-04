@@ -2,7 +2,7 @@ define(['underscore'], function (_) {
     'use strict';
 
     var defaultTemplate = _.template([
-        '<div class="dp-article-image-container" >',
+        '<div class="dp-article-image-container" style="max-width: <%= previewWidth %>px;">',
         '   <img src="<%= previewUri %>" width="<%= previewWidth %>" alt="<%- imboOptions.title %>" >',
         '   <div class="dp-article-image-title" data-dp-editable-type="textfield" data-dp-editable-name="Title"><%- imboOptions.title %></div>',
         '   <div class="dp-article-image-description" data-dp-editable-type="html" data-dp-editable-name="Description"><%- imboOptions.description %></div>',
