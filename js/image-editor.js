@@ -690,13 +690,21 @@ define([
         insertEmbeddedImage: function () {
             PluginAPI.showLoader('Importing image...')
 
+            var defaultWidth;
+            var defaultImageSize = _.find(this.imboApp.config.imageSizes, function(size) { return size.name === 'default' });
+            if (defaultImageSize) {
+                defaultWidth = defaultImageSize.width;
+            } else {
+                defaultWidth = this.imboApp.config.imageSizes[0];
+            }
+
             var options = {
                 embeddedTypeId: this.embeddedTypeId,
                 externalId: this.imageIdentifier,
                 assetClass: this.imageClassName,
                 resourceUri: this.buildImageUrl().jpg().toString(),
-                previewUri: this.buildImageUrl().maxSize({width: 552}).jpg().toString(),
-                previewWidth: 552,
+                previewUri: this.buildImageUrl().maxSize({width: defaultWidth}).jpg().toString(),
+                previewWidth: defaultWidth,
                 renditions: this.buildRenditions(),
                 imboOptions: {
                     imageIdentifier: this.imageIdentifier,
@@ -754,15 +762,25 @@ define([
         },
 
         buildRenditions: function () {
-            var thumbnailUri = this.buildImageUrl().maxSize({width: 100, height: 100}).jpg().toString();
-            var previewUri = this.buildImageUrl().maxSize({width: 800, height: 800}).jpg().toString();
-            var highResUrl = this.buildImageUrl().jpg().toString();
+            var renditions = {
+                highRes: {
+                    uri: this.buildImageUrl().reset().jpg().toString()
+                }
+            };
+            _.each(this.imboApp.config.imageSizes, _.bind(function(size) {
+                var maxSizeOptions = {};
+                if (size.width) {
+                    maxSizeOptions.width = size.width;
+                }
+                if (size.height) {
+                    maxSizeOptions.height = size.height;
+                }
 
-            return {
-                highRes: {uri: highResUrl},
-                preview: {uri: previewUri},
-                thumbnail: {uri: thumbnailUri}
-            }
+                var uri = this.buildImageUrl().maxSize(maxSizeOptions).jpg().toString();
+                renditions[size.name] = { uri: uri };
+            }, this));
+
+            return renditions;
         },
 
         onEditorSelectImage: function (elementId, data) {

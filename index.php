@@ -28,7 +28,7 @@
         var Drp = window.Drp || {};
         Drp.ImboConfig = <?php echo json_encode($config); ?>;
     </script>
-    <script src="vendor/require-2.1.11.min.js" data-main="js/main"></script>
+    <script src="vendor/require-2.1.11.min.js" data-main="js/main.js?<?=time()?>"></script>
 </head>
 <body class="loading standalone">
     <?php include 'imbo-loader.html'; ?>

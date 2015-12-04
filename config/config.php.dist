@@ -19,6 +19,16 @@ $publicationUserMapping = [
     ]
 ];
 
+// Mapping between publication and image sizes. Each publication can define their own
+// set of sizes. The settings here then propogates to the editor and allowing the
+// journalists to choose. If publication array is empty or not defined, default
+// values, defined in app.js, will be used
+$publicationImageSizeMapping = [
+    '1337' => [
+        ['name' => 'default', 'width' => 654]
+    ],
+];
+
 /**
  * Build the config array with data from the base config and the publication user mapping
  *

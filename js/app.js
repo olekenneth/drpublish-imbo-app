@@ -111,7 +111,11 @@ define([
 
         setConfig: function (config) {
             this.config = config || {};
-            this.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES || [];
+            this.config.imageSizes = this.config.imbo.imageSizes;
+
+            if (!this.config.imageSizes || !this.config.imageSizes.length) {
+                this.config.imageSizes = ImboApp.DEFAULT_IMAGE_SIZES;
+            }
         },
 
         setHelpers: function (helpers) {
@@ -119,7 +123,7 @@ define([
         },
 
         getImageResizeActions: function () {
-            var actions = [], sizes = this.imageSizes;
+            var actions = [], sizes = this.config.imageSizes;
             for (var i = 0; i < sizes.length; i++) {
                 actions.push({
                     label: sizes[i].name,
@@ -135,7 +139,7 @@ define([
 
             PluginAPI.Editor.getHTMLById(id, function (html) {
                 var el = $(html),
-                    img = el.find('img[data-transformations]');
+                    img = el.find('img');
 
                 // Remove all existing floats
                 el.removeClass(floats.join(' '));

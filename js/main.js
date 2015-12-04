@@ -37,7 +37,8 @@ require.config({
             deps: ['jquery', 'postmessage', 'drp-plugin-api'],
             exports: 'PluginAPI.Article'
         }
-    }
+    },
+    urlArgs: 'cachebreaker=' + (new Date()).getTime()
 });
 
 require([
