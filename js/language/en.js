@@ -6,6 +6,7 @@ define([], function() {
         'LOAD_FROM_SCANPIX': 'Get from Scanpix',
         'UPLOAD_LOCAL_IMAGE': 'Upload local image',
         'CONFIRM_DELETE_IMAGE': 'Are you sure you want to delete this image?',
+        'CONFIRM_DELETE_IMAGE_SURE': 'Are you sure? This action cannot be undone!',
         'FAILED_TO_DELETE_IMAGE': 'An error occured. Could not delete image.',
 
         // Image toolbar tooltips

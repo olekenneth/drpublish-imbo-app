@@ -469,6 +469,10 @@ define([
                 return false;
             }
 
+            if (!confirm(this.translate('CONFIRM_DELETE_IMAGE_SURE'))) {
+                return false;
+            }
+
             this.imbo.deleteImage(imageId, function (err) {
                 if (err) {
                     return alert(this.translate('FAILED_TO_DELETE_IMAGE'));
