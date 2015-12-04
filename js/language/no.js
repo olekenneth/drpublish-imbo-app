@@ -5,7 +5,8 @@ define(['underscore', 'language/en'], function(_, english) {
         'UPLOAD_IMAGE': 'Last opp bilde',
         'LOAD_FROM_SCANPIX': 'Hent fra Scanpix',
         'UPLOAD_LOCAL_IMAGE': 'Last opp bilde',
-        'CONFIRM_DELETE_IMAGE': 'Er du sikker på at du vil slette bildet?',
+        'CONFIRM_DELETE_IMAGE': 'Er du sikker på at du vil slette bildet? ALLE artiklene som bruker dette bildet vil miste det.',
+        'CONFIRM_DELETE_IMAGE_SURE': 'Er du helt sikker? Denne handlingen kan ikke omgjøres!',
         'FAILED_TO_DELETE_IMAGE': 'En feil oppstod under sletting av bildet',
 
         // Image toolbar tooltips
