@@ -59,6 +59,6 @@ return function($publicationId) use ($config, $publicationUserMapping) {
 
     return array_merge($config, [
         'user' => $imboUser,
-        'searchUsers' => $imboSearchUsers
+        'searchUsers' => array_values($imboSearchUsers)
     ]);
 };
