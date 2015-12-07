@@ -585,6 +585,10 @@ define([
         },
 
         onImageAdded: function (e, image) {
+            // Set user om image object
+            image.user = this.config.imbo.user;
+
+            // Prepend image to image list to show progress while uploading multiple images
             this.imageList.prepend(this.buildImageListItem('', image));
             this.incImageDisplayCount(1, true);
         },
