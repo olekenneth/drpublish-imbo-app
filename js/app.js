@@ -515,7 +515,7 @@ define([
                     page: query.page()
                 }, onComplete);
             } else {
-                this.imbo.getImages(query, onComplete);
+                this.imbo.user(this.config.imbo.user).getImages(query, onComplete);
             }
 
             this.isLoadingImages = true;
