@@ -162,10 +162,10 @@
                                 <textarea name="description"></textarea>
 
                                 <h3 data-translate="META_EDITOR_IMAGE_PHOTOGRAPHER"></h3>
-                                <input type="text" name="photographer">
+                                <input type="text" name="byline">
 
                                 <h3 data-translate="META_EDITOR_IMAGE_AGENCY"></h3>
-                                <input type="text" name="agency">
+                                <input type="text" name="credit">
                             </fieldset>
                         </section>
 
