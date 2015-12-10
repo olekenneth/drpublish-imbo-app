@@ -712,8 +712,8 @@ define([
                     externalId: this.imageIdentifier,
                     title: this.imageMetadata['title'] || '',
                     description: this.imageMetadata['description'] || '',
-                    author: this.imageMetadata['photographer'] || '',
-                    source: this.imageMetadata['agency'] || '',
+                    author: this.imageMetadata['byline'] || '',
+                    source: this.imageMetadata['credit'] || '',
                     cropParams: this.cropParams,
                     cropRatio: this.cropAspectRatio,
                     transformations: this.buildImageUrl().getTransformations()
@@ -747,8 +747,8 @@ define([
                     user: this.getUser(),
                     title: this.imageMetadata['title'] || '',
                     description: this.imageMetadata['description'] || '',
-                    author: this.imageMetadata['photographer'] || '',
-                    source: this.imageMetadata['agency'] || '',
+                    author: this.imageMetadata['byline'] || '',
+                    source: this.imageMetadata['credit'] || '',
                     cropParams: this.cropParams,
                     cropRatio: this.cropAspectRatio,
                     transformations: this.buildImageUrl().getTransformations()
