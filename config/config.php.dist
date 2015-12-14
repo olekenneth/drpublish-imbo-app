@@ -35,7 +35,7 @@ $publicationImageSizeMapping = [
  * @param int|string $publicationId Id of the publication to get config for
  * @return array Config array
  */
-return function($publicationId) use ($config, $publicationUserMapping) {
+return function($publicationId) use ($config, $publicationUserMapping, $publicationImageSizeMapping) {
     $publicationNotSet = $publicationId === null;
     $publicationId = (string) $publicationId;
 
@@ -59,6 +59,7 @@ return function($publicationId) use ($config, $publicationUserMapping) {
 
     return array_merge($config, [
         'user' => $imboUser,
-        'searchUsers' => array_values($imboSearchUsers)
+        'searchUsers' => array_values($imboSearchUsers),
+        'imageSizes' => isset($publicationImageSizeMapping[$publicationId]) ? $publicationImageSizeMapping[$publicationId] : null
     ]);
 };
