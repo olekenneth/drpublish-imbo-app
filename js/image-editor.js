@@ -128,7 +128,8 @@ define([
                 embeddedAssetFocus: function (data) {
                     this.onEditorSelectImage(data.id, data.options);
                 }.bind(this),
-                embeddedAssetBlur: this.onEditorDeselectImage
+                embeddedAssetBlur: this.onEditorDeselectImage,
+                editorUnfocus: this.onEditorDeselectImage
             });
         },
 
