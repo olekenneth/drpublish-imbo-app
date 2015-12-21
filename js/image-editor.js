@@ -128,8 +128,7 @@ define([
                 embeddedAssetFocus: function (data) {
                     this.onEditorSelectImage(data.id, data.options);
                 }.bind(this),
-                embeddedAssetBlur: this.onEditorDeselectImage,
-                editorUnfocus: this.onEditorDeselectImage
+                embeddedAssetBlur: this.onEditorDeselectImage
             });
         },
 
@@ -371,6 +370,10 @@ define([
         loadImage: function (imageId, options) {
             this.resetState();
             PluginAPI.showLoader('Loading image');
+
+            // Reset element
+            this.selectedElementId = null;
+            this.selectedElementMarkup = null;
 
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
@@ -691,47 +694,64 @@ define([
         insertEmbeddedImage: function () {
             PluginAPI.showLoader('Importing image...')
 
-            var defaultWidth;
-            var defaultImageSize = _.find(this.imboApp.config.imageSizes, function(size) { return size.name === 'default' });
-            if (defaultImageSize) {
-                defaultWidth = defaultImageSize.width;
+            var insertMarkup = function(markup, options) {
+                var onDone = function () {
+                    PluginAPI.hideLoader();
+                    this.hide();
+                    PluginAPI.Editor.markAsActive(this.selectedElementId);
+                    this.onEditorSelectImage(this.selectedElementId, options.imboOptions);
+                }.bind(this);
+                this.imboApp.exportEmbeddedAsset(markup, options, onDone);
+            }.bind(this);
+
+            if (this.selectedElementId) {
+                PluginAPI.Editor.getHTMLById(this.selectedElementId, function (html) {
+                    var $asset = $(html);
+                    $asset.find('img').attr('src', this.buildImageUrl().jpg().toString());
+                    insertMarkup($asset[0].outerHTML, {
+                        imboOptions: {
+                            imageIdentifier: this.imageIdentifier,
+                            user: this.getUser(),
+                            externalId: this.imageIdentifier,
+                            cropParams: this.cropParams,
+                            cropRatio: this.cropAspectRatio,
+                            transformations: this.buildImageUrl().getTransformations()
+                        }
+                    });
+                }.bind(this));
             } else {
-                defaultWidth = this.imboApp.config.imageSizes[0];
+                var defaultWidth;
+                var defaultImageSize = _.find(this.imboApp.config.imageSizes, function(size) { return size.name === 'default' });
+                if (defaultImageSize) {
+                    defaultWidth = defaultImageSize.width;
+                } else {
+                    defaultWidth = this.imboApp.config.imageSizes[0];
+                }
+
+                var options = {
+                    embeddedTypeId: this.embeddedTypeId,
+                    externalId: this.imageIdentifier,
+                    assetClass: this.imageClassName,
+                    resourceUri: this.buildImageUrl().jpg().toString(),
+                    previewUri: this.buildImageUrl().maxSize({width: defaultWidth}).jpg().toString(),
+                    previewWidth: defaultWidth,
+                    renditions: this.buildRenditions(),
+                    imboOptions: {
+                        imageIdentifier: this.imageIdentifier,
+                        user: this.getUser(),
+                        externalId: this.imageIdentifier,
+                        title: this.imageMetadata['title'] || '',
+                        description: this.imageMetadata['description'] || '',
+                        author: this.imageMetadata['byline'] || '',
+                        source: this.imageMetadata['credit'] || '',
+                        cropParams: this.cropParams,
+                        cropRatio: this.cropAspectRatio,
+                        transformations: this.buildImageUrl().getTransformations()
+                    }
+                };
+                insertMarkup(template(options), options);
             }
 
-            var options = {
-                embeddedTypeId: this.embeddedTypeId,
-                externalId: this.imageIdentifier,
-                assetClass: this.imageClassName,
-                resourceUri: this.buildImageUrl().jpg().toString(),
-                previewUri: this.buildImageUrl().maxSize({width: defaultWidth}).jpg().toString(),
-                previewWidth: defaultWidth,
-                renditions: this.buildRenditions(),
-                imboOptions: {
-                    imageIdentifier: this.imageIdentifier,
-                    user: this.getUser(),
-                    externalId: this.imageIdentifier,
-                    title: this.imageMetadata['title'] || '',
-                    description: this.imageMetadata['description'] || '',
-                    author: this.imageMetadata['byline'] || '',
-                    source: this.imageMetadata['credit'] || '',
-                    cropParams: this.cropParams,
-                    cropRatio: this.cropAspectRatio,
-                    transformations: this.buildImageUrl().getTransformations()
-                }
-            };
-
-            // build custom markup
-            var markup = template(options);
-            var onDone = function (imboOptions) {
-                PluginAPI.hideLoader();
-                this.hide();
-                PluginAPI.Editor.markAsActive(this.selectedElementId);
-                this.onEditorSelectImage(this.selectedElementId, imboOptions);
-            }.bind(this);
-            this.imboApp.exportEmbeddedAsset(markup, options, function () {
-                onDone(options.imboOptions)
-            });
         },
 
         insertAssetImage: function () {
