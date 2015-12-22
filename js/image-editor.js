@@ -724,8 +724,10 @@ define([
                 var defaultImageSize = _.find(this.imboApp.config.imageSizes, function(size) { return size.name === 'default' });
                 if (defaultImageSize) {
                     defaultWidth = defaultImageSize.width;
+                } else if(this.imboApp.config.imageSizes.length) {
+                    defaultWidth = this.imboApp.config.imageSizes[0].width;
                 } else {
-                    defaultWidth = this.imboApp.config.imageSizes[0];
+                    defaultWidth = 590;
                 }
 
                 var options = {
