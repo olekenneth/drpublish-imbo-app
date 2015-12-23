@@ -259,6 +259,22 @@ define([
             // Initialize the uploader
             this.uploader = new Uploader(this.imbo);
             this.uploader.setUserInfo(this.user || {});
+            this.uploader.on('image-uploaded', function(e, image) {
+                // this.showImageMetadata(image.imageIdentifier);
+                this.imbo.getImages(new Imbo.Query().ids([image.imageIdentifier]), function (err, info) {
+                    if (err) {
+                        return console.error(err);
+                    }
+                    this.imageEditor
+                        .show()
+                        .setUser(info[0].user)
+                        .loadImage(image.imageIdentifier, {
+                            width: info[0].width,
+                            height: info[0].height,
+                            user: info[0].user
+                        });
+                }.bind(this));
+            }.bind(this));
 
             // Initialize meta editor
             this.metaEditor = new MetaEditor(this);

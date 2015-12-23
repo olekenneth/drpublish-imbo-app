@@ -219,7 +219,8 @@ define([
 
             var callback = function () {
                 PluginAPI.hideLoader();
-            }
+                this.hide();
+            }.bind(this);
 
             this.imbo.editMetadata(
                 this.imageIdentifier,
