@@ -260,7 +260,6 @@ define([
             this.uploader = new Uploader(this.imbo);
             this.uploader.setUserInfo(this.user || {});
             this.uploader.on('image-uploaded', function(e, image) {
-                // this.showImageMetadata(image.imageIdentifier);
                 this.imbo.getImages(new Imbo.Query().ids([image.imageIdentifier]), function (err, info) {
                     if (err) {
                         return console.error(err);
