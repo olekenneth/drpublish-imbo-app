@@ -136,6 +136,7 @@ define([
 
         resizeSelectedImage: function (options, id, clickedElementId) {
             var floats = ['dp-float-left', 'dp-float-right', 'dp-float-none'];
+            var sizes = ImboApp.DEFAULT_IMAGE_SIZES.map(function(size) { return 'dp-image-size-' + size.name; });
 
             PluginAPI.Editor.getHTMLById(id, function (html) {
                 var el = $(html),
@@ -148,6 +149,12 @@ define([
                 if (options.float) {
                     el.addClass('dp-float-' + options.float);
                 }
+
+                // Remove all existing sizes
+                el.removeClass(sizes.join(' '));
+
+                // Add size as class
+                el.addClass('dp-image-size-' + options.name);
 
                 // Get the transformations applied to the image
                 var imgUrl = this.imbo.parseImageUrl(img.attr('src')),
