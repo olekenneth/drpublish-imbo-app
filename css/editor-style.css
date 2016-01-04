@@ -1,0 +1,8 @@
+.dp-picture.dp-plugin-imbo {
+    border: 1px solid #000;
+    margin: 10px 18px 10px 9px;
+}
+
+.dp-picture.dp-plugin-imbo img {
+    max-width: 100%;
+}
