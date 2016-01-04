@@ -534,7 +534,8 @@ define([
                     users: this.config.imbo.searchUsers,
                     metadata: true,
                     limit: query.limit(),
-                    page: query.page()
+                    page: query.page(),
+                    sort: ['metadata.date:desc']
                 }, onComplete);
             } else {
                 this.imbo.user(this.config.imbo.user).getImages(query, onComplete);
