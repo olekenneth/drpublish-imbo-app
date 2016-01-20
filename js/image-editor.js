@@ -371,10 +371,6 @@ define([
             this.resetState();
             PluginAPI.showLoader('Loading image');
 
-            // Reset element
-            this.selectedElementId = null;
-            this.selectedElementMarkup = null;
-
             // Ensure app knows which image to change metadata on
             this.imageIdentifier = imageId;
 
